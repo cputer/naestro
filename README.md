@@ -1,6 +1,7 @@
 # NAESTRO — Orchestrator Platform
 
-[![CI](https://github.com/cputer/naestro/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/cputer/naestro/actions/workflows/ci.yml)
+[![CI](https://github.com/cputer/naestro/workflows/CI/badge.svg)](https://github.com/cputer/naestro/actions)
+
 
 <p align="center">
   <img src="docs/naestro-logo.svg" alt="NAESTRO Logo" width="300"/>
