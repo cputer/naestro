@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+  gateway:
+    build: ./src/gateway
+    profiles: ["core"]
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+    ports: ["8080:8080"]
+    depends_on: [orchestrator, postgres, redis]
+
+  orchestrator:
+    build: ./src/orchestrator
+    profiles: ["core"]
+    environment:
+      PG_DSN: postgresql://postgres:secure@postgres:5432/naestro
+      REDIS_URL: redis://redis:6379/0
+      NIM_BASE_URL: http://nim:8000/v1
+      VLLM_BASE_URL: http://vllm:8000/v1
+      SLM_BASE_URL: http://slm:8000/v1
+
+  nim:
+    image: nvcr.io/nim/llama3-70b:1.0
+    profiles: ["inference"]
+    command: ["--api","openai","--gpus","6","--tp","6","--max-input-len","32768","--max-requests","64"]
+
+  vllm:
+    image: vllm/vllm-openai:0.5
+    profiles: ["inference"]
+    command: ["--model","meta-llama/Llama-3.1-70b","--tensor-parallel-size","6","--gpu-memory-utilization","0.88"]
+
+  slm:
+    image: nvcr.io/nim/llama3-8b:1.0
+    profiles: ["inference"]
+    command: ["--api","openai","--decoder-only","true","--dtype","fp8","--max-input-len","8192"]
+
+  postgres:
+    image: postgres:16
+    profiles: ["core"]
+    environment:
+      POSTGRES_PASSWORD: secure
+      POSTGRES_DB: naestro
+    ports: ["5432:5432"]
+    volumes: ["./.pgdata:/var/lib/postgresql/data"]
+
+  redis:
+    image: redis:7
+    profiles: ["core"]
+    command: ["redis-server","--appendonly","yes"]
+    ports: ["6379:6379"]
+
+  otel-collector:
+    image: otel/opentelemetry-collector:0.97.0
+    profiles: ["monitoring"]
+    command: ["--config=/etc/otel/config.yaml"]
+    volumes: ["./config/otel-config.yaml:/etc/otel/config.yaml:ro"]
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    profiles: ["monitoring"]
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+  grafana:
+    image: grafana/grafana:11.1.0
+    profiles: ["monitoring"]
+    ports: ["3000:3000"]
