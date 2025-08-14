@@ -1,7 +1,7 @@
 # NAESTRO — Orchestrator Platform
 
 <p align="center">
-  <img src="docs/naestro-logo.png" alt="NAESTRO Logo" width="300"/>
+  <img src="docs/naestro-logo.svg" alt="NAESTRO Logo" width="300"/>
 </p>
 
 **Production-grade LLM orchestrator** with [LangGraph](https://www.langchain.com/langgraph) workflow execution, [pgvector](https://github.com/pgvector/pgvector) powered RAG, secure code sandboxing, and multi-model routing.
