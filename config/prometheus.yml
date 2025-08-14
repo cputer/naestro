@@ -1,3 +1,7 @@
+# Copyright (c) 2025 CPUTER Inc.
+# SPDX-License-Identifier: MIT
+# Project Codename: NAESTRO (Orchestrator)
+
 global:
   scrape_interval: 15s
 scrape_configs:

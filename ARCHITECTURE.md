@@ -1,6 +1,3 @@
-# NAESTRO — Orchestrator Platform Architecture (v1.0)
+# NAESTRO — Orchestrator Platform Architecture
 
-Components: Gateway (FastAPI), Orchestrator (LangGraph), Inference (NIM/SLM/vLLM),
-RAG Memory (Postgres + pgvector), Sandbox, Observability (OTEL/Prometheus/Grafana).
-
-See `sql/schema.sql` and `docker-compose.yml` for runnable defaults.
+This document captures the architecture for CPUTER Inc.'s codename **NAESTRO** (Orchestrator).

@@ -1,14 +1,19 @@
+"""
+Copyright (c) 2025 CPUTER Inc.
+SPDX-License-Identifier: MIT
+Project Codename: NAESTRO (Orchestrator)
+"""
+
 from fastapi import FastAPI
 from typing import Dict
 
-# Placeholder: wire actual LangGraph app here
-app = FastAPI(title="NAESTRO Orchestrator")
+app = FastAPI(title="NAESTRO Orchestrator (CPUTER Inc.)")
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    return {"status":"ok"}
 
 @app.post("/run")
 def run(task: Dict):
-    # TODO: call planner -> implement -> verify -> refine workflow
+    # TODO: integrate LangGraph workflow (planner -> implement -> verify -> refine -> review)
     return {"ok": True, "echo": task}

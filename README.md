@@ -1,9 +1,11 @@
-# NAESTRO — Orchestrator
-
-Production-grade LLM orchestrator for coding/math/science workflows on NVIDIA DGX.
-This starter repo includes a FastAPI gateway, LangGraph state machine, pgvector schema,
-and Docker Compose with NIM/vLLM/SLM profiles.
+<!-- Copyright (c) 2025 CPUTER Inc.
+SPDX-License-Identifier: MIT
+Project Codename: NAESTRO (Orchestrator) -->
 
 <p align="center">
-  <img src="docs/naestro-logo.png" alt="Naestro Logo" width="300"/>
+  <img src="docs/naestro-logo.svg" alt="NAESTRO Logo" width="360">
 </p>
+
+# NAESTRO — Orchestrator Platform (CPUTER Inc.)
+
+Production-grade LLM orchestrator with **LangGraph** workflow, **pgvector** RAG, secure sandbox, and multi-model routing.

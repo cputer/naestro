@@ -1,3 +1,7 @@
+# Copyright (c) 2025 CPUTER Inc.
+# SPDX-License-Identifier: MIT
+# Project Codename: NAESTRO (Orchestrator)
+
 FROM python:3.11-slim
 WORKDIR /app
 COPY requirements.txt .
