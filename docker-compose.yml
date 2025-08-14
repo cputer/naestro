@@ -1,18 +1,14 @@
-# Copyright (c) 2025 CPUTER Inc.
-# SPDX-License-Identifier: MIT
-# Project Codename: NAESTRO (Orchestrator)
-
 version: "3.9"
 services:
   gateway:
     build: ./src/gateway
     profiles: ["core"]
     environment:
-      PG_DSN: postgresql://postgres:secure@postgres:5432/naestro
-      REDIS_URL: redis://redis:6379/0
-      NIM_BASE_URL: http://nim:8000/v1
-      VLLM_BASE_URL: http://vllm:8000/v1
-      SLM_BASE_URL: http://slm:8000/v1
+      PG_DSN: ${PG_DSN:-postgresql://postgres:secure@postgres:5432/naestro}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      NIM_BASE_URL: ${NIM_BASE_URL:-http://nim:8000/v1}
+      VLLM_BASE_URL: ${VLLM_BASE_URL:-http://vllm:8000/v1}
+      SLM_BASE_URL: ${SLM_BASE_URL:-http://slm:8000/v1}
     ports: ["8080:8080"]
     depends_on: [orchestrator, postgres, redis]
 
@@ -20,8 +16,8 @@ services:
     build: ./src/orchestrator
     profiles: ["core"]
     environment:
-      PG_DSN: postgresql://postgres:secure@postgres:5432/naestro
-      REDIS_URL: redis://redis:6379/0
+      PG_DSN: ${PG_DSN:-postgresql://postgres:secure@postgres:5432/naestro}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
     ports: ["8081:8081"]
     depends_on: [postgres, redis]
 

@@ -1,8 +1,5 @@
-# Copyright (c) 2025 CPUTER Inc.
-# SPDX-License-Identifier: MIT
-# Project Codename: NAESTRO (Orchestrator)
-
 fastapi==0.112.0
 uvicorn==0.30.6
 httpx==0.27.2
 prometheus-client==0.20.0
+python-dotenv==1.0.1

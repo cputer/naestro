@@ -1,18 +1,13 @@
-"""
-Copyright (c) 2025 CPUTER Inc.
-SPDX-License-Identifier: MIT
-Project Codename: NAESTRO (Orchestrator)
-"""
+from fastapi import FastAPI, HTTPException
+import os, httpx
 
-from fastapi import FastAPI
-import httpx, os
+app = FastAPI(title="NAESTRO Gateway")
 
-app = FastAPI(title="NAESTRO Gateway (CPUTER Inc.)")
-ORCH = os.getenv("ORCH_URL","http://orchestrator:8081")
+ORCH = os.getenv("ORCH_URL", "http://orchestrator:8081")
 
 @app.get("/health")
 def health():
-    return {"status":"ok"}
+    return {"status": "ok"}
 
 @app.post("/orchestrate")
 async def orchestrate(task: dict):
