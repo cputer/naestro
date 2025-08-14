@@ -108,31 +108,11 @@ Parallel tools in Refine for lint/test/gen.
 
 To create the architecture on GitHub:
 
-1. **Create Repo:**
-   - Go to GitHub.com > New repository.
-   - Name: naestro-orchestrator.
-   - Description: "Production-grade LLM orchestrator for complex problems in coding, math, sciences on DGX Spark."
-   - Public; add README.md with logo and overview.
-
-2. **Upload Logo:**
-   - Use your existing SVG at `docs/naestro-logo.svg` (replace the placeholder in this repo).
-
-3. **Add ARCHITECTURE.md:**
-   - Use this file and keep the embedded logo link to `docs/naestro-logo.svg`.
-
-4. **Structure Repo:**
-   - Folders: src (code), scripts (governor.py), config (governor.env), etc/docker (Dockerfiles), jobs (pii_calibrate.py), ui (React) as needed.
-   - Add docker-compose.yml, governor.py.
-
-5. **Add CI/CD Workflow:**
-   - .github/workflows/ci.yml with lint/compile and rollout hooks.
-
-6. **License & Readme:**
-   - LICENSE: MIT.
-   - README: Link to ARCHITECTURE.md.
-
-7. **Enable GitHub Pages:**
-   - Settings > Pages > Source: main /docs.
-
-8. **Invite Collaborators:**
-   - Settings > Collaborators > Add team.
+1. **Create Repo:** Use your existing repo.
+2. **Upload Logo:** Replace the placeholder SVG at `docs/naestro-logo.svg` with your actual SVG.
+3. **Add ARCHITECTURE.md:** This file is ready.
+4. **Structure Repo:** Provided in this ZIP.
+5. **CI/CD:** See `.github/workflows/ci.yml` and extend as needed.
+6. **License & Readme:** MIT + README included.
+7. **GitHub Pages:** Optional—host docs under `/docs`.
+8. **Invite Collaborators:** As needed.

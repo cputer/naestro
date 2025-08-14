@@ -2,7 +2,6 @@ from fastapi import FastAPI, HTTPException
 import os, httpx
 
 app = FastAPI(title="NAESTRO Gateway")
-
 ORCH = os.getenv("ORCH_URL", "http://orchestrator:8081")
 
 @app.get("/health")

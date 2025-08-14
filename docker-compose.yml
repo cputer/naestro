@@ -3,6 +3,12 @@ services:
   gateway:
     build: ./src/gateway
     profiles: ["core"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:8080/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
     environment:
       PG_DSN: ${PG_DSN:-postgresql://postgres:secure@postgres:5432/naestro}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
@@ -15,6 +21,12 @@ services:
   orchestrator:
     build: ./src/orchestrator
     profiles: ["core"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:8081/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
     environment:
       PG_DSN: ${PG_DSN:-postgresql://postgres:secure@postgres:5432/naestro}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
