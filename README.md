@@ -3,7 +3,7 @@
 [![CI](https://github.com/cputer/naestro/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/cputer/naestro/actions/workflows/ci.yml)
 
 <p align="center">
-  <img src="docs/naestro-logo2.svg" alt="NAESTRO Logo" width="300"/>
+  <img src="docs/naestro-logo.svg" alt="NAESTRO Logo" width="300"/>
 </p>
 
 **Production-grade LLM orchestrator** with LangGraph-style workflow execution, pgvector-backed RAG,
