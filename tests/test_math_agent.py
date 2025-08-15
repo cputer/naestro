@@ -1,0 +1,28 @@
+import pytest
+
+from src.orchestrator.math_agent import app as math_app, parse_math_query
+
+
+def test_parse_integrate_symbolic():
+    result = parse_math_query("integrate x**2")
+    assert str(result) == "x**3/3"
+
+
+def test_parse_differentiate():
+    result = parse_math_query("differentiate sin(x)")
+    assert str(result) == "cos(x)"
+
+
+def test_parse_solve():
+    result = parse_math_query("solve x**2 - 4")
+    assert set(map(str, result)) == {"-2", "2"}
+
+
+def test_parse_definite_integral():
+    result = parse_math_query("integrate sin(x) from 0 to pi")
+    assert result == pytest.approx(2.0, rel=1e-6)
+
+
+def test_math_app_invoke():
+    res = math_app.invoke({"query": "differentiate x**2"})
+    assert str(res["result"]) == "2*x"
