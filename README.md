@@ -26,6 +26,11 @@ secure sandboxing, and multi-model routing (NIM / vLLM / SLM).
 
 See [docs/USER_MANUAL.md](docs/USER_MANUAL.md) for a complete manual.
 
+## 🚀 Usage Scenarios
+- **RAG-based question answering** — retrieve documents from Postgres + pgvector and synthesize answers through LangGraph-style workflows.
+- **Multi-model routing** — pick between NIM, vLLM, and small language models based on cost or latency targets.
+- **Sandbox verification for untrusted code** — execute user snippets inside a seccomp-restricted Docker container with no network access.
+
 ## 📦 Quick Start (Docker)
 ```bash
 # Core services (gateway, orchestrator, postgres, redis)
@@ -73,9 +78,15 @@ Key variables:
 ```
 PG_DSN=postgresql://postgres:secure@postgres:5432/naestro
 REDIS_URL=redis://redis:6379/0
+ORCH_URL=http://orchestrator:8081
 NIM_BASE_URL=http://nim:8000/v1
 VLLM_BASE_URL=http://vllm:8000/v1
 SLM_BASE_URL=http://slm:8000/v1
+```
+
+To point the gateway at a local orchestrator instead of the Compose service:
+```bash
+export ORCH_URL=http://localhost:8081
 ```
 
 ## 🗂 Structure
