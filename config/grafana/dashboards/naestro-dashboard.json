@@ -1,0 +1,27 @@
+{
+  "title": "NAESTRO Dashboard",
+  "panels": [
+    {
+      "type": "gauge",
+      "title": "p95 Latency",
+      "datasource": "Prometheus",
+      "targets": [
+        {"expr": "histogram_quantile(0.95, sum(rate(naestro_latency_bucket[5m])) by (le))"}
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "GPU Util EMA",
+      "datasource": "Prometheus",
+      "targets": [{"expr": "gpu_utilization_ema"}]
+    },
+    {
+      "type": "heatmap",
+      "title": "Cost Heatmap",
+      "datasource": "Prometheus",
+      "targets": [
+        {"expr": "naestro_cost_metric"}
+      ]
+    }
+  ]
+}
