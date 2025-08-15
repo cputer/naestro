@@ -1,56 +1,127 @@
 from langgraph import Graph
-from random import random
+import collections
+import math
+import os
+import subprocess
+import tempfile
+
+import nltk
+
+nltk.download("punkt", quiet=True)
+nltk.download("averaged_perceptron_tagger", quiet=True)
+
+
+def _build_plan(text: str) -> str:
+    """Create a simple bullet-point plan using sentence tokenization."""
+    sentences = nltk.sent_tokenize(text) if text else []
+    return "\n".join(f"- {s.strip()}" for s in sentences)
 
 
 # Task functions
 def planner_fn(state):
-    # Break down the input into subtasks or plan
-    plan = "generated_plan"
-    return {"plan": plan, "context_size": len(state.get("input", ""))}
+    """Break down the input into a plan using an NLP tool."""
+    text = state.get("input", "")
+    plan = _build_plan(text)
+    return {"plan": plan, "context_size": len(text)}
 
 
 def implement_fn(state):
-    # Generate code or solution from the plan
-    code = "generated_code"
+    """Generate pseudocode from the plan using tokenization."""
+    plan = state.get("plan", "")
+    steps = [
+        line[2:].strip()
+        for line in plan.splitlines()
+        if line.startswith("- ")
+    ]
+    code_lines = []
+    for idx, step in enumerate(steps, 1):
+        tokens = [t for t in nltk.word_tokenize(step) if t.isidentifier()]
+        func_name = "_".join(tokens[:2]) or f"step_{idx}"
+        code_lines.append(
+            f"def {func_name}():\n    \"\"\"{step}\"\"\"\n    pass\n"
+        )
+    code = "\n".join(code_lines)
     return {"code": code}
 
 
+def _shannon_entropy(text: str) -> float:
+    if not text:
+        return 0.0
+    freq = collections.Counter(text)
+    total = len(text)
+    entropy = -sum(
+        (count / total) * math.log2(count / total) for count in freq.values()
+    )
+    max_entropy = math.log2(len(freq))
+    return entropy / max_entropy if max_entropy else 0.0
+
+
 def verify_fn(state):
-    # Check code correctness (e.g., run tests, static analysis)
-    passed = True  # placeholder
-    delta = 0.3  # difference metric (e.g. performance diff)
-    return {"passed": passed, "passed_delta": delta, "lint_delta": 0.1, "entropy_delta": 0.2}
+    """Run basic checks: compilation, linting, and entropy."""
+    code = state.get("code", "")
+    with tempfile.NamedTemporaryFile("w+", suffix=".py", delete=False) as tmp:
+        tmp.write(code)
+        tmp.flush()
+        path = tmp.name
+
+    try:
+        import py_compile
+
+        py_compile.compile(path, doraise=True)
+        passed = True
+    except Exception:
+        passed = False
+
+    result = subprocess.run(["flake8", path], capture_output=True, text=True)
+    lint_errors = [line for line in result.stdout.splitlines() if line.strip()]
+    lint_delta = 1 / (1 + len(lint_errors))
+    entropy_delta = _shannon_entropy(code)
+    os.unlink(path)
+    return {
+        "passed": passed,
+        "passed_delta": 1.0 if passed else 0.0,
+        "lint_delta": lint_delta,
+        "entropy_delta": entropy_delta,
+    }
 
 
 def refine_fn(state):
-    # Refine the output if needed
-    improved = "refined_code"
-    return {"improved": improved}
+    """Format code using Black to improve readability."""
+    code = state.get("code", "")
+    with tempfile.NamedTemporaryFile("w+", suffix=".py", delete=False) as tmp:
+        tmp.write(code)
+        tmp.flush()
+        path = tmp.name
+
+    subprocess.run(["black", "-q", path], check=False)
+    with open(path, "r", encoding="utf-8") as fh:
+        improved = fh.read()
+    os.unlink(path)
+    return {"code": improved}
 
 
 def human_review_fn(state):
-    # Human-in-the-loop review (simulate approval)
-    approved = True
+    """Approve plans containing at least one verb."""
+    plan = state.get("plan", "")
+    tokens = nltk.word_tokenize(plan) if plan else []
+    tags = nltk.pos_tag(tokens) if tokens else []
+    approved = any(tag.startswith("VB") for _, tag in tags)
     return {"approved": approved}
 
 
 # Conditions
 def approve_cond(state):
-    return state.get("plan") is not None
-
-
-def pass_cond(state):
-    return state.get("passed", False)
+    return state.get("approved", False)
 
 
 def refine_gate(state):
-    # Probabilistic gate for refining based on combined metrics
+    """Deterministic gate for refining based on combined metrics."""
     score = (
         0.05 * state.get("passed_delta", 0)
         + 0.65 * state.get("lint_delta", 0)
         + 0.30 * state.get("entropy_delta", 0)
     )
-    return (random() < score) and (state.get("budget", 1.0) > 0.5)
+    return (score < 0.8) and (state.get("budget", 1.0) > 0.5)
 
 
 # Construct the state machine graph
@@ -64,9 +135,8 @@ graph.add_node("human_review", human_review_fn)
 graph.add_edge("planner", "human_review")  # initial review step
 graph.add_conditional_edge("human_review", "implement", condition=approve_cond)
 graph.add_edge("implement", "verify")
-graph.add_conditional_edge("verify", "refine", condition=pass_cond)
+graph.add_conditional_edge("verify", "refine", condition=refine_gate)
 graph.add_edge("refine", "verify")  # loop back to verify after refining
 
 # Compile the workflow for execution
 app = graph.compile()
-
