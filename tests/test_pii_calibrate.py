@@ -3,6 +3,8 @@ import importlib
 import io
 import json
 import string
+from collections import Counter
+from pathlib import Path
 
 import pytest
 
@@ -30,3 +32,11 @@ def test_entropy_thresholds_and_flags(monkeypatch):
     assert module.calculate_shannon_entropy(low_entropy_text) < module.thresholds["low"]
     assert module.data[0]["flag"] == "high"
     assert module.data[1]["flag"] == "low"
+
+
+def test_label_distribution():
+    dataset_path = Path(__file__).resolve().parent.parent / "jobs" / "pii_calib_set.json"
+    with dataset_path.open() as f:
+        data = json.load(f)
+    counts = Counter(item["label"] for item in data)
+    assert counts == {"key": 220, "email": 193, "none": 137}
