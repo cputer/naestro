@@ -27,6 +27,14 @@ jobs:
             echo "No root requirements.txt"
           fi
 
+      - name: Install scripts requirements (optional)
+        run: |
+          if [ -f scripts/requirements.txt ]; then
+            pip install -r scripts/requirements.txt
+          else
+            echo "No scripts requirements"
+          fi
+
       - name: Install gateway requirements (optional)
         run: |
           if [ -f src/gateway/requirements.txt ]; then
