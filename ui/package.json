@@ -6,13 +6,6 @@
     "node": ">=22.12 <25",
     "npm": ">=10"
   },
-  "packageManager": "npm@11",
-  "overrides": {
-    "sourcemap-codec": "npm:@jridgewell/sourcemap-codec@^1.5.0",
-    "rimraf": "^5",
-    "glob": "^10",
-    "svgo": "^3"
-  },
   "dependencies": {
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
@@ -32,8 +25,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "lint": "eslint ."
+    "preview": "vite preview"
   },
   "browserslist": {
     "production": [
