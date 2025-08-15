@@ -4,6 +4,7 @@
 1. Clone the repository and install Python dependencies:
    ```bash
    pip install -r requirements.txt
+   pip install -r scripts/requirements.txt  # utilities such as governor.py
    ```
 2. Create a `.env` file based on the example:
    ```bash
@@ -30,6 +31,14 @@
 - **Orchestrator (8081)** – workflow engine and routing logic.
 - **Inference Tier** – optional NIM, vLLM, and small model services.
 - **Monitoring Stack** – optional Prometheus + Grafana via the `monitoring` profile.
+
+## Governor Script
+`scripts/governor.py` adjusts EMA alpha based on Prometheus P95 latency.
+Install its requirements and run:
+```bash
+pip install -r scripts/requirements.txt
+python scripts/governor.py --prom-url http://localhost:9090
+```
 
 ## User Interface
 The React dashboard in `ui/` exposes workflow traces and a Monaco-based code editor for prompt and script editing.
