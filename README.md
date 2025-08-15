@@ -55,13 +55,16 @@ curl http://localhost:8081/health
 
 **Local dev (no GPU / Codespaces):**
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.lock
 pip install -r scripts/requirements.txt  # utilities like governor.py
 
 # Start services directly (hot reload)
 uvicorn src.orchestrator.main:app --reload --port 8081 &
 uvicorn src.gateway.main:app --reload --port 8080 &
 ```
+
+Dependencies are pinned for reproducibility. After editing any `requirements.txt`,
+regenerate the corresponding `*.lock` file with `pip-compile`.
 
 ## DGX Spark Setup
 - Use DGX OS (Ubuntu-based).
