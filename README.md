@@ -50,6 +50,12 @@ uvicorn src.orchestrator.main:app --reload --port 8081 &
 uvicorn src.gateway.main:app --reload --port 8080 &
 ```
 
+## DGX Spark Setup
+- Use DGX OS (Ubuntu-based).
+- Run `sudo apt install nvidia-slm-1.0` for SLM support.
+- Execute `hardware/pin-resources.sh` for CPU/GPU pinning.
+- Enable MIG with `sudo systemctl start mig-setup`.
+
 ## 🧰 Environment
 Create a `.env` from the example:
 ```bash

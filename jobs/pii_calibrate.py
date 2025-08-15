@@ -1,5 +1,7 @@
 from collections import Counter
+import json
 import math
+from pathlib import Path
 
 
 def calculate_shannon_entropy(text):
@@ -9,12 +11,8 @@ def calculate_shannon_entropy(text):
     return entropy
 
 
-# Example calibration data (replace with actual dataset)
-data = [
-    {"text": "sample1", "label": "key"},
-    {"text": "sample2", "label": "email"},
-    # ... load actual calibration set here ...
-]
+with open(Path(__file__).with_name("pii_calib_set.json")) as f:
+    data = json.load(f)
 
 thresholds = {"high": 4.5, "low": 2.5}  # From spec
 
