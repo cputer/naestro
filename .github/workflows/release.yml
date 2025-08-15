@@ -15,6 +15,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
+
+      - name: Install and build UI
+        working-directory: ui
+        run: npm ci && npm run build
+
+      - name: Package UI dist
+        run: tar -czf ui-dist-${{ github.ref_name }}.tar.gz -C ui dist
+
       - name: Log in to ghcr.io
         uses: docker/login-action@v3
         with:
@@ -36,6 +49,13 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}/orchestrator:${{ github.ref_name }}
 
+      - name: Build and push ui image
+        uses: docker/build-push-action@v5
+        with:
+          context: ui
+          push: true
+          tags: ghcr.io/${{ github.repository }}/ui:${{ github.ref_name }}
+
       - name: Generate changelog
         id: changelog
         run: |
@@ -49,3 +69,4 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: ${{ github.ref_name }}
           body: ${{ steps.changelog.outputs.notes }}
+          files: ui-dist-${{ github.ref_name }}.tar.gz
