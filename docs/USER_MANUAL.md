@@ -3,9 +3,11 @@
 ## Setup
 1. Clone the repository and install Python dependencies:
    ```bash
-   pip install -r requirements.txt
+   pip install -r requirements.lock
    pip install -r scripts/requirements.txt  # utilities such as governor.py
    ```
+   Dependencies are pinned via `*.lock` files. If you change any
+   `requirements.txt`, regenerate the lock with `pip-compile`.
 2. Create a `.env` file based on the example:
    ```bash
    cp .env.example .env

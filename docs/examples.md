@@ -2,10 +2,10 @@
 
 This repository includes small demonstrations of third-party libraries.
 
-Install dependencies with:
+Install dependencies with pinned versions:
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.lock
 ```
 
 
