@@ -1,0 +1,30 @@
+groups:
+  - name: naestro-alerts
+    rules:
+      - alert: BacklogBreach
+        expr: naestro_backlog_size > 100
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "NAESTRO backlog size is high"
+          description: "Backlog is at {{ $value }} tasks for over 5 minutes."
+
+      - alert: CostDrift
+        expr: naestro_estimated_cost / naestro_actual_cost > 1.1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Cost deviation detected"
+          description: "Predicted vs actual cost ratio is {{ $value }}."
+
+      - alert: ShadowPauseGuard
+        expr: naestro_shadow_mode == 1 and naestro_delta < -0.05
+        for: 10m
+        labels:
+          severity: error
+        annotations:
+          summary: "Shadow launch indicates regression"
+          description: "Dark launch metrics have degraded (delta={{ $value }})."
+

@@ -1,0 +1,12 @@
+[Unit]
+Description=Configure NVIDIA MIG profiles at boot
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/nvidia-smi mig -cgi 19,19,13,13 -C
+# Above example creates MIG instances (adjust profiles per DGX Spark spec)
+
+[Install]
+WantedBy=multi-user.target
+
