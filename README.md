@@ -113,6 +113,8 @@ See **ARCHITECTURE.md** and **docs/architecture.mmd** (Mermaid).
 See **SECURITY.md**. Sandbox is network-isolated with a strict seccomp profile.
 
 ## 🧹 Pre-commit
+Install the git hooks so formatting and lint checks run automatically:
+
 ```bash
 pip install pre-commit
 pre-commit install
