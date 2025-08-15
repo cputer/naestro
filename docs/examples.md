@@ -2,6 +2,13 @@
 
 This repository includes small demonstrations of third-party libraries.
 
+Install dependencies with:
+
+```bash
+pip install -r requirements.txt
+```
+
+
 ## SymPy Quadratic Solver
 
 Solve quadratic equations of the form `a*x**2 + b*x + c = 0`.
