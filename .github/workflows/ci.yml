@@ -48,14 +48,10 @@ jobs:
           python -m compileall -q src/gateway || true
           python -m compileall -q src/orchestrator || true
 
-      - name: Run tests if present (non-fatal)
+      - name: Run tests
         run: |
-          if [ -f pytest.ini ] || [ -f pyproject.toml ] || [ -d tests ]; then
-            pip install pytest
-            pytest -q
-          else
-            echo "No tests configured — skipping"
-          fi
+          pip install pytest
+          pytest -q
 
       - name: Calculate Shadow/Canary Delta
         run: |
