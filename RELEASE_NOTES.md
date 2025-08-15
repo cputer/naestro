@@ -12,3 +12,10 @@
 - CI/CD pipeline now supports shadow testing and canary promotion logic.
 - Hybrid RAG pipeline with BM25 + cosine search and feedback reranker.
 
+- Updated gateway and orchestrator dependencies (FastAPI, redis, httpx, uvicorn, prometheus-client, python-dotenv) to their latest stable versions.
+- Added explicit pins for sympy==1.14.0 and scipy==1.16.1 and generated requirements.lock files with `pip-compile`.
+  To refresh locks after future upgrades, rerun:
+  - `pip-compile requirements.txt -o requirements.lock`
+  - `pip-compile src/gateway/requirements.txt -o src/gateway/requirements.lock`
+  - `pip-compile src/orchestrator/requirements.txt -o src/orchestrator/requirements.lock`
+
