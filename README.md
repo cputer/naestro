@@ -21,7 +21,7 @@ secure sandboxing, and multi-model routing (NIM / vLLM / SLM).
 - **PII Calibration** — Shannon entropy thresholds with a 550-item dataset.
 - **Observability First** — OTEL traces, Prometheus metrics, Grafana dashboards (see `config/grafana/dashboards/naestro-dashboard.json`).
 - **CI/CD** — GitHub Actions with healthchecks and hooks for shadow/canary logic.
-- **Interactive Web UI** — Monaco-powered React dashboard for inspecting workflows, editing prompts, and monitoring runs.
+- **Interactive Web UI** — Vite-powered React dashboard with Monaco editor for inspecting workflows, editing prompts, and monitoring runs.
 - **SymPy & SciPy Demos** — example scripts for quadratic solving and sine integration.
 
 See [docs/USER_MANUAL.md](docs/USER_MANUAL.md) for a complete manual.
