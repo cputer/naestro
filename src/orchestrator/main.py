@@ -7,6 +7,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 from .orchestrator import app as workflow_app
+from .math_agent import app as math_app
 
 
 app = FastAPI(title="NAESTRO Orchestrator")
@@ -64,4 +65,21 @@ def run(task: TaskRequest) -> RunResponse:
     except HTTPException:
         raise
     except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+class MathRequest(BaseModel):
+    """Payload for math queries."""
+
+    query: str
+
+
+@app.post("/math", response_model=RunResponse)
+def math(task: MathRequest) -> RunResponse:
+    """Execute the math agent and return the result."""
+
+    try:
+        result = math_app.invoke({"query": task.query})
+        return RunResponse(result=result)
+    except Exception as exc:  # pragma: no cover - defensive
         raise HTTPException(status_code=500, detail=str(exc))

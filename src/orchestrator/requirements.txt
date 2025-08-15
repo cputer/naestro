@@ -5,3 +5,6 @@ redis==5.0.8
 nltk==3.8.1
 flake8==7.0.0
 black==24.4.2
+sympy
+scipy
+langgraph
