@@ -46,7 +46,13 @@ services:
   slm:
     image: nvcr.io/nim/llama3-8b:1.0
     profiles: ["inference"]
-    command: ["--api","openai","--decoder-only","true","--dtype","fp8","--max-input-len","8192"]
+    command: ["--api","openai","--decoder-only","true","--dtype","fp8","--max-input-len","8192","--max-requests","96"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: ["gpu"]
+              device_ids: ["7"]
 
   postgres:
     image: postgres:16

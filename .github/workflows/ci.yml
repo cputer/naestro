@@ -56,3 +56,18 @@ jobs:
           else
             echo "No tests configured — skipping"
           fi
+
+      - name: Calculate Shadow/Canary Delta
+        run: |
+          # Example values; replace with real metric collection logic
+          PASS_DELTA=0.02
+          COST_DELTA=0.01
+          LATENCY_DELTA=0.03
+          WEIGHTED=$(echo "0.4*$PASS_DELTA + 0.4*$COST_DELTA + 0.2*$LATENCY_DELTA" | bc -l)
+          echo "Weighted delta: $WEIGHTED"
+          if (( $(echo "$WEIGHTED > -0.0001" | bc -l) )); then
+            echo "Promotion criteria met (weighted delta >= -0.0001)"
+          else
+            echo "Promotion criteria not met (weighted delta < -0.0001)"
+            exit 1
+          fi
