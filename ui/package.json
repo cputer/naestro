@@ -3,16 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@monaco-editor/react": "^4.7.0",
+    "@mui/icons-material": "^5.14.7",
+    "@mui/material": "^5.14.7",
+    "monaco-editor": "^0.33.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "monaco-editor": "^0.33.0",
     "recharts": "^2.3.2",
-    "socket.io-client": "^4.6.1",
-    "@mui/material": "^5.14.7",
-    "@mui/icons-material": "^5.14.7",
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0"
+    "socket.io-client": "^4.6.1"
   },
   "scripts": {
     "start": "react-scripts start",
