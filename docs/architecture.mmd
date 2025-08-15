@@ -1,22 +1,2 @@
-%% NAESTRO System Architecture (Mermaid)
-flowchart LR
-  Client[Client Apps]
-  GW[API Gateway]
-  LG[Workflow Engine (LangGraph)]
-  RAG[(Postgres + pgvector)]
-  Router[Multi-Model Router]
-  Sandbox[Secure Sandbox]
-  Telemetry[(OTEL / Prometheus / Grafana)]
-
-  Client <--> GW
-  GW <--> LG
-  LG --> RAG
-  LG --> Router
-  Router --> Sandbox
-  GW --> Telemetry
-  LG --> Telemetry
-  Sandbox --> Telemetry
-
-%% Notes:
-%% - Router abstracts NIM / vLLM / SLM
-%% - Sandbox is network-isolated with seccomp
+graph TD
+  A[User] --> B[NAESTRO]
