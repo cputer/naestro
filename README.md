@@ -21,6 +21,7 @@ secure sandboxing, and multi-model routing (NIM / vLLM / SLM).
 - **PII Calibration** — Shannon entropy thresholds with a 550-item dataset.
 - **Observability First** — OTEL traces, Prometheus metrics, Grafana dashboards (see `config/grafana/dashboards/naestro-dashboard.json`).
 - **CI/CD** — GitHub Actions with healthchecks and hooks for shadow/canary logic.
+- **Interactive Web UI** — React-based dashboard for inspecting workflows and monitoring runs.
 
 ## 📦 Quick Start (Docker)
 ```bash
