@@ -7,10 +7,6 @@ import tempfile
 
 import nltk
 
-nltk.download("punkt", quiet=True)
-nltk.download("averaged_perceptron_tagger", quiet=True)
-
-
 def _build_plan(text: str) -> str:
     """Create a simple bullet-point plan using sentence tokenization."""
     sentences = nltk.sent_tokenize(text) if text else []

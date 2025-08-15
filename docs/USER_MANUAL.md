@@ -9,7 +9,17 @@
    ```bash
    cp .env.example .env
    ```
-3. Launch core services with Docker:
+3. Install required NLTK corpora:
+   ```bash
+   python -m nltk.downloader punkt averaged_perceptron_tagger
+   ```
+   **Offline installation:**
+   ```bash
+   python -m nltk.downloader --download-dir ./nltk_data punkt averaged_perceptron_tagger
+   # transfer ./nltk_data to the target machine and set NLTK_DATA
+   ```
+   Then copy `nltk_data` to the offline host and set the `NLTK_DATA` environment variable to its path.
+4. Launch core services with Docker:
    ```bash
    docker compose up -d --profile core
    ```
