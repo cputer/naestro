@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Grid, Paper, Typography } from '@mui/material';
-import DiffViewer from './components/DiffViewer';
+import CodeEditor from './components/CodeEditor';
 import MetricsChart from './components/MetricsChart';
 import ServiceStatus from './components/ServiceStatus';
 
@@ -16,7 +16,7 @@ function App() {
             <Typography variant="h6" gutterBottom>
               Code Diff
             </Typography>
-            <DiffViewer
+            <CodeEditor
               original={"function add(a, b) { return a + b; }"}
               modified={"function add(a, b) { return a - b; }"}
             />
