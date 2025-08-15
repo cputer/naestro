@@ -175,3 +175,22 @@ def test_update_feedback(rag):
     result = rag.update_feedback(1, 0.2)
     assert result == {"success": True, "updated": 1}
     assert rag.pool.conn.committed
+
+def test_insert_embedding_connection_failure(rag, monkeypatch):
+    def raise_conn():
+        raise RuntimeError("no connection")
+
+    monkeypatch.setattr(rag, "_get_conn", raise_conn)
+    with pytest.raises(RuntimeError):
+        rag.insert_embedding("text", [0.1])
+
+
+def test_hybrid_search_invalid_input(rag, monkeypatch):
+    monkeypatch.setattr(rag, "_get_conn", lambda: object())
+
+    def bad_embed(text):
+        raise ValueError("invalid text")
+
+    monkeypatch.setattr(rag, "embed_text", bad_embed)
+    with pytest.raises(ValueError):
+        rag.hybrid_search(None)

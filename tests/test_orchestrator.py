@@ -40,3 +40,16 @@ def test_run_unknown_policy(orch_module):
     client = TestClient(app)
     resp = client.post("/run", json={"input": "x", "model": "unknown"})
     assert resp.status_code == 400
+
+def test_run_missing_input(orch_module):
+    app = orch_module.app
+    client = TestClient(app)
+    resp = client.post("/run", json={"model": "slm"})
+    assert resp.status_code == 422
+
+
+def test_unknown_route(orch_module):
+    app = orch_module.app
+    client = TestClient(app)
+    resp = client.get("/doesnotexist")
+    assert resp.status_code == 404
