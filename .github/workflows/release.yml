@@ -8,10 +8,14 @@ on:
 permissions:
   contents: write
   packages: write
+  id-token: write
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
+    outputs:
+      hashes: ${{ steps.hash.outputs.hashes }}
+      notes: ${{ steps.changelog.outputs.notes }}
     steps:
       - uses: actions/checkout@v4
 
@@ -27,6 +31,12 @@ jobs:
 
       - name: Package UI dist
         run: tar -czf ui-dist-${{ github.ref_name }}.tar.gz -C ui dist
+
+      - name: Generate SBOM
+        uses: anchore/syft-action@v3
+        with:
+          output: sbom-${{ github.ref_name }}.spdx.json
+          format: spdx-json
 
       - name: Log in to ghcr.io
         uses: docker/login-action@v3
@@ -63,10 +73,63 @@ jobs:
           cat RELEASE_NOTES.md >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+      - name: Compute artifact hashes
+        id: hash
+        run: echo "hashes=$(sha256sum ui-dist-${{ github.ref_name }}.tar.gz sbom-${{ github.ref_name }}.spdx.json | base64 -w0)" >> $GITHUB_OUTPUT
+
+      - name: Upload UI dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-dist-${{ github.ref_name }}.tar.gz
+          path: ui-dist-${{ github.ref_name }}.tar.gz
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ github.ref_name }}.spdx.json
+          path: sbom-${{ github.ref_name }}.spdx.json
+
+  provenance:
+    needs: build
+    permissions:
+      actions: read
+      id-token: write
+      contents: write
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.1.0
+    with:
+      base64-subjects: "${{ needs.build.outputs.hashes }}"
+      provenance-name: provenance-${{ github.ref_name }}.intoto.jsonl
+
+  release:
+    needs: [build, provenance]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download UI dist
+        uses: actions/download-artifact@v4
+        with:
+          name: ui-dist-${{ github.ref_name }}.tar.gz
+          path: .
+
+      - name: Download SBOM
+        uses: actions/download-artifact@v4
+        with:
+          name: sbom-${{ github.ref_name }}.spdx.json
+          path: .
+
+      - name: Download provenance
+        uses: actions/download-artifact@v4
+        with:
+          name: provenance-${{ github.ref_name }}.intoto.jsonl
+          path: .
+
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref_name }}
           name: ${{ github.ref_name }}
-          body: ${{ steps.changelog.outputs.notes }}
-          files: ui-dist-${{ github.ref_name }}.tar.gz
+          body: ${{ needs.build.outputs.notes }}
+          files: |
+            ui-dist-${{ github.ref_name }}.tar.gz
+            sbom-${{ github.ref_name }}.spdx.json
+            provenance-${{ github.ref_name }}.intoto.jsonl
+
