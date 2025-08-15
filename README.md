@@ -91,3 +91,14 @@ See **SECURITY.md**. Sandbox is network-isolated with a strict seccomp profile.
 pip install pre-commit
 pre-commit install
 ```
+
+## 🤝 Contributing
+Contributions are welcome! Please open an issue or pull request for any improvements or bug fixes.
+Run formatting and lint checks before submitting:
+```bash
+pre-commit run --files <file>...
+```
+If your change touches code, execute the test suite:
+```bash
+pytest
+```
