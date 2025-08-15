@@ -1,5 +1,5 @@
 # Stage 1: build
-FROM node:22-alpine AS build
+FROM node:22.12-alpine AS build
 
 WORKDIR /app
 
@@ -12,11 +12,11 @@ COPY . .
 RUN npm run build
 
 # Stage 2: production with Nginx
-FROM nginx:alpine
+FROM nginx:1.27-alpine
 
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expose default port
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
