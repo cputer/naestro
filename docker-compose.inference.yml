@@ -2,3 +2,12 @@ version: '3.8'
 services:
   vllm:
     image: vllm/vllm:latest
+  slm:
+    image: ghcr.io/.../slm:${TAG}
+    profiles: ["inference"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: ["gpu"]
+              device_ids: ["7"]
