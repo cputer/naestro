@@ -41,3 +41,14 @@ def test_orchestrate(monkeypatch):
     resp = client.post("/orchestrate", json={"task": "demo"})
     assert resp.status_code == 200
     assert resp.json() == response_payload
+
+def test_orchestrate_missing_body():
+    client = TestClient(app)
+    resp = client.post("/orchestrate")
+    assert resp.status_code == 422
+
+
+def test_unknown_route():
+    client = TestClient(app)
+    resp = client.get("/doesnotexist")
+    assert resp.status_code == 404
