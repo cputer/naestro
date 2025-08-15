@@ -18,7 +18,8 @@ secure sandboxing, and multi-model routing (NIM / vLLM / SLM).
 - **Multi-Model Routing** — cost/latency-aware routes across NIM, vLLM, and a small model tier.
 - **RAG on Postgres + pgvector** — BM25 + cosine + feedback reranker.
 - **Secure Sandbox** — Docker-executed verification with seccomp + no-network.
-- **Observability First** — OTEL traces, Prometheus metrics, Grafana dashboards.
+- **PII Calibration** — Shannon entropy thresholds with a 550-item dataset.
+- **Observability First** — OTEL traces, Prometheus metrics, Grafana dashboards (see `config/grafana/dashboards/naestro-dashboard.json`).
 - **CI/CD** — GitHub Actions with healthchecks and hooks for shadow/canary logic.
 
 ## 📦 Quick Start (Docker)
@@ -78,6 +79,7 @@ src/orchestrator/          # Orchestrator service (workflow scaffold)
 sql/schema.sql             # pgvector schema + indexes
 etc/docker/sandbox/        # sandbox Dockerfile + seccomp
 config/                    # prometheus + otel examples
+config/grafana/            # Grafana dashboards
 scripts/                   # DGX pinning, governor
 jobs/                      # PII calibration
 .github/workflows/         # CI
