@@ -9,7 +9,9 @@
 **Production-grade LLM orchestrator** with LangGraph-style workflow execution, pgvector-backed RAG,
 secure sandboxing, and multi-model routing (NIM / vLLM / SLM).
 
+Naestro is an AI Orchestrator for multi-model collaboration.
 
+📖 Read the full [Whitepaper](./WHITEPAPER.md)
 
 ---
 
