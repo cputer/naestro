@@ -93,6 +93,7 @@ To point the gateway at a local orchestrator instead of the Compose service:
 ```bash
 export ORCH_URL=http://localhost:8081
 ```
+Graph Memory with Graphiti → see GRAPHITI.md for full overview and setup.
 
 ## 🗂 Structure
 ```
