@@ -1,26 +1,13 @@
 {
-  "include-v-in-tag": true,
-  "tag-separator": "/",
+  "bootstrap-sha": "",
+  "include-component-in-tag": true,
   "packages": {
-    ".": {
-      "release-type": "node",
-      "bump-minor-pre-major": true,
-      "bump-patch-for-minor-pre-major": true
-    },
-    "server": {
-      "release-type": "node",
-      "path": "server",
-      "changelog-path": "server/CHANGELOG.md",
-      "bump-minor-pre-major": true,
-      "bump-patch-for-minor-pre-major": true
-    },
     "ui": {
-      "release-type": "node",
       "path": "ui",
+      "release-type": "node",
+      "package-name": "naestro-ui",
       "changelog-path": "ui/CHANGELOG.md",
-      "bump-minor-pre-major": true,
-      "bump-patch-for-minor-pre-major": true
+      "versioning": "default"
     }
   }
 }
-

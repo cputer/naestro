@@ -1,17 +1,25 @@
-name: Release Please
+name: release-please
+
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - name: Run Release Please (monorepo)
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Release Please (manifest mode)
         uses: googleapis/release-please-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-
