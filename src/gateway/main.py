@@ -10,6 +10,7 @@ from typing import List
 import httpx
 from fastapi import FastAPI, WebSocket
 from fastapi.responses import JSONResponse, StreamingResponse
+from starlette.websockets import WebSocketDisconnect
 from pydantic import BaseModel
 
 app = FastAPI(title="NAESTRO Gateway")
@@ -122,7 +123,11 @@ async def websocket_endpoint(websocket: WebSocket):
             event = _telemetry_event()
             await websocket.send_json(event.model_dump())
             await asyncio.sleep(20)
-    except Exception:  # pragma: no cover - connection dropped
+    except WebSocketDisconnect:  # pragma: no cover - connection dropped
+        pass
+    except Exception:  # pragma: no cover - unexpected error
+        logger.exception("WebSocket error")
+    finally:
         await websocket.close()
 
 
@@ -131,10 +136,13 @@ async def sse_endpoint():
     """Server‑Sent Events fallback emitting telemetry every 20 seconds."""
 
     async def event_generator():
-        while True:
-            event = _telemetry_event()
-            yield f"data: {event.model_dump_json()}\n\n"
-            await asyncio.sleep(20)
+        try:
+            while True:
+                event = _telemetry_event()
+                yield f"data: {event.model_dump_json()}\n\n"
+                await asyncio.sleep(20)
+        except asyncio.CancelledError:  # pragma: no cover - client disconnected
+            logger.debug("SSE client disconnected")
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
