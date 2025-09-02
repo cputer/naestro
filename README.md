@@ -25,6 +25,9 @@ Naestro is an AI Orchestrator for multi-model collaboration.
 - **VS Code add-on (Qoder-style) spec** → [docs/VS_CODE_EXTENSION.md](docs/VS_CODE_EXTENSION.md)
 - **No-Replit deployment (Caddy + Cloudflare Tunnel)** → [docs/NO_REPLIT_DEPLOY.md](docs/NO_REPLIT_DEPLOY.md)
 
+### Scale-out from single node
+Naestro runs great on a single DGX Spark desktop. When you’re ready to expand across multiple desktops (“cells”), see **[DEPLOY_MULTI_NODE.md](docs/DEPLOY_MULTI_NODE.md)**. Cells register with the router; the scheduler places steps by VRAM headroom, temperature, and queue pressure—local-first with cloud spillover only when needed.
+
 ### Naestro Studio (local UI)
 First-party dashboard (React + Vite + Tailwind + shadcn/ui) served by Naestro Core on the DGX.  \
 Real-time Live Runs, model metrics, GPU health, KV cache hit-rate, cloud spillover %, and incidents.  \
