@@ -117,6 +117,9 @@ docker-compose.yml
 ARCHITECTURE.md
 ```
 
+## 🔬 Example Scripts
+Sample SymPy and SciPy demonstrations live in `src/examples/`. See [docs/examples.md](docs/examples.md) for setup instructions and troubleshooting tips.
+
 ## 📄 Architecture
 See **ARCHITECTURE.md** and **docs/architecture.mmd** (Mermaid).
 

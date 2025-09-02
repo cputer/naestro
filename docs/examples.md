@@ -2,7 +2,8 @@
 
 This repository includes small demonstrations of third-party libraries.
 
-Install dependencies with pinned versions:
+## Setup
+Install dependencies with pinned versions and run examples from the repository root:
 
 ```bash
 pip install -r requirements.lock
@@ -24,3 +25,7 @@ Integrate `sin(x)` from `a` to `b` (defaults 0 to π):
 ```bash
 python -m src.examples.scipy_demo
 ```
+
+## Troubleshooting
+- Run examples with `python -m` to ensure module imports resolve correctly.
+- If `ModuleNotFoundError` occurs, reinstall the pinned requirements.
