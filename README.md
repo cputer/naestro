@@ -1,6 +1,6 @@
 # NAESTRO — Orchestrator Platform
 
-[![CI](https://github.com/cputer/naestro/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/cputer/naestro/actions/workflows/ci.yml) [![Coverage](https://codecov.io/gh/cputer/naestro/branch/main/graph/badge.svg)](https://codecov.io/gh/cputer/naestro) [![Release Please](https://github.com/cputer/naestro/actions/workflows/release-please.yml/badge.svg)](https://github.com/cputer/naestro/actions/workflows/release-please.yml)
+[![CI](https://github.com/cputer/naestro/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/cputer/naestro/actions/workflows/ci.yml) [![Release Please](https://github.com/cputer/naestro/actions/workflows/release-please.yml/badge.svg)](https://github.com/cputer/naestro/actions/workflows/release-please.yml) [![Coverage](https://codecov.io/gh/cputer/naestro/branch/main/graph/badge.svg)](https://codecov.io/gh/cputer/naestro)
 
 <p align="center">
   <img src="docs/naestro-logo.svg" alt="NAESTRO Logo" width="300"/>
