@@ -1,2 +1,2 @@
-import config from './ui/eslint.config.js';
+import config from './ui/eslint.config.mjs';
 export default config;
