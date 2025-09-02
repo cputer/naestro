@@ -21,6 +21,7 @@ Naestro is an AI Orchestrator for multi-model collaboration.
 - **Graph Memory (Graphiti) guide** → [docs/GRAPHITI.md](docs/GRAPHITI.md)
 - **Studio ↔ Core API contract (REST/WS/SSE, auth)** → [docs/UI_API_CONTRACT.md](docs/UI_API_CONTRACT.md)
 - **Single-node DGX Spark deployment** → [docs/DEPLOY_SINGLE_NODE.md](docs/DEPLOY_SINGLE_NODE.md)
+- **Multi-node DGX Spark deployment** → [docs/DEPLOY_MULTI_NODE.md](docs/DEPLOY_MULTI_NODE.md)
 - **VS Code add-on (Qoder-style) spec** → [docs/VS_CODE_EXTENSION.md](docs/VS_CODE_EXTENSION.md)
 - **No-Replit deployment (Caddy + Cloudflare Tunnel)** → [docs/NO_REPLIT_DEPLOY.md](docs/NO_REPLIT_DEPLOY.md)
 
