@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.{js,jsx}\"",
     "test:ui": "vitest --environment jsdom --run",
+    "test:ci": "vitest --environment jsdom --run",
     "test": "vitest --environment jsdom --run"
   },
   "dependencies": {
