@@ -19,6 +19,9 @@ export default [
       import: importPlugin,
       "@typescript-eslint": tsPlugin,
     },
+    settings: {
+      react: { version: "detect" }
+    },
     rules: {
       ...reactPlugin.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,

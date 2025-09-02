@@ -26,7 +26,7 @@ const CodeEditor = ({ original, modified, language = 'javascript', height }) => 
 };
 
 CodeEditor.propTypes = {
-  language: PropTypes.string.isRequired,
+  language: PropTypes.string,
   original: PropTypes.string,
   modified: PropTypes.string,
   height: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
