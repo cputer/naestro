@@ -4,6 +4,7 @@ import time
 
 import httpx
 from fastapi import FastAPI, WebSocket
+from starlette.websockets import WebSocketDisconnect
 from fastapi.responses import JSONResponse, StreamingResponse
 
 app = FastAPI(title="NAESTRO Gateway")
@@ -38,7 +39,9 @@ async def websocket_endpoint(websocket: WebSocket):
             # TODO: replace heartbeat with real telemetry events
             await websocket.send_json({"heartbeat": time.time()})
             await asyncio.sleep(20)
-    except Exception:  # pragma: no cover - connection dropped
+    except WebSocketDisconnect:  # pragma: no cover - client disconnected
+        pass
+    finally:
         await websocket.close()
 
 
@@ -47,10 +50,13 @@ async def sse_endpoint():
     """Server‑Sent Events fallback emitting heartbeats every 20 seconds."""
 
     async def event_generator():
-        while True:
-            # TODO: replace heartbeat with real telemetry events
-            yield f'data: {{"heartbeat": {time.time()}}}\n\n'
-            await asyncio.sleep(20)
+        try:
+            while True:
+                # TODO: replace heartbeat with real telemetry events
+                yield f'data: {{"heartbeat": {time.time()}}}\n\n'
+                await asyncio.sleep(20)
+        except asyncio.CancelledError:  # pragma: no cover - client disconnected
+            return
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
