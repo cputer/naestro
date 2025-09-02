@@ -1,15 +1,83 @@
-# Example provider configuration loaded by the orchestrator.
-# See docs/INTEGRATIONS.md for details.
-providers:
-  openai:
-    api_key: ${OPENAI_API_KEY}
-    base_url: https://api.openai.com/v1
-  anthropic:
-    api_key: ${ANTHROPIC_API_KEY}
-    base_url: https://api.anthropic.com
-  mistral:
-    api_key: ${MISTRAL_API_KEY}
-    base_url: https://api.mistral.ai/v1
-  gemini:
-    api_key: ${GEMINI_API_KEY}
-    base_url: https://generativelanguage.googleapis.com/v1
+# Naestro providers: single-node DGX Spark (local-first) + cloud spillover
+
+inference:
+  local:
+    - id: llama70b_judge
+      runtime: tensorrt_llm
+      model: llama-3.1-70b-instruct-fp8
+      endpoint: http://127.0.0.1:8001
+      max_batch: 4
+      kv_cache: fp8
+      roles: [judge, proposer]
+
+    - id: deepseek32b
+      runtime: vllm
+      model: deepseek-v3.2-32b-instruct
+      endpoint: http://127.0.0.1:8002
+      max_batch: 8
+      roles: [proposer, synthesizer]
+
+    - id: qwen32b_awq
+      runtime: vllm
+      model: qwen-3-32b-instruct-awq
+      endpoint: http://127.0.0.1:8003
+      max_batch: 12
+      roles: [critic, code]
+
+  cloud:
+    - id: openai_gpt4x
+      provider: openai
+      model: gpt-4.1
+      auth_env: OPENAI_API_KEY
+      roles: [overflow, long_context]
+
+    - id: anthropic_claude37
+      provider: anthropic
+      model: claude-3-7-opus
+      auth_env: ANTHROPIC_API_KEY
+      roles: [judge, safety_backup]
+
+    - id: google_gemini25
+      provider: google
+      model: gemini-2.5-pro
+      auth_env: GOOGLE_API_KEY
+      roles: [long_context]
+
+routing:
+  policy: local_first_with_cloud_spill
+  defaults:
+    judge: llama70b_judge
+    proposer: deepseek32b
+    critic: qwen32b_awq
+    synthesizer: deepseek32b
+  fallbacks:
+    judge: [anthropic_claude37, openai_gpt4x]
+    proposer: [openai_gpt4x]
+    critic: [openai_gpt4x]
+    synthesizer: [google_gemini25]
+  limits:
+    max_concurrency: 8
+    max_tokens_per_run: 120000
+    long_context_threshold: 200000
+
+retrieval:
+  vector_store:
+    kind: qdrant
+    url: http://127.0.0.1:6333
+    collection: naestro_docs
+  embeddings:
+    local: bge-large
+    cloud_fallback: text-embedding-3-large
+
+planner:
+  engine: langgraph   # or dspy / none
+  timeout_ms: 60000
+
+evaluation:
+  rag: ragas
+  general: deepeval
+
+safety:
+  primary: nemo_guardrails
+  pii_filters: [email, phone, credit_card]
+
