@@ -12,6 +12,10 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: { ecmaVersion: 2022, sourceType: "module" },
+      globals: {
+        document: "readonly",
+        window: "readonly",
+      },
     },
     plugins: {
       react: reactPlugin,
@@ -26,6 +30,7 @@ export default [
       ...reactPlugin.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
       "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off",
     },
   },
 ];

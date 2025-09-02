@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import CodeEditor from '../CodeEditor.jsx';
 
 vi.mock('@monaco-editor/react', () => ({
@@ -10,7 +10,7 @@ vi.mock('@monaco-editor/react', () => ({
 
 describe('CodeEditor', () => {
   it('renders with defaults', () => {
-    const { getByText } = render(<CodeEditor language="plaintext" />);
-    expect(getByText('mock editor')).toBeTruthy();
+    render(<CodeEditor language="plaintext" />);
+    expect(screen.getByText('mock editor')).toBeTruthy();
   });
 });
