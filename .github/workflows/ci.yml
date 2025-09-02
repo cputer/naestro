@@ -32,8 +32,22 @@ jobs:
       - name: Typecheck
         run: npm run typecheck || true
 
+      - name: Restore Vite cache
+        id: vite-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ui/node_modules/.vite
+          key: ${{ runner.os }}-vite-${{ hashFiles('ui/package-lock.json') }}
+
       - name: Build
         run: npm run build
+
+      - name: Save Vite cache
+        if: success() && steps.vite-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ui/node_modules/.vite
+          key: ${{ runner.os }}-vite-${{ hashFiles('ui/package-lock.json') }}
 
       - name: Test with coverage
         env:
