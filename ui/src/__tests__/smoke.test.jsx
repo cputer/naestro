@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 
 describe('ui smoke', () => {
-  it('runs vitest in jsdom', () => {
+  it('jsdom present', () => {
     expect(typeof document).toBe('object');
   });
 });
