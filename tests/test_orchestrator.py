@@ -1,15 +1,18 @@
 import importlib
 import sys
 import types
-from fastapi.testclient import TestClient
+
 import pytest
+from fastapi.testclient import TestClient
 
 
 @pytest.fixture
 def orch_module(monkeypatch):
     dummy_workflow = types.SimpleNamespace(invoke=lambda state: state)
     dummy_orchestrator = types.SimpleNamespace(app=dummy_workflow)
-    monkeypatch.setitem(sys.modules, "src.orchestrator.orchestrator", dummy_orchestrator)
+    monkeypatch.setitem(
+        sys.modules, "src.orchestrator.orchestrator", dummy_orchestrator
+    )
     module = importlib.reload(importlib.import_module("src.orchestrator.main"))
     return module
 
@@ -41,6 +44,7 @@ def test_run_unknown_policy(orch_module):
     resp = client.post("/run", json={"input": "x", "model": "unknown"})
     assert resp.status_code == 400
 
+
 def test_run_missing_input(orch_module):
     app = orch_module.app
     client = TestClient(app)
@@ -53,3 +57,57 @@ def test_unknown_route(orch_module):
     client = TestClient(app)
     resp = client.get("/doesnotexist")
     assert resp.status_code == 404
+
+
+def test_build_plan_missing_corpus(monkeypatch):
+    class DummyGraph:
+        def add_node(self, *a, **k):
+            return None
+
+        def add_edge(self, *a, **k):
+            return None
+
+        def add_conditional_edge(self, *a, **k):
+            return None
+
+        def compile(self):
+            return None
+
+    monkeypatch.setitem(
+        sys.modules, "langgraph", types.SimpleNamespace(Graph=DummyGraph)
+    )
+    orch = importlib.reload(importlib.import_module("src.orchestrator.orchestrator"))
+
+    def raise_lookup():
+        raise LookupError("missing")
+
+    monkeypatch.setattr(orch, "ensure_nltk_data", raise_lookup)
+    with pytest.raises(RuntimeError, match="NLTK"):
+        orch._build_plan("hello world")
+
+
+def test_human_review_missing_corpus(monkeypatch):
+    class DummyGraph:
+        def add_node(self, *a, **k):
+            return None
+
+        def add_edge(self, *a, **k):
+            return None
+
+        def add_conditional_edge(self, *a, **k):
+            return None
+
+        def compile(self):
+            return None
+
+    monkeypatch.setitem(
+        sys.modules, "langgraph", types.SimpleNamespace(Graph=DummyGraph)
+    )
+    orch = importlib.reload(importlib.import_module("src.orchestrator.orchestrator"))
+
+    def raise_lookup():
+        raise LookupError("missing")
+
+    monkeypatch.setattr(orch, "ensure_nltk_data", raise_lookup)
+    with pytest.raises(RuntimeError, match="NLTK"):
+        orch.human_review_fn({"plan": "do thing"})

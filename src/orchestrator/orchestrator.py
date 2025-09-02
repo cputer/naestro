@@ -1,4 +1,3 @@
-from langgraph import Graph
 import collections
 import math
 import os
@@ -6,10 +5,55 @@ import subprocess
 import tempfile
 
 import nltk
+from langgraph import Graph
+
+_NLTK_READY = False
+
+
+def ensure_nltk_data() -> None:
+    """Ensure required NLTK corpora are available."""
+
+    global _NLTK_READY
+    if _NLTK_READY:
+        return
+
+    packages = {
+        "punkt": "tokenizers/punkt",
+        "averaged_perceptron_tagger": "taggers/averaged_perceptron_tagger",
+    }
+    missing = []
+    for pkg, path in packages.items():
+        try:
+            nltk.data.find(path)
+        except LookupError:
+            missing.append(pkg)
+
+    if missing:
+        for pkg in missing:
+            nltk.download(pkg, quiet=True)
+
+        unresolved = []
+        for pkg, path in packages.items():
+            try:
+                nltk.data.find(path)
+            except LookupError:
+                unresolved.append(pkg)
+
+        if unresolved:
+            raise LookupError("Missing NLTK corpora: " + ", ".join(sorted(unresolved)))
+
+    _NLTK_READY = True
+
 
 def _build_plan(text: str) -> str:
     """Create a simple bullet-point plan using sentence tokenization."""
-    sentences = nltk.sent_tokenize(text) if text else []
+    try:
+        ensure_nltk_data()
+        sentences = nltk.sent_tokenize(text) if text else []
+    except LookupError as exc:
+        raise RuntimeError(
+            "Required NLTK corpora not available; install 'punkt' and 'averaged_perceptron_tagger'."
+        ) from exc
     return "\n".join(f"- {s.strip()}" for s in sentences)
 
 
@@ -24,18 +68,12 @@ def planner_fn(state):
 def implement_fn(state):
     """Generate pseudocode from the plan using tokenization."""
     plan = state.get("plan", "")
-    steps = [
-        line[2:].strip()
-        for line in plan.splitlines()
-        if line.startswith("- ")
-    ]
+    steps = [line[2:].strip() for line in plan.splitlines() if line.startswith("- ")]
     code_lines = []
     for idx, step in enumerate(steps, 1):
         tokens = [t for t in nltk.word_tokenize(step) if t.isidentifier()]
         func_name = "_".join(tokens[:2]) or f"step_{idx}"
-        code_lines.append(
-            f"def {func_name}():\n    \"\"\"{step}\"\"\"\n    pass\n"
-        )
+        code_lines.append(f'def {func_name}():\n    """{step}"""\n    pass\n')
     code = "\n".join(code_lines)
     return {"code": code}
 
@@ -99,8 +137,14 @@ def refine_fn(state):
 def human_review_fn(state):
     """Approve plans containing at least one verb."""
     plan = state.get("plan", "")
-    tokens = nltk.word_tokenize(plan) if plan else []
-    tags = nltk.pos_tag(tokens) if tokens else []
+    try:
+        ensure_nltk_data()
+        tokens = nltk.word_tokenize(plan) if plan else []
+        tags = nltk.pos_tag(tokens) if tokens else []
+    except LookupError as exc:
+        raise RuntimeError(
+            "Required NLTK corpora not available; install 'punkt' and 'averaged_perceptron_tagger'."
+        ) from exc
     approved = any(tag.startswith("VB") for _, tag in tags)
     return {"approved": approved}
 
