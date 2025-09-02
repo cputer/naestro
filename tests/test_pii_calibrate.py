@@ -6,8 +6,6 @@ import string
 from collections import Counter
 from pathlib import Path
 
-import pytest
-
 
 def test_entropy_thresholds_and_flags(monkeypatch):
     # Prepare sample dataset with high and low entropy texts
@@ -27,15 +25,20 @@ def test_entropy_thresholds_and_flags(monkeypatch):
 
     monkeypatch.setattr(builtins, "open", fake_open)
     module = importlib.reload(importlib.import_module("jobs.pii_calibrate"))
+    module.main()
 
-    assert module.calculate_shannon_entropy(high_entropy_text) > module.thresholds["high"]
+    assert (
+        module.calculate_shannon_entropy(high_entropy_text) > module.thresholds["high"]
+    )
     assert module.calculate_shannon_entropy(low_entropy_text) < module.thresholds["low"]
     assert module.data[0]["flag"] == "high"
     assert module.data[1]["flag"] == "low"
 
 
 def test_label_distribution():
-    dataset_path = Path(__file__).resolve().parent.parent / "jobs" / "pii_calib_set.json"
+    dataset_path = (
+        Path(__file__).resolve().parent.parent / "jobs" / "pii_calib_set.json"
+    )
     with dataset_path.open() as f:
         data = json.load(f)
     counts = Counter(item["label"] for item in data)
