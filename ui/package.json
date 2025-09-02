@@ -53,5 +53,11 @@
     "typescript": "^5.5.4",
     "vite": "^7.0.2",
     "vitest": "^2.1.9"
+  },
+  "vitest": {
+    "setupFiles": [
+      "./vitest.setup.js"
+    ],
+    "environment": "jsdom"
   }
 }
