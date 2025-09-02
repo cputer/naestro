@@ -1,5 +1,7 @@
 # Integrations Runbook
 
+[← Back to README](../README.md)
+
 ## TL;DR
 | Integration | Purpose | Configuration |
 |-------------|---------|---------------|
@@ -26,3 +28,7 @@ This runbook outlines how Naestro connects to optional components and developer 
 | Missing API key | Ensure secret is set in environment or `.env` file |
 | Extension not loading | Restart VS Code and check logs |
 | API mismatch | Compare request/response with contract table |
+
+---
+
+See also: [INTEGRATIONS](INTEGRATIONS.md) · [GRAPHITI](GRAPHITI.md) · [UI_API_CONTRACT](UI_API_CONTRACT.md) · [DEPLOY_SINGLE_NODE](DEPLOY_SINGLE_NODE.md)

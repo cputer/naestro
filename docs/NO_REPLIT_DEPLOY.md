@@ -1,5 +1,7 @@
 # No Replit Deploy
 
+[← Back to README](../README.md)
+
 ## TL;DR
 | Step | Command | Notes |
 |------|---------|-------|
@@ -24,3 +26,7 @@ Access `http://localhost:8000/health` to confirm the service is running.
 |-------|-----------|
 | Missing Python headers | Install `python3-dev` on the host |
 | Port already in use | Adjust `PORT` environment variable |
+
+---
+
+See also: [INTEGRATIONS](INTEGRATIONS.md) · [GRAPHITI](GRAPHITI.md) · [UI_API_CONTRACT](UI_API_CONTRACT.md) · [DEPLOY_SINGLE_NODE](DEPLOY_SINGLE_NODE.md)

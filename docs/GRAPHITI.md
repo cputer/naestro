@@ -1,5 +1,7 @@
 # Graphiti Runbook
 
+[← Back to README](../README.md)
+
 ## TL;DR
 | Step | Command | Notes |
 |------|---------|-------|
@@ -26,3 +28,7 @@ Start Naestro and ensure episodes are recorded and retrieved through the Graphit
 | Connection refused | Check that Graphiti is listening on the expected port |
 | Missing episodes | Confirm the client is calling `recordEpisode` and `context.assemble` |
 | Slow queries | Tune `GRAPHITI_SEMAPHORE_LIMIT` and review backend performance |
+
+---
+
+See also: [INTEGRATIONS](INTEGRATIONS.md) · [GRAPHITI](GRAPHITI.md) · [UI_API_CONTRACT](UI_API_CONTRACT.md) · [DEPLOY_SINGLE_NODE](DEPLOY_SINGLE_NODE.md)

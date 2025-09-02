@@ -15,6 +15,24 @@ Naestro is an AI Orchestrator for multi-model collaboration.
 
 ---
 
+## Documentation
+
+- **Integrations (local-first stack, adapters, providers)** → [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md)
+- **Graph Memory (Graphiti) guide** → [docs/GRAPHITI.md](docs/GRAPHITI.md)
+- **Studio ↔ Core API contract (REST/WS/SSE, auth)** → [docs/UI_API_CONTRACT.md](docs/UI_API_CONTRACT.md)
+- **Single-node DGX Spark deployment** → [docs/DEPLOY_SINGLE_NODE.md](docs/DEPLOY_SINGLE_NODE.md)
+- **VS Code add-on (Qoder-style) spec** → [docs/VS_CODE_EXTENSION.md](docs/VS_CODE_EXTENSION.md)
+- **No-Replit deployment (Caddy + Cloudflare Tunnel)** → [docs/NO_REPLIT_DEPLOY.md](docs/NO_REPLIT_DEPLOY.md)
+
+### Naestro Studio (local UI)
+First-party dashboard (React + Vite + Tailwind + shadcn/ui) served by Naestro Core on the DGX.  \
+Real-time Live Runs, model metrics, GPU health, KV cache hit-rate, cloud spillover %, and incidents.  \
+See **[docs/UI_API_CONTRACT.md](docs/UI_API_CONTRACT.md)** and **[docs/DEPLOY_SINGLE_NODE.md](docs/DEPLOY_SINGLE_NODE.md)**.
+
+### VS Code Extension (Qoder-style)
+A lightweight extension that talks to Naestro Core (`/api/runs`, `/ws/live`) to refactor code, explain errors, and generate tests **without leaving the IDE**.  \
+Spec and scaffolding guidance in **[docs/VS_CODE_EXTENSION.md](docs/VS_CODE_EXTENSION.md)**.
+
 ## ✨ Features
 - **Agentic Orchestration** — multi-phase workflows you can trace and audit.
 - **Multi-Model Routing** — cost/latency-aware routes across NIM, vLLM, and a small model tier.

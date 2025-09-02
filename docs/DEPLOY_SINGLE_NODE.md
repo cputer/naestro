@@ -1,5 +1,7 @@
 # Deploy Single Node
 
+[← Back to README](../README.md)
+
 ## TL;DR
 | Step | Command | Notes |
 |------|---------|-------|
@@ -23,3 +25,7 @@ Send a test prompt through the API or UI and confirm a response.
 |-------|-----------|
 | Containers failing to start | Check Docker logs and available resources |
 | Ports conflict | Adjust exposed ports in `docker-compose.yml` |
+
+---
+
+See also: [INTEGRATIONS](INTEGRATIONS.md) · [GRAPHITI](GRAPHITI.md) · [UI_API_CONTRACT](UI_API_CONTRACT.md) · [DEPLOY_SINGLE_NODE](DEPLOY_SINGLE_NODE.md)
