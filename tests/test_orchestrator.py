@@ -90,6 +90,36 @@ def test_backpressure_guard_triggers(orch_module, monkeypatch, caplog):
     assert "Backpressure guard engaged" in caplog.text
 
 
+def test_ensure_nltk_data_missing(monkeypatch):
+    class DummyGraph:
+        def add_node(self, *a, **k):
+            return None
+
+        def add_edge(self, *a, **k):
+            return None
+
+        def add_conditional_edge(self, *a, **k):
+            return None
+
+        def compile(self):
+            return None
+
+    monkeypatch.setitem(
+        sys.modules, "langgraph", types.SimpleNamespace(Graph=DummyGraph)
+    )
+    orch = importlib.reload(importlib.import_module("src.orchestrator.orchestrator"))
+
+    def fake_find(path):
+        raise LookupError("missing")
+
+    monkeypatch.setattr(orch.nltk.data, "find", fake_find)
+    with pytest.raises(LookupError) as exc:
+        orch.ensure_nltk_data()
+    msg = str(exc.value)
+    assert "Missing NLTK corpora" in msg
+    assert "punkt" in msg and "averaged_perceptron_tagger" in msg
+
+
 def test_build_plan_missing_corpus(monkeypatch):
     class DummyGraph:
         def add_node(self, *a, **k):
