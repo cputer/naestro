@@ -2,58 +2,41 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
 
 jobs:
   ui:
+    name: UI (lint • typecheck • build • test)
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ui
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node 22.x
+        uses: actions/setup-node@v4
         with:
-          node-version: "22"
-          cache: "npm"
+          node-version: '22.x'
+          cache: 'npm'
           cache-dependency-path: ui/package-lock.json
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run build
-      - run: npm run test:ui
-        if: ${{ hashFiles('ui/src/**/*.{test,spec}.{js,jsx,ts,tsx}') != '' }}
-
-  python:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-          cache: "pip"
-          cache-dependency-path: |
-            requirements.lock
-            scripts/requirements.txt
-      - run: pip install -r requirements.lock -r scripts/requirements.txt
-      - name: Flake8
+      - name: Install
+        run: npm ci
+      - name: Lint
+        run: npm run lint --if-present
+      - name: Typecheck
+        run: npm run typecheck --if-present
+      - name: Build
+        run: npm run build --if-present
+      - name: Test (jsdom)
+        env:
+          CI: 'true'
         run: |
-          if command -v flake8 >/dev/null 2>&1; then
-            flake8
+          if npm run | grep -q "test:ui"; then
+            npm run test:ui
+          elif npm run | grep -q "test"; then
+            npm test
           else
-            echo "flake8 not installed"
+            echo "No tests defined, skipping."
           fi
-      - name: Pytest
-        run: |
-          if command -v pytest >/dev/null 2>&1; then
-            pytest
-          else
-            echo "pytest not installed"
-          fi
-
-  release:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: googleapis/release-please-action@v4

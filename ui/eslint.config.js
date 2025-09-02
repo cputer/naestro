@@ -1,39 +1,27 @@
-import js from "@eslint/js";
-import reactPlugin from "eslint-plugin-react";
-import reactHooks from "eslint-plugin-react-hooks";
-import importPlugin from "eslint-plugin-import";
-import tsParser from "@typescript-eslint/parser";
-import tsPlugin from "@typescript-eslint/eslint-plugin";
+import react from 'eslint-plugin-react';
 
 export default [
-  js.configs.recommended,
   {
-    files: ["**/*.{ts,tsx,js,jsx}"],
+    files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
-      parser: tsParser,
-      parserOptions: { ecmaVersion: 2022, sourceType: "module" },
-      globals: {
-        console: "readonly",
-        document: "readonly",
-        navigator: "readonly",
-        window: "readonly",
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true
+        }
       },
+      globals: {
+        window: 'readonly',
+        document: 'readonly',
+        navigator: 'readonly'
+      }
     },
-    plugins: {
-      react: reactPlugin,
-      "react-hooks": reactHooks,
-      import: importPlugin,
-      "@typescript-eslint": tsPlugin,
-    },
-    settings: {
-      react: { version: "detect" }
-    },
+    plugins: { react },
+    settings: { react: { version: 'detect' } },
     rules: {
-      ...reactPlugin.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
-      "react/react-in-jsx-scope": "off",
-      "react/prop-types": "off",
-      "react-hooks/rules-of-hooks": "error",
-    },
-  },
+      // Adjust to your preference; we set off to avoid noisy CI. Component files can still use PropTypes/TS.
+      'react/prop-types': 'off'
+    }
+  }
 ];

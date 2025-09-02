@@ -1,29 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Editor, DiffEditor } from '@monaco-editor/react';
 
-const CodeEditor = ({ original = '', modified = '', language = 'javascript', height = 400 }) => {
-  if (modified) {
-    return (
-      <DiffEditor
-        original={original}
-        modified={modified}
-        height={height}
-        language={language}
-        options={{ renderSideBySide: true, automaticLayout: true }}
-      />
-    );
-  }
-
+export default function CodeEditor({
+  language = 'javascript',
+  original = '',
+  modified = '',
+  height = 400
+}) {
+  const px = typeof height === 'number' ? `${height}px` : (height || '400px');
   return (
-    <Editor
-      value={original}
-      height={height}
-      language={language}
-      options={{ automaticLayout: true }}
-    />
+    <div style={{ height: px, border: '1px solid #222', borderRadius: 8 }}>
+      <div style={{ padding: 8, fontFamily: 'monospace', fontSize: 12 }}>
+        <div><strong>Language:</strong> {language || 'plaintext'}</div>
+        <div style={{ marginTop: 8 }}>
+          <strong>Original:</strong>
+          <pre style={{ whiteSpace: 'pre-wrap', margin: 0 }}>{original}</pre>
+        </div>
+        <div style={{ marginTop: 8 }}>
+          <strong>Modified:</strong>
+          <pre style={{ whiteSpace: 'pre-wrap', margin: 0 }}>{modified}</pre>
+        </div>
+      </div>
+    </div>
   );
-};
+}
 
 CodeEditor.propTypes = {
   language: PropTypes.string,
@@ -31,4 +31,3 @@ CodeEditor.propTypes = {
   modified: PropTypes.string,
   height: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
 };
-export default CodeEditor;
