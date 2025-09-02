@@ -48,7 +48,7 @@ class ConnectionPool:
     def close(self) -> None:
         self._pool.closeall()
 
-
+_pool_lock = threading.Lock()
 pool: ConnectionPool | None = None
 
 
@@ -57,12 +57,13 @@ def init_connection_pool(
 ) -> ConnectionPool:
     """Initialize a connection pool for PostgreSQL."""
     global pool
-    if pool is None:
-        dsn = dsn or os.getenv("DATABASE_URL")
-        if not dsn:
-            raise ValueError("DSN required for connection pool")
-        pool = ConnectionPool(dsn, minconn, maxconn)
-    return pool
+    with _pool_lock:
+        if pool is None:
+            dsn = dsn or os.getenv("DATABASE_URL")
+            if not dsn:
+                raise ValueError("DSN required for connection pool")
+            pool = ConnectionPool(dsn, minconn, maxconn)
+        return pool
 
 
 def close_pool() -> None:
