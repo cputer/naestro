@@ -230,3 +230,34 @@ def test_init_model_thread_safe(rag, monkeypatch):
 
     assert all(r is results[0] for r in results)
     assert calls["count"] == 1
+
+
+def test_init_connection_pool_thread_safe(rag, monkeypatch):
+    """Ensure only one pool instance is created under concurrent calls."""
+    rag.pool = None
+
+    class DummyPool:
+        pass
+
+    calls = {"count": 0}
+
+    def dummy_constructor(dsn, minconn, maxconn):
+        calls["count"] += 1
+        time.sleep(0.01)
+        return DummyPool()
+
+    monkeypatch.setattr(rag, "ConnectionPool", dummy_constructor)
+
+    results = []
+
+    def worker():
+        results.append(rag.init_connection_pool(dsn="db://", minconn=1, maxconn=2))
+
+    threads = [threading.Thread(target=worker) for _ in range(5)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert all(r is results[0] for r in results)
+    assert calls["count"] == 1
