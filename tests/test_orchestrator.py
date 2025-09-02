@@ -1,4 +1,5 @@
 import importlib
+import logging
 import os
 import sys
 import types
@@ -58,6 +59,35 @@ def test_unknown_route(orch_module):
     client = TestClient(app)
     resp = client.get("/doesnotexist")
     assert resp.status_code == 404
+
+
+def test_thermal_guard_triggers(orch_module, monkeypatch, caplog):
+    dummy_psutil = types.SimpleNamespace(
+        sensors_temperatures=lambda: {"cpu": [types.SimpleNamespace(current=80)]}
+    )
+    monkeypatch.setitem(sys.modules, "psutil", dummy_psutil)
+    monkeypatch.setenv("THERMAL_GUARD_MAX_C", "78")
+    with caplog.at_level(logging.WARNING):
+        assert orch_module.thermal_guard()
+    assert "Thermal guard triggered" in caplog.text
+
+
+def test_oom_guard_triggers(orch_module, monkeypatch, caplog):
+    dummy_psutil = types.SimpleNamespace(
+        virtual_memory=lambda: types.SimpleNamespace(available=50 * 1024 * 1024)
+    )
+    monkeypatch.setitem(sys.modules, "psutil", dummy_psutil)
+    monkeypatch.setenv("OOM_GUARD_MIN_AVAILABLE_MB", "100")
+    with caplog.at_level(logging.ERROR):
+        assert orch_module.oom_guard()
+    assert "OOM guard activated" in caplog.text
+
+
+def test_backpressure_guard_triggers(orch_module, monkeypatch, caplog):
+    monkeypatch.setenv("BACKPRESSURE_P95_THRESHOLD_MS", "500")
+    with caplog.at_level(logging.INFO):
+        assert orch_module.backpressure_guard(600)
+    assert "Backpressure guard engaged" in caplog.text
 
 
 def test_build_plan_missing_corpus(monkeypatch):
