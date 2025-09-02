@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Editor, DiffEditor } from '@monaco-editor/react';
 
-const CodeEditor = ({ original, modified, language = 'javascript', height }) => {
+const CodeEditor = ({ original = '', modified = '', language = 'javascript', height = 400 }) => {
   if (modified) {
     return (
       <DiffEditor
@@ -31,10 +31,4 @@ CodeEditor.propTypes = {
   modified: PropTypes.string,
   height: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
 };
-CodeEditor.defaultProps = {
-  original: '',
-  modified: '',
-  height: 400
-};
-
 export default CodeEditor;
