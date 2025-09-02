@@ -68,6 +68,9 @@ uvicorn src.gateway.main:app --reload --port 8080 &
 Dependencies are pinned for reproducibility. After editing any `requirements.txt`,
 regenerate the corresponding `*.lock` file with `pip-compile`.
 
+## Local-first DGX Spark (single node)
+Naestro favors a local-first deployment model where all orchestrator and inference services run on a single DGX box with Spark. This setup targets self-contained experimentation and prototyping before any scale-out. For connector details see [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md) and for memory semantics see [docs/GRAPHITI.md](docs/GRAPHITI.md). Studio and the VS Code extension are the official interfaces for interacting with this stack.
+
 ## DGX Spark Setup
 - Use DGX OS (Ubuntu-based).
 - Run `sudo apt install nvidia-slm-1.0` for SLM support.
@@ -94,7 +97,7 @@ To point the gateway at a local orchestrator instead of the Compose service:
 export ORCH_URL=http://localhost:8081
 ```
 ## Memory
-Naestro now includes Graph Memory with Graphiti  → see [GRAPHITI](./GRAPHITI.md) for full overview and setup.
+Naestro now includes Graph Memory with Graphiti  → see [GRAPHITI](docs/GRAPHITI.md) for full overview and setup.
 
 ## 🗂 Structure
 ```
