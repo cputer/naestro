@@ -11,3 +11,6 @@ node_modules/
 
 # Built UI output
 ui/dist/
+
+# Ignore nested UI directory
+ui/ui/
