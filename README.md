@@ -79,6 +79,12 @@ curl http://localhost:8080/health
 curl http://localhost:8081/health
 ```
 
+Naestro's core services run without SciPy, but numeric integration demos depend on it. Install SciPy separately if you plan to run those examples:
+
+```bash
+pip install scipy
+```
+
 > **NVIDIA images:** If enabling the **inference** profile (NIM/SLM from `nvcr.io/*`), authenticate first:
 > ```bash
 > docker login nvcr.io
