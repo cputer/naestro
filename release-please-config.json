@@ -1,6 +1,6 @@
 {
   "bootstrap-sha": "",
-  "include-component-in-tag": true,
+  "include-component-in-tag": false,
   "packages": {
     "ui": {
       "path": "ui",
