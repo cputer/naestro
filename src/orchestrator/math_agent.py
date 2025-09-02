@@ -3,10 +3,9 @@ from typing import Any, Dict
 
 import sympy as sp
 from langgraph.graph import StateGraph
-from scipy import integrate
-
 
 x = sp.symbols("x")
+
 
 def parse_math_query(query: str) -> Any:
     """Parse a math query and execute it using SymPy/SciPy.
@@ -27,7 +26,12 @@ def parse_math_query(query: str) -> Any:
         func = sp.lambdify(x, sp.sympify(expr), "math")
         a = float(sp.sympify(lower))
         b = float(sp.sympify(upper))
-        val, _ = integrate.quad(func, a, b)
+        try:
+            from scipy import integrate  # type: ignore
+
+            val, _ = integrate.quad(func, a, b)
+        except ImportError:
+            val = float(sp.integrate(sp.sympify(expr), (x, a, b)).evalf())
         return val
 
     m = re.match(r"integrate\s+(.+)", query, re.I)
@@ -51,6 +55,7 @@ def parse_math_query(query: str) -> Any:
         return sp.simplify(sp.sympify(expr))
 
     return sp.simplify(sp.sympify(query))
+
 
 def math_agent_fn(state: Dict[str, Any]) -> Dict[str, Any]:
     query = state.get("query", "")

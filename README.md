@@ -95,6 +95,14 @@ uvicorn src.orchestrator.main:app --reload --port 8081 &
 uvicorn src.gateway.main:app --reload --port 8080 &
 ```
 
+SciPy is optional and only needed for numeric integration in the math agent. When
+it's missing, Naestro falls back to a pure SymPy evaluator. Install SciPy
+separately if you want the faster `quad` integrator:
+
+```bash
+pip install scipy
+```
+
 Dependencies are pinned for reproducibility. After editing any `requirements.txt`,
 regenerate the corresponding `*.lock` file with `pip-compile`.
 

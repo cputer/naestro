@@ -1,6 +1,9 @@
+import builtins
+
 import pytest
 
-from src.orchestrator.math_agent import app as math_app, parse_math_query
+from src.orchestrator.math_agent import app as math_app
+from src.orchestrator.math_agent import parse_math_query
 
 
 def test_parse_integrate_symbolic():
@@ -19,6 +22,19 @@ def test_parse_solve():
 
 
 def test_parse_definite_integral():
+    result = parse_math_query("integrate sin(x) from 0 to pi")
+    assert result == pytest.approx(2.0, rel=1e-6)
+
+
+def test_parse_definite_integral_no_scipy(monkeypatch):
+    real_import = builtins.__import__
+
+    def fake_import(name, *args, **kwargs):
+        if name.startswith("scipy"):
+            raise ImportError("SciPy is not installed")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
     result = parse_math_query("integrate sin(x) from 0 to pi")
     assert result == pytest.approx(2.0, rel=1e-6)
 
