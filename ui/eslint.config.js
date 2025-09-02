@@ -13,7 +13,9 @@ export default [
       parser: tsParser,
       parserOptions: { ecmaVersion: 2022, sourceType: "module" },
       globals: {
+        console: "readonly",
         document: "readonly",
+        navigator: "readonly",
         window: "readonly",
       },
     },
@@ -31,6 +33,7 @@ export default [
       ...reactHooks.configs.recommended.rules,
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
+      "react-hooks/rules-of-hooks": "error",
     },
   },
 ];
