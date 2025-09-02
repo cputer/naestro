@@ -93,45 +93,63 @@ def _shannon_entropy(text: str) -> float:
 def verify_fn(state):
     """Run basic checks: compilation, linting, and entropy."""
     code = state.get("code", "")
-    with tempfile.NamedTemporaryFile("w+", suffix=".py", delete=False) as tmp:
-        tmp.write(code)
-        tmp.flush()
-        path = tmp.name
-
+    path = None
     try:
-        import py_compile
+        with tempfile.NamedTemporaryFile("w+", suffix=".py", delete=False) as tmp:
+            tmp.write(code)
+            tmp.flush()
+            path = tmp.name
 
-        py_compile.compile(path, doraise=True)
-        passed = True
-    except Exception:
-        passed = False
+        try:
+            import py_compile
 
-    result = subprocess.run(["flake8", path], capture_output=True, text=True)
-    lint_errors = [line for line in result.stdout.splitlines() if line.strip()]
-    lint_delta = 1 / (1 + len(lint_errors))
-    entropy_delta = _shannon_entropy(code)
-    os.unlink(path)
-    return {
-        "passed": passed,
-        "passed_delta": 1.0 if passed else 0.0,
-        "lint_delta": lint_delta,
-        "entropy_delta": entropy_delta,
-    }
+            py_compile.compile(path, doraise=True)
+            passed = True
+        except Exception:
+            passed = False
+
+        try:
+            result = subprocess.run(["flake8", path], capture_output=True, text=True)
+            lint_errors = [
+                line for line in result.stdout.splitlines() if line.strip()
+            ]
+            lint_delta = 1 / (1 + len(lint_errors))
+        except FileNotFoundError:
+            lint_delta = 0.0
+
+        entropy_delta = _shannon_entropy(code)
+        return {
+            "passed": passed,
+            "passed_delta": 1.0 if passed else 0.0,
+            "lint_delta": lint_delta,
+            "entropy_delta": entropy_delta,
+        }
+    finally:
+        if path and os.path.exists(path):
+            os.unlink(path)
 
 
 def refine_fn(state):
     """Format code using Black to improve readability."""
     code = state.get("code", "")
-    with tempfile.NamedTemporaryFile("w+", suffix=".py", delete=False) as tmp:
-        tmp.write(code)
-        tmp.flush()
-        path = tmp.name
+    path = None
+    try:
+        with tempfile.NamedTemporaryFile("w+", suffix=".py", delete=False) as tmp:
+            tmp.write(code)
+            tmp.flush()
+            path = tmp.name
 
-    subprocess.run(["black", "-q", path], check=False)
-    with open(path, "r", encoding="utf-8") as fh:
-        improved = fh.read()
-    os.unlink(path)
-    return {"code": improved}
+        try:
+            subprocess.run(["black", "-q", path], check=False)
+            with open(path, "r", encoding="utf-8") as fh:
+                improved = fh.read()
+        except FileNotFoundError:
+            improved = code
+
+        return {"code": improved}
+    finally:
+        if path and os.path.exists(path):
+            os.unlink(path)
 
 
 def human_review_fn(state):

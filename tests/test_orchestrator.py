@@ -1,4 +1,5 @@
 import importlib
+import os
 import sys
 import types
 
@@ -111,3 +112,68 @@ def test_human_review_missing_corpus(monkeypatch):
     monkeypatch.setattr(orch, "ensure_nltk_data", raise_lookup)
     with pytest.raises(RuntimeError, match="NLTK"):
         orch.human_review_fn({"plan": "do thing"})
+
+
+def test_verify_fn_missing_flake8(monkeypatch):
+    class DummyGraph:
+        def add_node(self, *a, **k):
+            return None
+
+        def add_edge(self, *a, **k):
+            return None
+
+        def add_conditional_edge(self, *a, **k):
+            return None
+
+        def compile(self):
+            return None
+
+    monkeypatch.setitem(
+        sys.modules, "langgraph", types.SimpleNamespace(Graph=DummyGraph)
+    )
+    orch = importlib.reload(importlib.import_module("src.orchestrator.orchestrator"))
+
+    def fake_run(*a, **k):
+        raise FileNotFoundError
+
+    monkeypatch.setattr(orch.subprocess, "run", fake_run)
+    removed = {"path": None}
+    real_unlink = orch.os.unlink
+
+    def fake_unlink(p):
+        removed["path"] = p
+        real_unlink(p)
+
+    monkeypatch.setattr(orch.os, "unlink", fake_unlink)
+
+    result = orch.verify_fn({"code": "print('hi')"})
+    assert result["lint_delta"] == 0.0
+    assert removed["path"] is not None
+    assert not os.path.exists(removed["path"])
+
+
+def test_refine_fn_missing_black(monkeypatch):
+    class DummyGraph:
+        def add_node(self, *a, **k):
+            return None
+
+        def add_edge(self, *a, **k):
+            return None
+
+        def add_conditional_edge(self, *a, **k):
+            return None
+
+        def compile(self):
+            return None
+
+    monkeypatch.setitem(
+        sys.modules, "langgraph", types.SimpleNamespace(Graph=DummyGraph)
+    )
+    orch = importlib.reload(importlib.import_module("src.orchestrator.orchestrator"))
+
+    def fake_run(*a, **k):
+        raise FileNotFoundError
+
+    monkeypatch.setattr(orch.subprocess, "run", fake_run)
+    result = orch.refine_fn({"code": "x=1"})
+    assert result["code"] == "x=1"
