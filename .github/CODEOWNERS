@@ -1,0 +1,6 @@
+# Adjust GitHub teams/users to your org as needed
+/src/core/           @cputer/owners
+/config/providers.yaml @cputer/owners
+/docs/**             @cputer/docs
+/ui/**               @cputer/ui-maintainers
+.github/**           @cputer/infra

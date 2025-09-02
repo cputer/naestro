@@ -1,0 +1,5 @@
+releaseType: simple
+bumpMinorPreMajor: true
+handleGHRelease: true
+packages:
+  ".": {}
