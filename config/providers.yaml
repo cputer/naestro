@@ -1,26 +1,50 @@
-# Naestro providers: single-node DGX Spark (local-first) + cloud spillover
+# Naestro providers: multi-node DGX Spark (local-first) + cloud spillover
 
 inference:
   local:
-    - id: llama70b_judge
+    # DGX A
+    - id: llama70b_judge_dgx_a
       runtime: tensorrt_llm
       model: llama-3.1-70b-instruct-fp8
-      endpoint: http://127.0.0.1:8001
+      endpoint: http://dgx-a:8001
       max_batch: 4
       kv_cache: fp8
       roles: [judge, proposer]
 
-    - id: deepseek32b
+    - id: deepseek32b_dgx_a
       runtime: vllm
       model: deepseek-v3.2-32b-instruct
-      endpoint: http://127.0.0.1:8002
+      endpoint: http://dgx-a:8002
       max_batch: 8
       roles: [proposer, synthesizer]
 
-    - id: qwen32b_awq
+    - id: qwen32b_awq_dgx_a
       runtime: vllm
       model: qwen-3-32b-instruct-awq
-      endpoint: http://127.0.0.1:8003
+      endpoint: http://dgx-a:8003
+      max_batch: 12
+      roles: [critic, code]
+
+    # DGX B
+    - id: llama70b_judge_dgx_b
+      runtime: tensorrt_llm
+      model: llama-3.1-70b-instruct-fp8
+      endpoint: http://dgx-b:8001
+      max_batch: 4
+      kv_cache: fp8
+      roles: [judge, proposer]
+
+    - id: deepseek32b_dgx_b
+      runtime: vllm
+      model: deepseek-v3.2-32b-instruct
+      endpoint: http://dgx-b:8002
+      max_batch: 8
+      roles: [proposer, synthesizer]
+
+    - id: qwen32b_awq_dgx_b
+      runtime: vllm
+      model: qwen-3-32b-instruct-awq
+      endpoint: http://dgx-b:8003
       max_batch: 12
       roles: [critic, code]
 
@@ -46,17 +70,17 @@ inference:
 routing:
   policy: local_first_with_cloud_spill
   defaults:
-    judge: llama70b_judge
-    proposer: deepseek32b
-    critic: qwen32b_awq
-    synthesizer: deepseek32b
+    judge: llama70b_judge_dgx_a
+    proposer: deepseek32b_dgx_a
+    critic: qwen32b_awq_dgx_a
+    synthesizer: deepseek32b_dgx_a
   fallbacks:
-    judge: [anthropic_claude37, openai_gpt4x]
-    proposer: [openai_gpt4x]
-    critic: [openai_gpt4x]
-    synthesizer: [google_gemini25]
+    judge: [llama70b_judge_dgx_b, anthropic_claude37, openai_gpt4x]
+    proposer: [deepseek32b_dgx_b, openai_gpt4x]
+    critic: [qwen32b_awq_dgx_b, openai_gpt4x]
+    synthesizer: [deepseek32b_dgx_b, google_gemini25]
   limits:
-    max_concurrency: 8
+    max_concurrency: 16
     max_tokens_per_run: 120000
     long_context_threshold: 200000
 
