@@ -26,3 +26,18 @@ def test_parse_definite_integral():
 def test_math_app_invoke():
     res = math_app.invoke({"query": "differentiate x**2"})
     assert str(res["result"]) == "2*x"
+
+
+def test_invalid_symbol_rejected():
+    with pytest.raises(ValueError):
+        parse_math_query("solve y + 1")
+
+
+def test_malicious_expression_rejected():
+    with pytest.raises(ValueError):
+        parse_math_query("__import__('os')")
+
+
+def test_invalid_integral_bound():
+    with pytest.raises(ValueError):
+        parse_math_query("integrate x from 0 to y")
