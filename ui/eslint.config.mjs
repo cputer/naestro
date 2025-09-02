@@ -1,43 +1,37 @@
-import js from '@eslint/js';
-import react from 'eslint-plugin-react';
+// Flat ESLint config for React + browser
+import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
-import importPlugin from 'eslint-plugin-import';
 
 export default [
   {
-    files: ['src/**/*.{js,jsx}'],
+    files: ['**/*.{js,jsx}'],
     languageOptions: {
-      ecmaVersion: 'latest',
+      ecmaVersion: 2023,
       sourceType: 'module',
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
       globals: {
         window: 'readonly',
         document: 'readonly',
         navigator: 'readonly',
+        console: 'readonly'
       },
+      parserOptions: {
+        ecmaFeatures: { jsx: true }
+      }
     },
     plugins: {
-      react,
-      'react-hooks': reactHooks,
-      import: importPlugin,
+      react: reactPlugin,
+      'react-hooks': reactHooks
     },
     settings: {
-      react: { version: 'detect' },
+      react: { version: 'detect' }
     },
     rules: {
-      ...js.configs.recommended.rules,
-      ...react.configs.flat.recommended.rules,
-      ...react.configs.flat['jsx-runtime'].rules,
-      ...reactHooks.configs.recommended.rules,
-      'react/prop-types': 'off',
-      'no-unused-vars': [
-        'error',
-        { varsIgnorePattern: '^React$' }
-      ],
-    },
-  },
+      'react/jsx-uses-react': 'off',
+      'react/react-in-jsx-scope': 'off',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      // If you prefer to keep PropTypes, set this to "off" and add PropTypes below in CodeEditor.jsx
+      'react/prop-types': 'off'
+    }
+  }
 ];

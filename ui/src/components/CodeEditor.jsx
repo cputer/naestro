@@ -1,33 +1,35 @@
+/* eslint-env browser */
 import React from 'react';
 import PropTypes from 'prop-types';
 
 export default function CodeEditor({
-  language = 'javascript',
   original = '',
   modified = '',
-  height = 400
+  language = 'plaintext',
+  height = 320
 }) {
-  const px = typeof height === 'number' ? `${height}px` : (height || '400px');
+  // Lightweight placeholder; replace with Monaco later if desired
   return (
-    <div style={{ height: px, border: '1px solid #222', borderRadius: 8 }}>
-      <div style={{ padding: 8, fontFamily: 'monospace', fontSize: 12 }}>
-        <div><strong>Language:</strong> {language || 'plaintext'}</div>
-        <div style={{ marginTop: 8 }}>
-          <strong>Original:</strong>
-          <pre style={{ whiteSpace: 'pre-wrap', margin: 0 }}>{original}</pre>
-        </div>
-        <div style={{ marginTop: 8 }}>
-          <strong>Modified:</strong>
-          <pre style={{ whiteSpace: 'pre-wrap', margin: 0 }}>{modified}</pre>
-        </div>
+    <div style={{ display: 'grid', gap: 12 }}>
+      <div>
+        <div style={{ fontSize: 12, opacity: 0.7 }}>Original ({language})</div>
+        <pre style={{ height, overflow: 'auto', border: '1px solid #333', padding: 12, borderRadius: 8 }}>
+          {original}
+        </pre>
+      </div>
+      <div>
+        <div style={{ fontSize: 12, opacity: 0.7 }}>Modified ({language})</div>
+        <pre style={{ height, overflow: 'auto', border: '1px solid #333', padding: 12, borderRadius: 8 }}>
+          {modified}
+        </pre>
       </div>
     </div>
   );
 }
 
 CodeEditor.propTypes = {
-  language: PropTypes.string,
   original: PropTypes.string,
   modified: PropTypes.string,
+  language: PropTypes.string,
   height: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
 };
