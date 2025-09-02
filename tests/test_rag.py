@@ -1,5 +1,7 @@
 import importlib
 import sys
+import threading
+import time
 import types
 from types import SimpleNamespace
 from contextlib import contextmanager
@@ -197,3 +199,34 @@ def test_hybrid_search_invalid_input(rag, monkeypatch):
     monkeypatch.setattr(rag, "embed_text", bad_embed)
     with pytest.raises(ValueError):
         rag.hybrid_search(None)
+
+
+def test_init_model_thread_safe(rag, monkeypatch):
+    """Ensure only one model instance is created under concurrent calls."""
+    rag.model = None
+
+    class DummyModel:
+        pass
+
+    calls = {"count": 0}
+
+    def dummy_constructor(*args, **kwargs):
+        calls["count"] += 1
+        time.sleep(0.01)
+        return DummyModel()
+
+    monkeypatch.setattr(rag, "SentenceTransformer", dummy_constructor)
+
+    results = []
+
+    def worker():
+        results.append(rag.init_model())
+
+    threads = [threading.Thread(target=worker) for _ in range(5)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert all(r is results[0] for r in results)
+    assert calls["count"] == 1
