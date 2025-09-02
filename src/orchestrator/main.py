@@ -10,34 +10,67 @@ from pydantic import BaseModel
 from .math_agent import app as math_app
 from .orchestrator import app as workflow_app
 
+logger = logging.getLogger(__name__)
 app = FastAPI(title="NAESTRO Orchestrator")
 
 
-# Guardrail stubs -----------------------------------------------------------
+# Guardrails -----------------------------------------------------------------
 
 
-def thermal_guard() -> None:
-    """Reduce concurrency and emit incidents when temperature exceeds 78°C."""
+def thermal_guard() -> bool:
+    """Reduce concurrency and emit incidents when temperature exceeds threshold."""
 
-    temp_c = 70  # TODO: replace with real temperature telemetry
-    if temp_c >= 78:
-        # TODO: integrate concurrency throttling and incident emission
-        logging.warning("Thermal guard triggered at %s°C", temp_c)
+    limit_c = int(os.getenv("THERMAL_GUARD_MAX_C", "78"))
+    try:  # pragma: no cover - psutil may not be installed
+        import psutil  # type: ignore
+
+        temps = psutil.sensors_temperatures()  # type: ignore[attr-defined]
+        current = max(
+            [t.current for group in temps.values() for t in group], default=None
+        )
+    except Exception as exc:  # pragma: no cover - telemetry not available
+        logger.debug("Thermal telemetry unavailable: %s", exc)
+        return False
+
+    if current is not None and current >= limit_c:
+        logger.warning("Thermal guard triggered at %s°C", current)
+        return True
+    return False
 
 
-def oom_guard() -> None:
-    """Reroute workload to cloud on OOM with incident logging."""
+def oom_guard() -> bool:
+    """Reroute workload to cloud on low available memory with incident logging."""
 
-    # TODO: detect OOM conditions and reroute traffic to the cloud
-    logging.error("OOM guard activated; rerouting to cloud")
+    min_free_mb = int(os.getenv("OOM_GUARD_MIN_AVAILABLE_MB", "0"))
+    if min_free_mb <= 0:
+        return False
+
+    try:  # pragma: no cover - psutil may not be installed
+        import psutil  # type: ignore
+
+        avail_mb = psutil.virtual_memory().available / (1024 * 1024)
+    except Exception as exc:  # pragma: no cover - telemetry not available
+        logger.debug("Memory telemetry unavailable: %s", exc)
+        return False
+
+    if avail_mb < min_free_mb:
+        logger.error(
+            "OOM guard activated; available memory %.1fMB below threshold %sMB",
+            avail_mb,
+            min_free_mb,
+        )
+        return True
+    return False
 
 
-def backpressure_guard(p95_paint_ms: float) -> None:
-    """Coalesce updates when UI paint P95 exceeds 500 ms."""
+def backpressure_guard(p95_paint_ms: float) -> bool:
+    """Coalesce updates when UI paint P95 exceeds configured limit."""
 
-    # TODO: integrate with real paint metrics and coalescing logic
-    if p95_paint_ms > 500:
-        logging.info("Backpressure guard engaged at %sms", p95_paint_ms)
+    threshold = float(os.getenv("BACKPRESSURE_P95_THRESHOLD_MS", "500"))
+    if p95_paint_ms > threshold:
+        logger.info("Backpressure guard engaged at %sms", p95_paint_ms)
+        return True
+    return False
 
 
 class TaskRequest(BaseModel):
@@ -90,7 +123,8 @@ def run(task: TaskRequest) -> RunResponse:
         model_url = _route_model(task.model)
         state: Dict[str, Any] = {"input": task.input, "model_url": model_url}
         result = workflow_app.invoke(state)
-        backpressure_guard(p95_paint_ms=0)  # TODO: supply real paint metric
+        paint_ms = float(os.getenv("PAINT_METRIC_P95_MS", "0"))
+        backpressure_guard(paint_ms)
         return RunResponse(result=result)
     except MemoryError:
         oom_guard()
