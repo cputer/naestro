@@ -33,6 +33,12 @@ First-party dashboard (React + Vite + Tailwind + shadcn/ui) served by Naestro Co
 Real-time Live Runs, model metrics, GPU health, KV cache hit-rate, cloud spillover %, and incidents.  \
 See **[docs/UI_API_CONTRACT.md](docs/UI_API_CONTRACT.md)** and **[docs/DEPLOY_SINGLE_NODE.md](docs/DEPLOY_SINGLE_NODE.md)**.
 
+To configure the WebSocket base URL during build, set `VITE_SOCKET_BASE_URL`:
+
+```bash
+VITE_SOCKET_BASE_URL=https://naestro.example.com npm run build
+```
+
 ### VS Code Extension (Qoder-style)
 A lightweight extension that talks to Naestro Core (`/api/runs`, `/ws/live`) to refactor code, explain errors, and generate tests **without leaving the IDE**.  \
 Spec and scaffolding guidance in **[docs/VS_CODE_EXTENSION.md](docs/VS_CODE_EXTENSION.md)**.
