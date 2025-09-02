@@ -2,5 +2,5 @@
 /src/core/           @cputer/owners
 /config/providers.yaml @cputer/owners
 /docs/**             @cputer/docs
-/ui/**               @cputer/ui-maintainers
+/ui/ @cputer/ui-team
 .github/**           @cputer/infra
