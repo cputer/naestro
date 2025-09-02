@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+set -e
+MSG_FILE="$1"
+# Prefer local UI install (offline), fallback to npx
+if [ -x "./ui/node_modules/.bin/commitlint" ]; then
+  NODE_PATH=ui/node_modules ./ui/node_modules/.bin/commitlint --config commitlint.config.cjs --edit "$MSG_FILE"
+else
+  npx --yes @commitlint/cli@^19 --config commitlint.config.cjs --edit "$MSG_FILE"
+fi
