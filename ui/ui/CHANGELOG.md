@@ -1,0 +1,29 @@
+# Changelog
+
+## [0.2.1](https://github.com/cputer/naestro/compare/v0.2.0...v0.2.1) (2025-09-02)
+
+
+### Features
+
+* add socket config module ([e7520bb](https://github.com/cputer/naestro/commit/e7520bbf5fd2d198df4b5a979c212eb08b3c068c))
+* finalize naestro architecture ([db353a4](https://github.com/cputer/naestro/commit/db353a4bb792cf072d7c1f7396e6396d3a260425))
+* finalize naestro architecture ([ac7d8a3](https://github.com/cputer/naestro/commit/ac7d8a3e873b82a51610afb6f5ce87b1999db6cc))
+* make socket url configurable ([d7082f6](https://github.com/cputer/naestro/commit/d7082f6284aac2ef8d212da935288006ca75ca9b))
+* **ui:** add dashboard components ([014856e](https://github.com/cputer/naestro/commit/014856e1ae46bec49446f96f63fe90698c520e9a))
+* **ui:** add dashboard components ([66b649b](https://github.com/cputer/naestro/commit/66b649ba4431ee11014b14bf149af13790048c55))
+* **ui:** add Dockerfile for Nginx build ([f9677ac](https://github.com/cputer/naestro/commit/f9677acd216c260a9c6708fc10a4681845277d3e))
+* **ui:** add Dockerfile for Nginx build ([a1ea63b](https://github.com/cputer/naestro/commit/a1ea63b6662df8d6b08e3f25256aa47105d88d8d))
+* **ui:** add monaco editor component ([81e7bc8](https://github.com/cputer/naestro/commit/81e7bc853c01975c98ce4cbecb91ab6a3422c80d))
+* **ui:** add prop types to CodeEditor ([454a76c](https://github.com/cputer/naestro/commit/454a76c207c7434fbe1581aeedb91abc2045e8bb))
+* **ui:** add prop types to CodeEditor ([e8d5729](https://github.com/cputer/naestro/commit/e8d5729415789b20daefc07955b7e96b3bc9550a))
+* **ui:** integrate monaco editor component ([455c4b7](https://github.com/cputer/naestro/commit/455c4b7dd8127596c3a15ba937ab0a17c84528c6))
+* **ui:** use multi-stage nginx build ([4d3e325](https://github.com/cputer/naestro/commit/4d3e325725d80a9f174d3f68480691b4fa9ed553))
+* **ui:** use multi-stage nginx build ([e908300](https://github.com/cputer/naestro/commit/e908300ae668387fc886ebc8035553582aa89d4e))
+
+
+### Bug Fixes
+
+* adjust CodeEditor PropTypes ([c1ff2c2](https://github.com/cputer/naestro/commit/c1ff2c211c1c03dfc22e6ff25dc16c5cc8795ca1))
+* **ui:** adjust CodeEditor PropTypes ([16708b8](https://github.com/cputer/naestro/commit/16708b83966907a8e71969b3deec2e912b8d12ab))
+* **ui:** disable vitest watch mode ([c1a6df1](https://github.com/cputer/naestro/commit/c1a6df1f4a7be0c1457003871a44a846aa7c2e4f))
+* **ui:** disable vitest watch mode ([9578cf8](https://github.com/cputer/naestro/commit/9578cf8f7399ffb044d93414b15b389d7bde768b))
