@@ -59,5 +59,6 @@
       "./vitest.setup.js"
     ],
     "environment": "jsdom"
-  }
+  },
+  "version": "0.1.0"
 }
