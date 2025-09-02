@@ -42,6 +42,31 @@ def test_orchestrate(monkeypatch):
     assert resp.status_code == 200
     assert resp.json() == response_payload
 
+
+def test_orchestrate_connection_error(monkeypatch):
+    """Return 502 when orchestrator is unreachable."""
+
+    class DummyAsyncClient:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            pass
+
+        async def post(self, url, json):
+            raise httpx.RequestError(
+                "boom", request=httpx.Request("POST", url)
+            )
+
+    monkeypatch.setattr(httpx, "AsyncClient", DummyAsyncClient)
+    client = TestClient(app)
+    resp = client.post("/orchestrate", json={"task": "demo"})
+    assert resp.status_code == 502
+    assert resp.json() == {"error": "orchestrator unreachable"}
+
 def test_orchestrate_missing_body():
     client = TestClient(app)
     resp = client.post("/orchestrate")
