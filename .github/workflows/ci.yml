@@ -1,39 +1,139 @@
 name: CI
 on:
-  pull_request:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
 jobs:
-  core:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Use Node.js 22.x (setup-node)
+        id: setup_node
+        uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "22.x"
+          check-latest: true
+          cache: "npm"
+
+      - name: Fallback to Node.js 22 via NodeSource
+        if: ${{ always() }}
+        run: |
+          set -e
+          echo "Detected node: $(node -v || true)"
+          if ! node -v | grep -q '^v22\.'; then
+            echo "Installing Node.js 22 via NodeSource..."
+            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+          fi
+          echo "Final node: $(node -v)"
+          node -v | grep -q '^v22\.' || (echo 'Node 22 not available' && exit 1)
+
       - run: npm ci
-        if: hashFiles('package-lock.json') != ''
-      - run: npm run lint --if-present
-      - run: npm run typecheck --if-present
+      - run: npm run build --if-present
       - run: npm test --if-present
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 22.x (setup-node)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          check-latest: true
+          cache: "npm"
+
+      - name: Fallback to Node.js 22 via NodeSource
+        if: ${{ always() }}
+        run: |
+          set -e
+          if ! node -v | grep -q '^v22\.'; then
+            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+          fi
+          node -v | grep -q '^v22\.' || (echo 'Node 22 not available' && exit 1)
+
+      - run: npm ci
+      - run: npm run lint --if-present
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 22.x (setup-node)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          check-latest: true
+          cache: "npm"
+
+      - name: Fallback to Node.js 22 via NodeSource
+        if: ${{ always() }}
+        run: |
+          set -e
+          if ! node -v | grep -q '^v22\.'; then
+            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+          fi
+          node -v | grep -q '^v22\.' || (echo 'Node 22 not available' && exit 1)
+
+      - run: npm ci
+      - run: npm run typecheck --if-present
+
   providers-validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Use Node.js 22.x (setup-node)
+        uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "22.x"
+          check-latest: true
+          cache: "npm"
+
+      - name: Fallback to Node.js 22 via NodeSource
+        if: ${{ always() }}
+        run: |
+          set -e
+          if ! node -v | grep -q '^v22\.'; then
+            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+          fi
+          node -v | grep -q '^v22\.' || (echo 'Node 22 not available' && exit 1)
+
       - run: npm i ajv ajv-formats yaml
       - run: node scripts/validate-providers.js
         continue-on-error: false
+
   ui:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Use Node.js 22.x (setup-node)
+        uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "22.x"
+          check-latest: true
           cache: "npm"
+
+      - name: Fallback to Node.js 22 via NodeSource
+        if: ${{ always() }}
+        run: |
+          set -e
+          if ! node -v | grep -q '^v22\.'; then
+            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+          fi
+          node -v | grep -q '^v22\.' || (echo 'Node 22 not available' && exit 1)
+
       - name: Install UI deps
         working-directory: ./ui
         run: npm ci
