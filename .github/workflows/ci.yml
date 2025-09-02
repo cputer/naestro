@@ -5,123 +5,220 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  CI: "true"
+  TZ: "UTC"
+  LC_ALL: "C.UTF-8"
+  LANG: "C.UTF-8"
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Use Node.js 22.x (setup-node)
-        id: setup_node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22.x"
-          check-latest: true
-          cache: "npm"
-
-      - name: Fallback to Node.js 22 via NodeSource
-        if: ${{ always() }}
-        run: |
-          set -e
-          echo "Detected node: $(node -v || true)"
-          if ! node -v | grep -q '^v22\.'; then
-            echo "Installing Node.js 22 via NodeSource..."
-            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-          fi
-          echo "Final node: $(node -v)"
-          node -v | grep -q '^v22\.' || (echo 'Node 22 not available' && exit 1)
-
-      - run: npm ci
-        if: hashFiles('package-lock.json') != ''
-      - run: npm run build --if-present
-        if: hashFiles('package-lock.json') != ''
-      - run: npm test --if-present
-        if: hashFiles('package-lock.json') != ''
-
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js 22.x (setup-node)
+      - name: Setup Node 22.x
         uses: actions/setup-node@v4
         with:
           node-version: "22.x"
           check-latest: true
           cache: "npm"
 
-      - name: Fallback to Node.js 22 via NodeSource
-        if: ${{ always() }}
+      # Root lint (only if lockfile+script exist)
+      - name: Install (root) if lockfile
+        if: ${{ hashFiles('package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock') != '' }}
         run: |
-          set -e
-          if ! node -v | grep -q '^v22\.'; then
-            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-            sudo apt-get install -y nodejs
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci
+          elif [ -f yarn.lock ]; then
+            corepack enable || true
+            yarn install --frozen-lockfile
           fi
-          node -v | grep -q '^v22\.' || (echo 'Node 22 not available' && exit 1)
+      - name: Lint (root)
+        run: npm run lint --if-present
 
-      - run: npm ci
-        if: hashFiles('package-lock.json') != ''
-      - run: npm run lint --if-present
-        if: hashFiles('package-lock.json') != ''
+      # Server lint (if server/package.json exists)
+      - name: Install (server) if lockfile
+        if: ${{ hashFiles('server/package-lock.json', 'server/npm-shrinkwrap.json', 'server/yarn.lock') != '' }}
+        working-directory: ./server
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci
+          elif [ -f yarn.lock ]; then
+            corepack enable || true
+            yarn install --frozen-lockfile
+          fi
+      - name: Lint (server)
+        if: ${{ hashFiles('server/package.json') != '' }}
+        working-directory: ./server
+        run: npm run lint --if-present
+
+      # UI lint (if ui/package.json exists)
+      - name: Install (ui) if lockfile
+        if: ${{ hashFiles('ui/package-lock.json', 'ui/npm-shrinkwrap.json', 'ui/yarn.lock') != '' }}
+        working-directory: ./ui
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci
+          elif [ -f yarn.lock ]; then
+            corepack enable || true
+            yarn install --frozen-lockfile
+          fi
+      - name: Lint (ui)
+        if: ${{ hashFiles('ui/package.json') != '' }}
+        working-directory: ./ui
+        run: npm run lint --if-present
 
   typecheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js 22.x (setup-node)
+      - name: Setup Node 22.x
         uses: actions/setup-node@v4
         with:
           node-version: "22.x"
           check-latest: true
           cache: "npm"
 
-      - name: Fallback to Node.js 22 via NodeSource
-        if: ${{ always() }}
+      # Root typecheck
+      - name: Install (root) if lockfile
+        if: ${{ hashFiles('package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock') != '' }}
         run: |
-          set -e
-          if ! node -v | grep -q '^v22\.'; then
-            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-            sudo apt-get install -y nodejs
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci
+          elif [ -f yarn.lock ]; then
+            corepack enable || true
+            yarn install --frozen-lockfile
           fi
-          node -v | grep -q '^v22\.' || (echo 'Node 22 not available' && exit 1)
+      - name: Typecheck (root)
+        run: npm run typecheck --if-present
 
-      - run: npm ci
-        if: hashFiles('package-lock.json') != ''
-      - run: npm run typecheck --if-present
-        if: hashFiles('package-lock.json') != ''
+      # Server typecheck
+      - name: Install (server) if lockfile
+        if: ${{ hashFiles('server/package-lock.json', 'server/npm-shrinkwrap.json', 'server/yarn.lock') != '' }}
+        working-directory: ./server
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci
+          elif [ -f yarn.lock ]; then
+            corepack enable || true
+            yarn install --frozen-lockfile
+          fi
+      - name: Typecheck (server)
+        if: ${{ hashFiles('server/package.json') != '' }}
+        working-directory: ./server
+        run: npm run typecheck --if-present
+
+      # UI typecheck
+      - name: Install (ui) if lockfile
+        if: ${{ hashFiles('ui/package-lock.json', 'ui/npm-shrinkwrap.json', 'ui/yarn.lock') != '' }}
+        working-directory: ./ui
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci
+          elif [ -f yarn.lock ]; then
+            corepack enable || true
+            yarn install --frozen-lockfile
+          fi
+      - name: Typecheck (ui)
+        if: ${{ hashFiles('ui/package.json') != '' }}
+        working-directory: ./ui
+        run: npm run typecheck --if-present
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          check-latest: true
+          cache: "npm"
+
+      # Root build
+      - name: Install (root) if lockfile
+        if: ${{ hashFiles('package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock') != '' }}
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci
+          elif [ -f yarn.lock ]; then
+            corepack enable || true
+            yarn install --frozen-lockfile
+          fi
+      - name: Build (root)
+        run: npm run build --if-present
+
+      # Server build
+      - name: Install (server) if lockfile
+        if: ${{ hashFiles('server/package-lock.json', 'server/npm-shrinkwrap.json', 'server/yarn.lock') != '' }}
+        working-directory: ./server
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci
+          elif [ -f yarn.lock ]; then
+            corepack enable || true
+            yarn install --frozen-lockfile
+          fi
+      - name: Build (server)
+        if: ${{ hashFiles('server/package.json') != '' }}
+        working-directory: ./server
+        run: npm run build --if-present
+
+      # UI build
+      - name: Install (ui) if lockfile
+        if: ${{ hashFiles('ui/package-lock.json', 'ui/npm-shrinkwrap.json', 'ui/yarn.lock') != '' }}
+        working-directory: ./ui
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci
+          elif [ -f yarn.lock ]; then
+            corepack enable || true
+            yarn install --frozen-lockfile
+          fi
+      - name: Build (ui)
+        if: ${{ hashFiles('ui/package.json') != '' }}
+        working-directory: ./ui
+        run: npm run build --if-present
 
   ui:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js 22.x (setup-node)
+      - name: Setup Node 22.x
         uses: actions/setup-node@v4
         with:
           node-version: "22.x"
           check-latest: true
           cache: "npm"
 
-      - name: Fallback to Node.js 22 via NodeSource
-        if: ${{ always() }}
-        run: |
-          set -e
-          if ! node -v | grep -q '^v22\.'; then
-            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-          fi
-          node -v | grep -q '^v22\.' || (echo 'Node 22 not available' && exit 1)
-
-      - name: Install UI deps
+      - name: Install (ui) if lockfile
+        if: ${{ hashFiles('ui/package-lock.json', 'ui/npm-shrinkwrap.json', 'ui/yarn.lock') != '' }}
         working-directory: ./ui
-        run: npm ci
-        if: hashFiles('ui/package-lock.json') != ''
-      - name: Lint
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci
+          elif [ -f yarn.lock ]; then
+            corepack enable || true
+            yarn install --frozen-lockfile
+          else
+            echo "No lockfile in ./ui; skipping install."
+          fi
+
+      - name: Lint (ui)
+        if: ${{ hashFiles('ui/package.json') != '' }}
         working-directory: ./ui
         run: npm run lint --if-present
-      - name: Build
+
+      - name: Build (ui)
+        if: ${{ hashFiles('ui/package.json') != '' }}
         working-directory: ./ui
         run: npm run build --if-present
+
+      - name: Test (ui)
+        if: ${{ hashFiles('ui/package.json') != '' }}
+        working-directory: ./ui
+        run: npm test --if-present
