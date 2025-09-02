@@ -1,0 +1,26 @@
+{
+  "include-v-in-tag": true,
+  "tag-separator": "/",
+  "packages": {
+    ".": {
+      "release-type": "node",
+      "bump-minor-pre-major": true,
+      "bump-patch-for-minor-pre-major": true
+    },
+    "server": {
+      "release-type": "node",
+      "path": "server",
+      "changelog-path": "server/CHANGELOG.md",
+      "bump-minor-pre-major": true,
+      "bump-patch-for-minor-pre-major": true
+    },
+    "ui": {
+      "release-type": "node",
+      "path": "ui",
+      "changelog-path": "ui/CHANGELOG.md",
+      "bump-minor-pre-major": true,
+      "bump-patch-for-minor-pre-major": true
+    }
+  }
+}
+
