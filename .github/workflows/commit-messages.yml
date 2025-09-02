@@ -1,16 +1,15 @@
-name: PR Title (Conventional Commits)
+name: Commit Messages (Conventional Commits)
 
 on:
-  pull_request:
-    types: [opened, edited, synchronize, reopened]
+  push:
+    branches: [ main ]
 
 jobs:
-  pr-title:
-    name: Validate PR title with commitlint
+  commit-messages:
+    name: Lint commit messages on push to main
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,8 +19,9 @@ jobs:
         with:
           node-version: '22.x'
 
-      - name: Lint PR title
+      - name: Lint commits in this push
         uses: wagoid/commitlint-github-action@v6
         with:
           configFile: commitlint.config.cjs
+          # By default, the action lints all commits in the current push ref
           helpURL: https://www.conventionalcommits.org/en/v1.0.0/
