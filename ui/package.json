@@ -13,7 +13,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit || true",
     "test": "vitest --environment jsdom",
-    "test:ci": "vitest run --environment jsdom --reporter=dot"
+    "test:ci": "CI=true vitest run --environment jsdom --reporter=dot"
   },
   "devDependencies": {
     "@types/node": "^22.7.4",
@@ -26,8 +26,7 @@
     "prop-types": "^15.8.1",
     "typescript": "^5.5.4",
     "vite": "^5.4.3",
-    "vitest": "^2.1.1",
-    "jsdom": "^24.0.0"
+    "vitest": "^2.1.1"
   },
   "dependencies": {
     "react": "^18.3.1",
