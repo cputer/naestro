@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.2](https://github.com/cputer/naestro/compare/v0.2.1...v0.2.2) (2025-09-02)
+
+
+### Features
+
+* report and upload UI test coverage ([628000f](https://github.com/cputer/naestro/commit/628000f306c25b46c631a839ab5a97178bf2ef27))
+* **ui:** add material-ui and emotion ([51e8cf4](https://github.com/cputer/naestro/commit/51e8cf4d9418f5c6bfcdb6ae30b8018379161ed1))
+* **ui:** add material-ui dependencies ([a0e2729](https://github.com/cputer/naestro/commit/a0e27291326c236aa4ce051892cc6f3837bd7dc6))
+
+
+### Bug Fixes
+
+* **ui:** ensure vitest runs in CI mode ([4f427b1](https://github.com/cputer/naestro/commit/4f427b1862cb08f67a9a6563b9eab00f5b9da3c1))
+* **ui:** ensure vitest runs in CI mode ([a95ab30](https://github.com/cputer/naestro/commit/a95ab30a03f757fe855ca1a0298fad01aea04b84))
+
 ## [0.2.1](https://github.com/cputer/naestro/compare/v0.2.0...v0.2.1) (2025-09-02)
 
 
