@@ -8,6 +8,10 @@ export default defineConfig({
     globals: true,
     reporters: ['dot'],
     include: ['src/**/*.{test,spec}.{js,jsx}'],
-    watch: false
+    watch: false,
+    coverage: {
+      provider: 'v8',
+      reportsDirectory: '../coverage'
+    }
   }
 });

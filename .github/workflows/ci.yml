@@ -35,7 +35,14 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Test (CI)
+      - name: Test with coverage
         env:
           CI: 'true'
-        run: npm run test:ci
+        run: npm run test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ui
+          directory: coverage
