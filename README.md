@@ -28,6 +28,14 @@ Naestro is an AI Orchestrator for multi-model collaboration.
 
 See [docs/USER_MANUAL.md](docs/USER_MANUAL.md) for a complete manual.
 
+Additional documentation:
+
+- [Integrations](docs/INTEGRATIONS.md)
+- [Graphiti Memory](docs/GRAPHITI.md)
+- [UI API Contract](docs/UI_API_CONTRACT.md)
+- [Single-Node Deployment](docs/DEPLOY_SINGLE_NODE.md)
+- [VS Code Extension](docs/VS_CODE_EXTENSION.md)
+
 ## 🚀 Usage Scenarios
 - **RAG-based question answering** — retrieve documents from Postgres + pgvector and synthesize answers through LangGraph-style workflows.
 - **Multi-model routing** — pick between NIM, vLLM, and small language models based on cost or latency targets.
@@ -94,7 +102,13 @@ To point the gateway at a local orchestrator instead of the Compose service:
 export ORCH_URL=http://localhost:8081
 ```
 ## Memory
-Naestro now includes Graph Memory with Graphiti  → see [GRAPHITI](./GRAPHITI.md) for full overview and setup.
+Naestro now includes Graph Memory with Graphiti  → see [GRAPHITI](docs/GRAPHITI.md) for full overview and setup.
+
+## Naestro Studio (First-Party UI)
+Naestro ships with a web-based Studio for composing workflows, inspecting runs, and exploring graph memory. It features trace visualizations, prompt editing, and monitoring tools out of the box.
+
+## VS Code Extension (Qoder-style)
+A Qoder-style extension allows you to interact with Naestro from within VS Code. See [VS Code Extension](docs/VS_CODE_EXTENSION.md) for installation and usage details.
 
 ## 🗂 Structure
 ```
