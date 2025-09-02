@@ -5,5 +5,8 @@ __pycache__/
 .env
 .vscode/
 **/__pycache__/
+# Ignore Node.js dependencies
 node_modules/
+
+# Built UI output
 ui/dist/
