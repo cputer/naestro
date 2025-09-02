@@ -1,13 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import io from 'socket.io-client';
+import React, { useEffect, useState } from "react";
+import {
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import io from "socket.io-client";
+import { SOCKET_BASE_URL } from "../config";
 
 const MetricsChart = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const socket = io('http://localhost:4000');
-    socket.on('metrics', (metrics) => {
+    const socket = io(SOCKET_BASE_URL);
+    socket.on("metrics", (metrics) => {
       setData((prev) => [...prev.slice(-19), metrics]);
     });
     return () => socket.close();
