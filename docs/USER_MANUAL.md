@@ -55,6 +55,29 @@ echo $ORCH_URL  # expect: http://localhost:8081
 - **Inference Tier** – optional NIM, vLLM, and small model services.
 - **Monitoring Stack** – optional Prometheus + Grafana via the `monitoring` profile.
 
+## Telemetry API
+The gateway exposes real-time telemetry for system health and performance.
+
+| Endpoint | Description |
+|----------|-------------|
+| `/ws` | WebSocket stream emitting telemetry events. |
+| `/events` | Server-Sent Events fallback with the same payloads. |
+| `/api/metrics/system` | Latest CPU and memory usage. |
+| `/api/metrics/kpis` | Runtime KPIs derived from request handling. |
+
+Each streamed telemetry message shares this schema:
+
+```json
+{
+  "timestamp": 1712345678.9,
+  "system": {"cpu_percent": 42.5, "memory_mb": 1234.0},
+  "kpis": {"latency_p95_ms": 10.0, "throughput_rps": 0.5}
+}
+```
+
+Clients should subscribe to either `/ws` or `/events` and parse the `system` and `kpis`
+objects for monitoring or visualization.
+
 ## End-to-End Orchestration Demo
 1. Ensure gateway and orchestrator services are running (see `docker compose up` in Setup).
 2. Submit a task through the gateway:
