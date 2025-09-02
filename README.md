@@ -16,12 +16,14 @@ Naestro is an AI Orchestrator for multi-model collaboration.
 ---
 
 ## Documentation
-
+- **Whitepaper** → [WHITEPAPER.md](WHITEPAPER.md)
+- **Architecture** → [ARCHITECTURE.md](ARCHITECTURE.md)
+- **Single-node deployment (DGX Spark desktop)** → [docs/DEPLOY_SINGLE_NODE.md](docs/DEPLOY_SINGLE_NODE.md)
+- **Multi-desktop (cells, router, queue)** → [docs/DEPLOY_MULTI_NODE.md](docs/DEPLOY_MULTI_NODE.md)
+- **Apple sidecars (vision, routing, UI)** → [docs/APPLE_MODELS.md](docs/APPLE_MODELS.md)
 - **Integrations (local-first stack, adapters, providers)** → [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md)
 - **Graph Memory (Graphiti) guide** → [docs/GRAPHITI.md](docs/GRAPHITI.md)
 - **Studio ↔ Core API contract (REST/WS/SSE, auth)** → [docs/UI_API_CONTRACT.md](docs/UI_API_CONTRACT.md)
-- **Single-node DGX Spark deployment** → [docs/DEPLOY_SINGLE_NODE.md](docs/DEPLOY_SINGLE_NODE.md)
-- **Multi-node DGX Spark deployment** → [docs/DEPLOY_MULTI_NODE.md](docs/DEPLOY_MULTI_NODE.md)
 - **VS Code add-on (Qoder-style) spec** → [docs/VS_CODE_EXTENSION.md](docs/VS_CODE_EXTENSION.md)
 - **No-Replit deployment (Caddy + Cloudflare Tunnel)** → [docs/NO_REPLIT_DEPLOY.md](docs/NO_REPLIT_DEPLOY.md)
 
@@ -174,3 +176,12 @@ Contributions are welcome! Please open an issue or pull request for any improvem
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
+### Compatibility Matrix
+| Component           | Version | Compatible With                          |
+|--------------------|---------|------------------------------------------|
+| Core Orchestrator  | v1.4.x  | Studio v0.9+, Providers schema v0.6+     |
+| Studio (UI)        | v0.9.x  | Core v1.4+, Graphiti v0.3+               |
+| Providers schema   | v0.6+   | Core v1.4+                               |
+
+> Automated dependency updates via **Dependabot** are enabled (npm & GitHub Actions).

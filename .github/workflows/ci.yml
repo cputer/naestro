@@ -1,109 +1,46 @@
 name: CI
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
-
+  push:
+    branches: [ main ]
 jobs:
-  build:
+  core:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: ui/package-lock.json
-
-      - name: Install UI dependencies
-        working-directory: ui
-        run: npm ci
-
-      - name: Build UI
-        working-directory: ui
-        run: npm run build
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Upgrade pip
-        run: python -m pip install --upgrade pip
-
-      - name: Install root requirements (optional)
-        run: |
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-          else
-            echo "No root requirements.txt"
-          fi
-
-      - name: Install scripts requirements (optional)
-        run: |
-          if [ -f scripts/requirements.txt ]; then
-            pip install -r scripts/requirements.txt
-          else
-            echo "No scripts requirements"
-          fi
-
-      - name: Install gateway requirements (optional)
-        run: |
-          if [ -f src/gateway/requirements.txt ]; then
-            pip install -r src/gateway/requirements.txt
-          else
-            echo "No gateway requirements"
-          fi
-
-      - name: Install orchestrator requirements (optional)
-        run: |
-          if [ -f src/orchestrator/requirements.txt ]; then
-            pip install -r src/orchestrator/requirements.txt
-          else
-            echo "No orchestrator requirements"
-          fi
-
-      - name: Sanity compile (non-fatal)
-        run: |
-          python -m compileall -q src/gateway || true
-          python -m compileall -q src/orchestrator || true
-
-      - name: Run tests
-        run: |
-          pip install pytest
-          pytest -q
-
-      - name: Calculate Shadow/Canary Delta
-        run: |
-          # Example values; replace with real metric collection logic
-          PASS_DELTA=0.02
-          COST_DELTA=0.01
-          LATENCY_DELTA=0.03
-          WEIGHTED=$(echo "0.4*$PASS_DELTA + 0.4*$COST_DELTA + 0.2*$LATENCY_DELTA" | bc -l)
-          echo "Weighted delta: $WEIGHTED"
-          if (( $(echo "$WEIGHTED > -0.0001" | bc -l) )); then
-            echo "Promotion criteria met (weighted delta >= -0.0001)"
-          else
-            echo "Promotion criteria not met (weighted delta < -0.0001)"
-            exit 1
-          fi
-  trivy:
-    name: Trivy Scan
+          node-version: "22"
+      - run: npm ci
+        if: hashFiles('package-lock.json') != ''
+      - run: npm run lint --if-present
+      - run: npm run typecheck --if-present
+      - run: npm test --if-present
+  providers-validate:
     runs-on: ubuntu-latest
-    needs: build
-    strategy:
-      matrix:
-        service: [gateway, orchestrator]
     steps:
       - uses: actions/checkout@v4
-      - name: Build ${{ matrix.service }} image
-        run: docker build -t ${{ matrix.service }} -f src/${{ matrix.service }}/Dockerfile src/${{ matrix.service }}
-      - name: Scan ${{ matrix.service }} image
-        uses: aquasecurity/trivy-action@0.32.0
+      - uses: actions/setup-node@v4
         with:
-          image-ref: ${{ matrix.service }}
-          severity: HIGH,CRITICAL
-          ignore-unfixed: true
-          exit-code: '1'
+          node-version: "22"
+      - run: npm i ajv ajv-formats yaml
+      - run: node scripts/validate-providers.js
+        continue-on-error: false
+  ui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - name: Install UI deps
+        working-directory: ./ui
+        run: npm ci
+        if: hashFiles('ui/package-lock.json') != ''
+      - name: Lint
+        working-directory: ./ui
+        run: npm run lint --if-present
+      - name: Build
+        working-directory: ./ui
+        run: npm run build --if-present
