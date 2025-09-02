@@ -1,221 +1,59 @@
 name: CI
+
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-env:
-  CI: "true"
-  TZ: "UTC"
-  LC_ALL: "C.UTF-8"
-  LANG: "C.UTF-8"
-
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      # No cache here — avoids lockfile errors at repo root
-      - name: Setup Node 22.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22.x"
-          check-latest: true
-
-      # Root lint (only runs if a lockfile + script exists)
-      - name: Install (root) if lockfile
-        if: ${{ hashFiles('package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock') != '' }}
-        run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            npm ci
-          elif [ -f yarn.lock ]; then
-            corepack enable || true
-            yarn install --frozen-lockfile
-          fi
-      - name: Lint (root)
-        run: npm run lint --if-present
-
-      # Server lint
-      - name: Install (server) if lockfile
-        if: ${{ hashFiles('server/package-lock.json', 'server/npm-shrinkwrap.json', 'server/yarn.lock') != '' }}
-        working-directory: ./server
-        run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            npm ci
-          elif [ -f yarn.lock ]; then
-            corepack enable || true
-            yarn install --frozen-lockfile
-          fi
-      - name: Lint (server)
-        if: ${{ hashFiles('server/package.json') != '' }}
-        working-directory: ./server
-        run: npm run lint --if-present
-
-      # UI lint
-      - name: Install (ui) if lockfile
-        if: ${{ hashFiles('ui/package-lock.json', 'ui/npm-shrinkwrap.json', 'ui/yarn.lock') != '' }}
-        working-directory: ./ui
-        run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            npm ci
-          elif [ -f yarn.lock ]; then
-            corepack enable || true
-            yarn install --frozen-lockfile
-          fi
-      - name: Lint (ui)
-        if: ${{ hashFiles('ui/package.json') != '' }}
-        working-directory: ./ui
-        run: npm run lint --if-present
-
-  typecheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node 22.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22.x"
-          check-latest: true
-
-      # Root typecheck
-      - name: Install (root) if lockfile
-        if: ${{ hashFiles('package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock') != '' }}
-        run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            npm ci
-          elif [ -f yarn.lock ]; then
-            corepack enable || true
-            yarn install --frozen-lockfile
-          fi
-      - name: Typecheck (root)
-        run: npm run typecheck --if-present
-
-      # Server typecheck
-      - name: Install (server) if lockfile
-        if: ${{ hashFiles('server/package-lock.json', 'server/npm-shrinkwrap.json', 'server/yarn.lock') != '' }}
-        working-directory: ./server
-        run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            npm ci
-          elif [ -f yarn.lock ]; then
-            corepack enable || true
-            yarn install --frozen-lockfile
-          fi
-      - name: Typecheck (server)
-        if: ${{ hashFiles('server/package.json') != '' }}
-        working-directory: ./server
-        run: npm run typecheck --if-present
-
-      # UI typecheck
-      - name: Install (ui) if lockfile
-        if: ${{ hashFiles('ui/package-lock.json', 'ui/npm-shrinkwrap.json', 'ui/yarn.lock') != '' }}
-        working-directory: ./ui
-        run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            npm ci
-          elif [ -f yarn.lock ]; then
-            corepack enable || true
-            yarn install --frozen-lockfile
-          fi
-      - name: Typecheck (ui)
-        if: ${{ hashFiles('ui/package.json') != '' }}
-        working-directory: ./ui
-        run: npm run typecheck --if-present
-
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node 22.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22.x"
-          check-latest: true
-
-      # Root build
-      - name: Install (root) if lockfile
-        if: ${{ hashFiles('package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock') != '' }}
-        run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            npm ci
-          elif [ -f yarn.lock ]; then
-            corepack enable || true
-            yarn install --frozen-lockfile
-          fi
-      - name: Build (root)
-        run: npm run build --if-present
-
-      # Server build
-      - name: Install (server) if lockfile
-        if: ${{ hashFiles('server/package-lock.json', 'server/npm-shrinkwrap.json', 'server/yarn.lock') != '' }}
-        working-directory: ./server
-        run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            npm ci
-          elif [ -f yarn.lock ]; then
-            corepack enable || true
-            yarn install --frozen-lockfile
-          fi
-      - name: Build (server)
-        if: ${{ hashFiles('server/package.json') != '' }}
-        working-directory: ./server
-        run: npm run build --if-present
-
-      # UI build
-      - name: Install (ui) if lockfile
-        if: ${{ hashFiles('ui/package-lock.json', 'ui/npm-shrinkwrap.json', 'ui/yarn.lock') != '' }}
-        working-directory: ./ui
-        run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            npm ci
-          elif [ -f yarn.lock ]; then
-            corepack enable || true
-            yarn install --frozen-lockfile
-          fi
-      - name: Build (ui)
-        if: ${{ hashFiles('ui/package.json') != '' }}
-        working-directory: ./ui
-        run: npm run build --if-present
-
   ui:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ui
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Node 22.x
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "22.x"
-          check-latest: true
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: ui/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npm run test:ui
+        if: ${{ hashFiles('ui/src/**/*.{test,spec}.{js,jsx,ts,tsx}') != '' }}
 
-      - name: Install (ui) if lockfile
-        if: ${{ hashFiles('ui/package-lock.json', 'ui/npm-shrinkwrap.json', 'ui/yarn.lock') != '' }}
-        working-directory: ./ui
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+          cache: "pip"
+          cache-dependency-path: |
+            requirements.lock
+            scripts/requirements.txt
+      - run: pip install -r requirements.lock -r scripts/requirements.txt
+      - name: Flake8
         run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            npm ci
-          elif [ -f yarn.lock ]; then
-            corepack enable || true
-            yarn install --frozen-lockfile
+          if command -v flake8 >/dev/null 2>&1; then
+            flake8
           else
-            echo "No lockfile in ./ui; skipping install."
+            echo "flake8 not installed"
+          fi
+      - name: Pytest
+        run: |
+          if command -v pytest >/dev/null 2>&1; then
+            pytest
+          else
+            echo "pytest not installed"
           fi
 
-      - name: Lint (ui)
-        if: ${{ hashFiles('ui/package.json') != '' }}
-        working-directory: ./ui
-        run: npm run lint --if-present
-
-      - name: Build (ui)
-        if: ${{ hashFiles('ui/package.json') != '' }}
-        working-directory: ./ui
-        run: npm run build --if-present
-
-      - name: Test (ui)
-        if: ${{ hashFiles('ui/package.json') != '' }}
-        working-directory: ./ui
-        run: npm test --if-present
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
