@@ -7,7 +7,9 @@
       "release-type": "node",
       "package-name": "naestro-ui",
       "changelog-path": "ui/CHANGELOG.md",
-      "versioning": "default"
+      "versioning": "default",
+      "bump-minor-pre-major": true,
+      "bump-patch-for-minor-pre-major": true
     }
   }
 }
