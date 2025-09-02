@@ -4,7 +4,7 @@ import time
 
 import httpx
 from fastapi import FastAPI, WebSocket
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 
 app = FastAPI(title="NAESTRO Gateway")
 ORCH = os.getenv("ORCH_URL", "http://orchestrator:8081")
@@ -18,9 +18,14 @@ def health():
 @app.post("/orchestrate")
 async def orchestrate(task: dict):
     async with httpx.AsyncClient(timeout=120) as client:
-        r = await client.post(f"{ORCH}/run", json=task)
-        r.raise_for_status()
-        return r.json()
+        try:
+            r = await client.post(f"{ORCH}/run", json=task)
+            r.raise_for_status()
+            return r.json()
+        except httpx.RequestError:
+            return JSONResponse(
+                {"error": "orchestrator unreachable"}, status_code=502
+            )
 
 
 @app.websocket("/ws")
