@@ -3,7 +3,6 @@ from typing import Any, Dict
 
 import sympy as sp
 from langgraph.graph import StateGraph
-from scipy import integrate
 
 
 # Allowed symbols and functions for safe evaluation
@@ -64,14 +63,18 @@ def parse_math_query(query: str) -> Any:
     Otherwise the expression is evaluated symbolically.
     """
     query = query.strip()
-    # definite integral using SciPy
+    # definite integral, prefer SciPy but fallback to SymPy if unavailable
     m = re.match(r"integrate\s+(.+)\s+from\s+(.+)\s+to\s+(.+)", query, re.I)
     if m:
         expr, lower, upper = m.groups()
         func = sp.lambdify(x, _safe_sympify(expr), "math")
         a = float(_safe_sympify(lower))
         b = float(_safe_sympify(upper))
-        val, _ = integrate.quad(func, a, b)
+        try:
+            from scipy import integrate
+            val, _ = integrate.quad(func, a, b)
+        except ImportError:
+            val = float(sp.integrate(_safe_sympify(expr), (x, a, b)))
         return val
 
     m = re.match(r"integrate\s+(.+)", query, re.I)
