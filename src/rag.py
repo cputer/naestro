@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
+import threading
 from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import Iterable
@@ -13,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 # --- Model loading -------------------------------------------------------
+_model_lock = threading.Lock()
 model: SentenceTransformer | None = None
 
 
@@ -20,7 +22,9 @@ def init_model() -> SentenceTransformer:
     """Lazily initialize and return the text embedding model."""
     global model
     if model is None:
-        model = SentenceTransformer("all-MiniLM-L12-v2")
+        with _model_lock:
+            if model is None:
+                model = SentenceTransformer("all-MiniLM-L12-v2")
     return model
 
 
