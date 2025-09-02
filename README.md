@@ -73,6 +73,7 @@ regenerate the corresponding `*.lock` file with `pip-compile`.
 - Run `sudo apt install nvidia-slm-1.0` for SLM support.
 - Execute `hardware/pin-resources.sh` for CPU/GPU pinning.
 - Enable MIG with `sudo systemctl start mig-setup`.
+- Validate the deployment with `./scripts/validate-dgx-deployment.js`.
 
 ## 🧰 Environment
 Create a `.env` from the example:
@@ -105,7 +106,7 @@ sql/schema.sql             # pgvector schema + indexes
 etc/docker/sandbox/        # sandbox Dockerfile + seccomp
 config/                    # prometheus + otel examples
 config/grafana/            # Grafana dashboards
-scripts/                   # DGX pinning, governor
+scripts/                   # DGX pinning, governor, validation
 jobs/                      # PII calibration
 .github/workflows/         # CI
 .devcontainer/             # Codespaces dev environment
