@@ -2,6 +2,7 @@ import importlib
 import sys
 import types
 from types import SimpleNamespace
+from contextlib import contextmanager
 
 import pytest
 
@@ -37,13 +38,13 @@ def test_init_connection_pool(rag, monkeypatch):
     rag.pool = None
 
     class DummyPool:
-        def __init__(self, minc, maxc, dsn):
-            self.args = (minc, maxc, dsn)
+        def __init__(self, dsn, minc, maxc):
+            self.args = (dsn, minc, maxc)
 
-    monkeypatch.setattr(rag, "SimpleConnectionPool", DummyPool)
+    monkeypatch.setattr(rag, "ConnectionPool", DummyPool)
     pool = rag.init_connection_pool(dsn="db://", minconn=1, maxconn=2)
     assert isinstance(pool, DummyPool)
-    assert pool.args == (1, 2, "db://")
+    assert pool.args == ("db://", 1, 2)
     assert rag.pool is pool
 
 
@@ -79,15 +80,14 @@ def test_insert_embedding_success(rag):
         def __init__(self):
             self.conn = DummyConn()
 
-        def getconn(self):
-            return self.conn
-
-        def putconn(self, conn):
-            self.put = conn
+        @contextmanager
+        def connection(self):
+            yield self.conn
 
     rag.pool = DummyPool()
     result = rag.insert_embedding("text", [0.1])
-    assert result == {"success": True, "id": 5}
+    assert isinstance(result, rag.InsertEmbeddingResult)
+    assert result.id == 5
     assert rag.pool.conn.committed
 
 
@@ -122,15 +122,14 @@ def test_hybrid_search(rag):
         def __init__(self):
             self.conn = DummyConn()
 
-        def getconn(self):
-            return self.conn
-
-        def putconn(self, conn):
-            self.put = conn
+        @contextmanager
+        def connection(self):
+            yield self.conn
 
     rag.pool = DummyPool()
     result = rag.hybrid_search("query")
-    assert result["rows"] == [(1, "row")]
+    assert isinstance(result, rag.HybridSearchResult)
+    assert result.rows == [(1, "row")]
 
 
 def test_update_feedback(rag):
@@ -165,28 +164,32 @@ def test_update_feedback(rag):
         def __init__(self):
             self.conn = DummyConn()
 
-        def getconn(self):
-            return self.conn
-
-        def putconn(self, conn):
-            self.put = conn
+        @contextmanager
+        def connection(self):
+            yield self.conn
 
     rag.pool = DummyPool()
     result = rag.update_feedback(1, 0.2)
-    assert result == {"success": True, "updated": 1}
+    assert isinstance(result, rag.UpdateFeedbackResult)
+    assert result.updated == 1
     assert rag.pool.conn.committed
 
-def test_insert_embedding_connection_failure(rag, monkeypatch):
-    def raise_conn():
-        raise RuntimeError("no connection")
+def test_insert_embedding_connection_failure(rag):
+    class BadPool:
+        def connection(self):
+            raise RuntimeError("no connection")
 
-    monkeypatch.setattr(rag, "_get_conn", raise_conn)
+    rag.pool = BadPool()
     with pytest.raises(RuntimeError):
         rag.insert_embedding("text", [0.1])
 
 
 def test_hybrid_search_invalid_input(rag, monkeypatch):
-    monkeypatch.setattr(rag, "_get_conn", lambda: object())
+    @contextmanager
+    def fake_conn():
+        yield object()
+
+    rag.pool = SimpleNamespace(connection=fake_conn)
 
     def bad_embed(text):
         raise ValueError("invalid text")
