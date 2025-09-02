@@ -48,6 +48,15 @@ inference:
       max_batch: 12
       roles: [critic, code]
 
+    # Apple OpenELM router provider (local OpenAI-compatible endpoint)
+    - id: apple_openelm_router
+      cell: local-01
+      runtime: openai
+      model: apple/OpenELM-3B-Instruct
+      endpoint: http://127.0.0.1:8602/v1
+      roles: [router, proposer, critic]
+      max_output_tokens: 4096
+
   cloud:
     - id: openai_gpt4x
       provider: openai
