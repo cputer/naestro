@@ -17,14 +17,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # No cache here — avoids lockfile errors at repo root
       - name: Setup Node 22.x
         uses: actions/setup-node@v4
         with:
           node-version: "22.x"
           check-latest: true
-          cache: "npm"
 
-      # Root lint (only if lockfile+script exist)
+      # Root lint (only runs if a lockfile + script exists)
       - name: Install (root) if lockfile
         if: ${{ hashFiles('package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock') != '' }}
         run: |
@@ -37,7 +37,7 @@ jobs:
       - name: Lint (root)
         run: npm run lint --if-present
 
-      # Server lint (if server/package.json exists)
+      # Server lint
       - name: Install (server) if lockfile
         if: ${{ hashFiles('server/package-lock.json', 'server/npm-shrinkwrap.json', 'server/yarn.lock') != '' }}
         working-directory: ./server
@@ -53,7 +53,7 @@ jobs:
         working-directory: ./server
         run: npm run lint --if-present
 
-      # UI lint (if ui/package.json exists)
+      # UI lint
       - name: Install (ui) if lockfile
         if: ${{ hashFiles('ui/package-lock.json', 'ui/npm-shrinkwrap.json', 'ui/yarn.lock') != '' }}
         working-directory: ./ui
@@ -79,7 +79,6 @@ jobs:
         with:
           node-version: "22.x"
           check-latest: true
-          cache: "npm"
 
       # Root typecheck
       - name: Install (root) if lockfile
@@ -136,7 +135,6 @@ jobs:
         with:
           node-version: "22.x"
           check-latest: true
-          cache: "npm"
 
       # Root build
       - name: Install (root) if lockfile
@@ -193,7 +191,6 @@ jobs:
         with:
           node-version: "22.x"
           check-latest: true
-          cache: "npm"
 
       - name: Install (ui) if lockfile
         if: ${{ hashFiles('ui/package-lock.json', 'ui/npm-shrinkwrap.json', 'ui/yarn.lock') != '' }}
