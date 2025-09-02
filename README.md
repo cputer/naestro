@@ -89,6 +89,7 @@ curl http://localhost:8081/health
 ```bash
 pip install -r requirements.lock
 pip install -r scripts/requirements.txt  # utilities like governor.py
+python scripts/install_nltk_data.py      # download NLTK corpora
 
 # Start services directly (hot reload)
 uvicorn src.orchestrator.main:app --reload --port 8081 &

@@ -29,18 +29,12 @@ def ensure_nltk_data() -> None:
             missing.append(pkg)
 
     if missing:
-        for pkg in missing:
-            nltk.download(pkg, quiet=True)
-
-        unresolved = []
-        for pkg, path in packages.items():
-            try:
-                nltk.data.find(path)
-            except LookupError:
-                unresolved.append(pkg)
-
-        if unresolved:
-            raise LookupError("Missing NLTK corpora: " + ", ".join(sorted(unresolved)))
+        corpora = ", ".join(sorted(missing))
+        raise LookupError(
+            f"Missing NLTK corpora: {corpora}. "
+            "Run 'python scripts/install_nltk_data.py' or "
+            f"python -m nltk.downloader {corpora} before running."
+        )
 
     _NLTK_READY = True
 
@@ -110,9 +104,7 @@ def verify_fn(state):
 
         try:
             result = subprocess.run(["flake8", path], capture_output=True, text=True)
-            lint_errors = [
-                line for line in result.stdout.splitlines() if line.strip()
-            ]
+            lint_errors = [line for line in result.stdout.splitlines() if line.strip()]
             lint_delta = 1 / (1 + len(lint_errors))
         except FileNotFoundError:
             lint_delta = 0.0
