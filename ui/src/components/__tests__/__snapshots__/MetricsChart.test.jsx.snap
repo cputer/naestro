@@ -1,0 +1,36 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MetricsChart > renders metrics with axes and legend 1`] = `
+<div>
+  <div
+    data-testid="container"
+  >
+    <div
+      data-points="1"
+      role="chart"
+    >
+      <div
+        role="grid"
+      />
+      <div
+        role="x-axis"
+      />
+      <div
+        role="y-axis"
+      />
+      <div
+        role="tooltip"
+      />
+      <div
+        role="legend"
+      />
+      <div
+        role="line-latency"
+      />
+      <div
+        role="line-throughput"
+      />
+    </div>
+  </div>
+</div>
+`;
