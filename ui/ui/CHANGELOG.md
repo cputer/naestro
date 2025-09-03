@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.4](https://github.com/cputer/naestro/compare/v0.2.3...v0.2.4) (2025-09-03)
+
+
+### Features
+
+* **ui:** allow custom metric source for chart ([8f269f9](https://github.com/cputer/naestro/commit/8f269f9782fe6ddedff375c22e7961d26e46ffd8))
+* **ui:** allow custom metric source for chart ([49f27bf](https://github.com/cputer/naestro/commit/49f27bfac4169c6d11a407917811f0aba70b6111))
+* **ui:** mock status and metrics endpoints ([a5f7b7b](https://github.com/cputer/naestro/commit/a5f7b7ba67f5725965f3c12dfddf230e93cab48e))
+* **ui:** mock status and metrics endpoints ([cc67195](https://github.com/cputer/naestro/commit/cc67195e7454c653018dcfa0e19eaa8b9ae6a47c))
+
 ## [0.2.3](https://github.com/cputer/naestro/compare/v0.2.2...v0.2.3) (2025-09-03)
 
 
