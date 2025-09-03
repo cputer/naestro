@@ -1,0 +1,18 @@
+name: Codex Exec (Node 22)
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "Shell to run in ui/ (Node 22 container)"
+        required: true
+        default: "npm ci && npm run build && npm run test:ci"
+
+jobs:
+  exec:
+    runs-on: ubuntu-latest
+    container: node:22-bullseye
+    defaults: { run: { working-directory: ui } }
+    steps:
+      - uses: actions/checkout@v4
+      - run: ${{ inputs.command }}
+        env: { CI: "true" }
