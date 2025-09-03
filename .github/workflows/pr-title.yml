@@ -15,10 +15,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Use Node 22.x
+      - name: Use Node 22
         uses: actions/setup-node@v4
         with:
-          node-version: '22.x'
+          node-version: 22
 
       - name: Lint PR title
         uses: wagoid/commitlint-github-action@v6

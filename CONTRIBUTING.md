@@ -7,7 +7,7 @@
 
 ## Prerequisites
 
-- Node.js 22 (see `.node-version` and `.nvmrc`).
+ - Node.js 22 (see `.node-version` and `.nvmrc`; run `nvm use` or `fnm use` to switch automatically).
 
 ## Run the UI locally
 
@@ -23,8 +23,9 @@ The dev server runs on http://localhost:5173. Set `VITE_SOCKET_BASE_URL` if your
 
 We enforce ESLint/Prettier and other checks via [pre-commit](https://pre-commit.com/).
 
-- This repo uses **Node 22** everywhere (`.nvmrc`, `.node-version`).
-- To avoid `nodeenv` download issues, we configure pre-commit to use the **system Node**:
+ - This repo uses **Node 22** everywhere (`.nvmrc`, `.node-version`).
+ - Configure your shell to run `nvm use` or `fnm use` on entry so the correct version is loaded.
+ - To avoid `nodeenv` download issues, we configure pre-commit to use the **system Node**:
 
 ```yaml
 default_language_version:
