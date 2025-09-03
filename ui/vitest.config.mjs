@@ -8,10 +8,15 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.ts'],
     coverage: {
+      all: true,
       include: ['src/**/*.{js,jsx,ts,tsx}'],
-      exclude: ['src/main.jsx', 'src/**/__tests__/**', 'src/setupTests.ts'],
+      exclude: ['src/**/__tests__/**', 'src/setupTests.ts', 'src/main.jsx'],
       perFile: true,
       reporter: ['text', 'lcov', 'html'],
+      lines: 100,
+      statements: 100,
+      branches: 100,
+      functions: 100,
     },
   },
 });
