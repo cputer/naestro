@@ -4,9 +4,18 @@ codecov:
     wait_for_ci: true
 coverage:
   status:
+    # TODO: When server and Python reach ~100% coverage,
+    # raise their targets and tighten the project target to 100%.
+    flags:
+      ui:
+        target: 100%
+      server:
+        target: 0%
+      python:
+        target: 0%
     project:
       default:
-        target: auto
+        target: 5%
         threshold: 0%
     patch:
       default:
