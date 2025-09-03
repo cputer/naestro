@@ -77,7 +77,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt -r requirements-dev.txt -r src/gateway/requirements.txt
+          python -m pip install -r requirements.txt -r requirements-dev.txt
       - name: Run tests
         run: |
           pytest -m "not slow" --maxfail=1 -q --durations=10 --cov=src --cov-report=xml
