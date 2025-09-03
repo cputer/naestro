@@ -6,6 +6,7 @@
   "engines": {
     "node": ">=22 <23"
   },
+  "engineStrict": true,
   "scripts": {
     "lint": "tsc --noEmit",
     "build": "tsc -p tsconfig.json",
