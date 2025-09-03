@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom/vitest';
+import { server } from './src/mocks/server';
 
 const originalError = console.error;
 console.error = (...args) => {
@@ -9,8 +10,11 @@ console.error = (...args) => {
 };
 
 import { cleanup } from '@testing-library/react';
-import { afterEach } from 'vitest';
+import { afterAll, afterEach, beforeAll } from 'vitest';
 
+beforeAll(() => server.listen());
 afterEach(() => {
+  server.resetHandlers();
   cleanup();
 });
+afterAll(() => server.close());
