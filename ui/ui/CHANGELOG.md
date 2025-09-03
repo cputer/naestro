@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.3](https://github.com/cputer/naestro/compare/v0.2.2...v0.2.3) (2025-09-03)
+
+
+### Bug Fixes
+
+* **ci:** remove root ESLint deps to resolve npm ci conflict ([2b9a26a](https://github.com/cputer/naestro/commit/2b9a26aedb2755e6a425dad019a42515874cb750))
+* **ci:** upgrade ESLint deps ([d5dc61b](https://github.com/cputer/naestro/commit/d5dc61bc071f56c64117329dcd7a4dc8461a5dc2))
+
 ## [0.2.2](https://github.com/cputer/naestro/compare/v0.2.1...v0.2.2) (2025-09-02)
 
 
