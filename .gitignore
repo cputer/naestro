@@ -14,3 +14,8 @@ ui/dist/
 
 # Ignore nested UI directory
 ui/ui/
+
+# Coverage reports
+.coverage
+coverage.xml
+htmlcov/
