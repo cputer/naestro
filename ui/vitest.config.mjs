@@ -18,7 +18,9 @@ export default defineConfig({
       exclude: [
         'src/**/*.generated.{js,jsx,ts,tsx}',
         'src/**/*.stories.{js,jsx,ts,tsx}',
-        'src/**/*.{setup,setupTests}.{js,jsx,ts,tsx}'
+        'src/**/*.{setup,setupTests}.{js,jsx,ts,tsx}',
+        'src/**/main.{js,jsx,ts,tsx}',
+        'src/**/index.{js,jsx,ts,tsx}'
       ],
       thresholds: {
         lines: 100,
