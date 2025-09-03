@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest';
-import { server } from './src/mocks/server';
+import { server } from './mocks/server';
 
 const originalError = console.error;
 console.error = (...args) => {
