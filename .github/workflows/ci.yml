@@ -32,3 +32,25 @@ jobs:
           files: ui/coverage/lcov.info
           flags: ui
           fail_ci_if_error: true
+  server:
+    runs-on: ubuntu-latest
+    container: node:22-bullseye
+    defaults: { run: { working-directory: server } }
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-server-npm-${{ hashFiles('server/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-server-npm-
+      - run: npm ci
+      - run: npm run lint --if-present
+      - run: npm run build --if-present
+      - run: npm run test:ci --if-present
+        env: { CI: "true" }
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: server/coverage/lcov.info
+          flags: server
+          fail_ci_if_error: true
