@@ -112,7 +112,7 @@ jobs:
             pip install -r requirements.lock -r src/gateway/requirements.lock -r src/orchestrator/requirements.lock pytest pytest-cov
 
         - name: Test with coverage
-          run: pytest --cov=src --cov-report=xml
+          run: pytest --cov=src --cov-report=xml:coverage.xml
 
         - name: Upload coverage to Codecov
           uses: codecov/codecov-action@v5
