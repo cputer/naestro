@@ -26,3 +26,9 @@ jobs:
       - run: npm run build --if-present
       - run: npm run test:ci --if-present
         env: { CI: "true" }
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ui/coverage/lcov.info
+          flags: ui
+          fail_ci_if_error: true
