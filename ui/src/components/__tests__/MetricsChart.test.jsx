@@ -1,17 +1,22 @@
 import { render, act, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import MetricsChart from '../MetricsChart.jsx';
 
-const listeners = {};
-
-vi.mock('socket.io-client', () => ({
-  default: vi.fn(() => ({
-    on: vi.fn((event, cb) => {
-      listeners[event] = cb;
-    }),
-    close: vi.fn(),
-  })),
-}));
+const createMetricsStream = () => {
+  let emit;
+  let reject;
+  const getMetrics = vi.fn((e) => {
+    emit = e;
+    return new Promise((_, r) => {
+      reject = r;
+    });
+  });
+  return {
+    getMetrics,
+    emit: (m) => emit(m),
+    error: () => reject(new Error('fail')),
+  };
+};
 
 vi.mock('recharts', () => ({
   ResponsiveContainer: ({ children }) => (
@@ -31,41 +36,47 @@ vi.mock('recharts', () => ({
 }));
 
 describe('MetricsChart', () => {
-  beforeEach(() => {
-    for (const key in listeners) delete listeners[key];
-  });
-
   it('renders empty response', async () => {
-    const getMetrics = vi.fn((emit) => emit([]));
-    const { getByRole } = render(<MetricsChart getMetrics={getMetrics} />);
-
+    const stream = createMetricsStream();
+    const { getByRole } = render(
+      <MetricsChart getMetrics={stream.getMetrics} />
+    );
+    act(() => {
+      stream.emit([]);
+    });
     await waitFor(() => {
       expect(getByRole('chart').getAttribute('data-points')).toBe('0');
     });
   });
 
   it('renders metrics with axes and legend', async () => {
+    const stream = createMetricsStream();
     const metrics = [{ time: 1, latency: 2, throughput: 3 }];
-    const getMetrics = vi.fn((emit) => emit(metrics));
     const { getByRole, container } = render(
-      <MetricsChart getMetrics={getMetrics} />
+      <MetricsChart getMetrics={stream.getMetrics} />
     );
-
+    act(() => {
+      stream.emit(metrics);
+    });
     await waitFor(() => {
       expect(getByRole('chart').getAttribute('data-points')).toBe('1');
     });
-
     expect(getByRole('x-axis')).toBeInTheDocument();
     expect(getByRole('legend')).toBeInTheDocument();
     expect(container).toMatchSnapshot();
   });
 
-  it('handles socket errors', () => {
-    const { getByRole } = render(<MetricsChart />);
+  it('handles errors', async () => {
+    const stream = createMetricsStream();
+    const { getByRole } = render(
+      <MetricsChart getMetrics={stream.getMetrics} />
+    );
     act(() => {
-      listeners.connect_error(new Error('fail'));
+      stream.error();
     });
-    expect(getByRole('alert')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByRole('alert')).toBeInTheDocument();
+    });
   });
 });
 
