@@ -92,6 +92,7 @@ pip install scipy
 > ```
 
 ## Local Development
+Use Node.js 22.x for all Node-based tooling (see `.node-version` and `.nvmrc`).
 ```bash
 pip install -r requirements.lock
 pip install -r scripts/requirements.txt  # utilities like governor.py
