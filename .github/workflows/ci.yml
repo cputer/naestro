@@ -7,7 +7,6 @@ jobs:
   ui:
     runs-on: ubuntu-latest
     container: node:22-bullseye
-    defaults: { run: { working-directory: ui } }
     steps:
       - uses: actions/checkout@v5
       - uses: actions/cache@v4
@@ -21,14 +20,18 @@ jobs:
           key: ${{ runner.os }}-vite-${{ hashFiles('ui/package-lock.json') }}
           restore-keys: ${{ runner.os }}-vite-
       - run: npm ci
+        working-directory: ui
       - run: npm run lint --if-present
+        working-directory: ui
       - run: npm run typecheck --if-present
+        working-directory: ui
       - run: npm run build --if-present
+        working-directory: ui
       - run: npm run test:ci
+        working-directory: ui
         env: { CI: "true" }
       - name: Verify coverage files
         run: test -f ui/coverage/lcov.info
-        working-directory: .
       - name: Upload Codecov (UI)
         if: success()
         uses: codecov/codecov-action@v4
