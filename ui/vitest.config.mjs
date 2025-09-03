@@ -12,7 +12,20 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'text-summary', 'lcov'],
-      reportsDirectory: 'coverage'
+      reportsDirectory: 'coverage',
+      all: true,
+      include: ['src/**/*.{js,jsx,ts,tsx}'],
+      exclude: [
+        'src/**/*.generated.{js,jsx,ts,tsx}',
+        'src/**/*.stories.{js,jsx,ts,tsx}',
+        'src/**/*.{setup,setupTests}.{js,jsx,ts,tsx}'
+      ],
+      thresholds: {
+        lines: 100,
+        functions: 100,
+        branches: 100,
+        statements: 100
+      }
     }
   }
 });
