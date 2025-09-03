@@ -33,3 +33,13 @@ repos:
       - id: prettier
         files: ^ui/
         exclude: ^ui/node_modules/
+
+# Block accidental proxy config lines in tracked files
+  - repo: local
+    hooks:
+      - id: block-proxy-lines
+        name: Block proxy config lines
+        entry: |
+          bash -lc "if git grep -InE '(^|\s)(proxy|http-proxy|https-proxy)\s*=' -- . :!**/node_modules/** :!**/.git/**; then echo 'ERROR: Proxy config detected in tracked files. Remove it.'; exit 1; fi"
+        language: system
+        files: '.*'
