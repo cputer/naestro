@@ -17,6 +17,7 @@ jobs:
           npm config delete http-proxy || true
           npm config delete https-proxy || true
           echo "Global proxy config removed"
+        working-directory: ui
       - uses: actions/cache@v4
         with:
           path: ~/.npm
@@ -98,6 +99,7 @@ jobs:
           npm config delete http-proxy || true
           npm config delete https-proxy || true
           echo "Global proxy config removed"
+        working-directory: ui
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
