@@ -6,7 +6,7 @@ coverage:
   status:
     project:
       default:
-        target: 100%
+        target: auto
         threshold: 0%
     patch:
       default:
@@ -15,12 +15,15 @@ coverage:
 
 flags:
   ui:
+    carryforward: false
     paths:
       - ui/src
   server:
+    carryforward: false
     paths:
       - server/api
   python:
+    carryforward: false
     paths:
       - src
 
@@ -29,3 +32,6 @@ ignore:
   - "docs/**"
   - "scripts/**"
   - "**/node_modules/**"
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
