@@ -18,3 +18,25 @@ npm run dev
 ```
 
 The dev server runs on http://localhost:5173. Set `VITE_SOCKET_BASE_URL` if your backend isn't at `http://localhost:4000`.
+
+### Pre-commit Hooks
+
+We enforce ESLint/Prettier and other checks via [pre-commit](https://pre-commit.com/).
+
+- This repo uses **Node 22** everywhere (`.nvmrc`, `.node-version`).
+- To avoid `nodeenv` download issues, we configure pre-commit to use the **system Node**:
+
+```yaml
+default_language_version:
+  node: system
+```
+
+Run once after cloning:
+
+```bash
+pre-commit install
+pre-commit run --all-files
+```
+
+If nodeenv fails to fetch Node during setup, confirm you’re on Node 22 (`node -v`) and re-run with system Node enabled.
+
