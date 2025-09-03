@@ -6,23 +6,23 @@ coverage:
   status:
     project:
       default:
-        target: auto
-        threshold: 2%
+        target: 100%
+        threshold: 0%
     patch:
       default:
-        target: auto
-        threshold: 2%
+        target: 100%
+        threshold: 0%
 
 flags:
   ui:
     paths:
-      - ui/
+      - ui/src
   server:
     paths:
-      - server/
+      - server/api
   python:
     paths:
-      - src/
+      - src
 
 ignore:
   - "tests/**"
