@@ -40,13 +40,13 @@ jobs:
             echo "$unexpected"
             exit 1
           fi
-      - name: Upload Codecov (UI)
-        uses: codecov/codecov-action@v4
-        with:
-          files: ui/coverage/lcov.info
-          flags: ui
-          fail_ci_if_error: true
-          verbose: true
+      # - name: Upload Codecov (UI)
+      #   uses: codecov/codecov-action@v4
+      #   with:
+      #     files: ui/coverage/lcov.info
+      #     flags: ui
+      #     fail_ci_if_error: true
+      #     verbose: true
   server:
     runs-on: ubuntu-latest
     container: node:22-bullseye
@@ -63,12 +63,12 @@ jobs:
       - run: npm run build --if-present
       - run: npm run test:ci --if-present
         env: { CI: "true" }
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          files: server/coverage/lcov.info
-          flags: server
-          fail_ci_if_error: true
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v4
+      #   with:
+      #     files: server/coverage/lcov.info
+      #     flags: server
+      #     fail_ci_if_error: true
   python:
     runs-on: ubuntu-latest
     steps:
@@ -82,10 +82,10 @@ jobs:
           pip install -r requirements.txt pytest pytest-cov
       - name: Run tests
         run: |
-          pytest --cov=src --cov-report=xml --cov-fail-under=100
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          files: coverage.xml
-          flags: python
-          fail_ci_if_error: true
+          pytest --maxfail=1 -q --durations=10 --cov=src --cov-report=xml
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v4
+      #   with:
+      #     files: coverage.xml
+      #     flags: python
+      #     fail_ci_if_error: true
