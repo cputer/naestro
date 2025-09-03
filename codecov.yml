@@ -1,8 +1,31 @@
+codecov:
+  notify:
+    after_n_builds: 3
+    wait_for_ci: true
 coverage:
   status:
     project:
       default:
         target: auto
+        threshold: 2%
     patch:
       default:
         target: auto
+        threshold: 2%
+
+flags:
+  ui:
+    paths:
+      - ui/
+  server:
+    paths:
+      - server/
+  python:
+    paths:
+      - src/
+
+ignore:
+  - "tests/**"
+  - "docs/**"
+  - "scripts/**"
+  - "**/node_modules/**"
