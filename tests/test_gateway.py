@@ -126,6 +126,7 @@ def test_kpi_metrics(monkeypatch):
     assert set(data.keys()) == {"latency_p95_ms", "throughput_rps"}
 
 
+@pytest.mark.slow
 def test_telemetry_streams(monkeypatch):
     class DummyResponse:
         def raise_for_status(self):
@@ -163,6 +164,7 @@ def test_telemetry_streams(monkeypatch):
     assert ws_data.keys() == sse_data.keys()
 
 
+@pytest.mark.slow
 @pytest.mark.asyncio
 async def test_websocket_endpoint_disconnect(monkeypatch):
     """websocket_endpoint should exit cleanly when client disconnects."""
@@ -182,6 +184,7 @@ async def test_websocket_endpoint_disconnect(monkeypatch):
     assert getattr(DummyWebSocket, "closed", False)
 
 
+@pytest.mark.slow
 @pytest.mark.asyncio
 async def test_sse_endpoint_cancel(monkeypatch):
     """Cancelling the SSE generator should not leak CancelledError."""
