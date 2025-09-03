@@ -11,6 +11,7 @@ export default defineConfig({
     watch: false,
     coverage: {
       provider: 'v8',
+      reporter: ['text', 'lcov'],
       reportsDirectory: '../coverage'
     }
   }
