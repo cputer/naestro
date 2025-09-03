@@ -1,8 +1,13 @@
-import httpx
-from fastapi.testclient import TestClient
+import asyncio
+import contextlib
 import json
 
-from src.gateway.main import app
+import httpx
+import pytest
+from fastapi.testclient import TestClient
+from starlette.websockets import WebSocketDisconnect
+
+from src.gateway.main import app, sse_endpoint, websocket_endpoint
 
 
 def test_health():
@@ -156,3 +161,48 @@ def test_telemetry_streams(monkeypatch):
 
     assert set(ws_data.keys()) == {"timestamp", "system", "kpis"}
     assert ws_data.keys() == sse_data.keys()
+
+
+@pytest.mark.asyncio
+async def test_websocket_endpoint_disconnect(monkeypatch):
+    """websocket_endpoint should exit cleanly when client disconnects."""
+
+    class DummyWebSocket:
+        async def accept(self):
+            pass
+
+        async def send_json(self, data):
+            raise WebSocketDisconnect()
+
+        async def close(self):
+            DummyWebSocket.closed = True
+
+    ws = DummyWebSocket()
+    await websocket_endpoint(ws)
+    assert getattr(DummyWebSocket, "closed", False)
+
+
+@pytest.mark.asyncio
+async def test_sse_endpoint_cancel(monkeypatch):
+    """Cancelling the SSE generator should not leak CancelledError."""
+
+    # Stub sleep so the generator awaits indefinitely until cancelled
+    real_sleep = asyncio.sleep
+
+    async def never_sleep(_):
+        await asyncio.Event().wait()
+
+    monkeypatch.setattr(asyncio, "sleep", never_sleep)
+
+    resp = await sse_endpoint()
+    gen = resp.body_iterator
+
+    await gen.__anext__()  # prime generator
+
+    task = asyncio.create_task(gen.__anext__())
+    await real_sleep(0)
+    task.cancel()
+    with contextlib.suppress(asyncio.CancelledError, StopAsyncIteration):
+        await task
+    assert not isinstance(task.exception(), asyncio.CancelledError)
+    await gen.aclose()
