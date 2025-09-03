@@ -13,11 +13,13 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit || true",
     "test": "vitest --environment jsdom",
-    "test:ci": "CI=true vitest run --environment jsdom --reporter=dot",
+    "test:ci": "CI=true vitest run --environment jsdom --reporter=dot --coverage",
     "test:coverage": "vitest run --environment jsdom --coverage"
   },
   "devDependencies": {
     "@eslint/js": "^9.34.0",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
     "@types/node": "^22.7.4",
     "@vitejs/plugin-react": "^4.3.2",
     "@vitest/coverage-v8": "^2.1.9",
