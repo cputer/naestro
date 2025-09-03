@@ -24,29 +24,19 @@ jobs:
       - run: npm run lint --if-present
       - run: npm run typecheck --if-present
       - run: npm run build --if-present
-      - run: npm run test:ci --if-present
+      - run: npm run test:ci
         env: { CI: "true" }
       - name: Verify coverage files
-        run: |
-          ls -l ui/coverage/
-          if [ ! -f ui/coverage/lcov.info ]; then
-            echo "ui/coverage/lcov.info missing"
-            exit 1
-          fi
-          head -n 50 ui/coverage/lcov.info
-          unexpected=$(grep '^SF:' ui/coverage/lcov.info | grep -v '^SF:ui/src/' || true)
-          if [ -n "$unexpected" ]; then
-            echo "lcov.info contains unexpected paths:"
-            echo "$unexpected"
-            exit 1
-          fi
-      # - name: Upload Codecov (UI)
-      #   uses: codecov/codecov-action@v4
-      #   with:
-      #     files: ui/coverage/lcov.info
-      #     flags: ui
-      #     fail_ci_if_error: true
-      #     verbose: true
+        run: test -f ui/coverage/lcov.info
+        working-directory: .
+      - name: Upload Codecov (UI)
+        if: success()
+        uses: codecov/codecov-action@v4
+        with:
+          files: ui/coverage/lcov.info
+          flags: ui
+          fail_ci_if_error: true
+          verbose: true
   server:
     runs-on: ubuntu-latest
     container: node:22-bullseye
