@@ -46,21 +46,21 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push gateway image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: src/gateway
           push: true
           tags: ghcr.io/${{ github.repository }}/gateway:${{ github.ref_name }}
 
       - name: Build and push orchestrator image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: src/orchestrator
           push: true
           tags: ghcr.io/${{ github.repository }}/orchestrator:${{ github.ref_name }}
 
       - name: Build and push ui image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ui
           push: true
