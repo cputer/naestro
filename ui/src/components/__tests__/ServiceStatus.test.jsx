@@ -9,6 +9,7 @@ describe("ServiceStatus", () => {
     ["ok", "MuiChip-colorSuccess"],
     ["degraded", "MuiChip-colorWarning"],
     ["down", "MuiChip-colorError"],
+    ["other", "MuiChip-colorDefault"],
   ])("renders %s status", (state, className) => {
     render(<ServiceStatus status={{ svc: state }} />);
     const chip = screen.getByText(`svc: ${state}`).closest(".MuiChip-root");

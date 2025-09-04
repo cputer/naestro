@@ -66,6 +66,28 @@ describe('MetricsChart', () => {
     expect(container).toMatchSnapshot();
   });
 
+  it('handles a single metric object', async () => {
+    const stream = createMetricsStream();
+    const { getByRole } = render(
+      <MetricsChart getMetrics={stream.getMetrics} />
+    );
+    act(() => {
+      stream.emit({ time: 1, latency: 2, throughput: 3 });
+    });
+    await waitFor(() => {
+      expect(getByRole('chart').getAttribute('data-points')).toBe('1');
+    });
+  });
+
+  it('uses cleanup returned from getMetrics', async () => {
+    const cleanup = vi.fn();
+    const getMetrics = vi.fn(() => cleanup);
+    const { unmount } = render(<MetricsChart getMetrics={getMetrics} />);
+    await waitFor(() => expect(getMetrics).toHaveBeenCalled());
+    unmount();
+    expect(cleanup).toHaveBeenCalled();
+  });
+
   it('handles errors', async () => {
     const stream = createMetricsStream();
     const { getByRole } = render(
