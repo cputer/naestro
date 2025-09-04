@@ -1,0 +1,22 @@
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "src/**/__init__.py",
+    "src/**/config.py",
+    "src/**/settings.py",
+    "src/**/celery.py",
+]
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self\\.debug",
+    "if settings\\.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == \"__main__\":",
+]
