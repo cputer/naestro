@@ -4,27 +4,48 @@ import math
 import os
 import subprocess
 import tempfile
-from types import ModuleType
+import types
 
 from langgraph import Graph
 
-_NLTK_READY = False
-_nltk: ModuleType | None = None
+try:  # pragma: no cover - handled at runtime
+    _real_nltk = importlib.import_module("nltk")
+except ModuleNotFoundError:  # pragma: no cover - handled at runtime
+    _real_nltk = None
 
 
-def ensure_nltk_data() -> ModuleType:
+class _NLTKShim:
+    class data:
+        @staticmethod
+        def find(_):
+            raise LookupError("NLTK resource not available")
+
+    @staticmethod
+    def download(*_, **__):
+        return None
+
+
+nltk: types.ModuleType = _real_nltk if _real_nltk else _NLTKShim()
+
+
+def ensure_nltk_real() -> bool:
+    """Swap shim for real nltk module when available."""
+
+    global _real_nltk, nltk
+    if _real_nltk is not None:
+        return True
+    try:
+        _real_nltk = importlib.import_module("nltk")
+    except ModuleNotFoundError:  # pragma: no cover - handled at runtime
+        return False
+    nltk = _real_nltk
+    return True
+
+
+def ensure_nltk_data() -> types.ModuleType:
     """Ensure required NLTK corpora are available and return the nltk module."""
 
-    global _NLTK_READY, _nltk
-    if _NLTK_READY and _nltk is not None:
-        return _nltk
-    try:
-        _nltk = importlib.import_module("nltk")
-    except ModuleNotFoundError as exc:  # pragma: no cover - handled at runtime
-        raise RuntimeError(
-            "NLTK is required but not installed. Install it with 'pip install nltk'."
-        ) from exc
-
+    ensure_nltk_real()
     packages = {
         "punkt": "tokenizers/punkt",
         "averaged_perceptron_tagger": "taggers/averaged_perceptron_tagger",
@@ -32,26 +53,24 @@ def ensure_nltk_data() -> ModuleType:
     missing = []
     for pkg, path in packages.items():
         try:
-            _nltk.data.find(path)
+            nltk.data.find(path)
         except LookupError:
-            missing.append(pkg)
+            nltk.download(pkg, quiet=True)
+            try:
+                nltk.data.find(path)
+            except LookupError:
+                missing.append(pkg)
 
     if missing:
         corpora = ", ".join(sorted(missing))
-        raise LookupError(
-            f"Missing NLTK corpora: {corpora}. "
-            "Run 'python scripts/install_nltk_data.py' or "
-            f"python -m nltk.downloader {corpora} before running."
-        )
-
-    _NLTK_READY = True
-    return _nltk
+        raise LookupError(f"Missing NLTK corpora: {corpora}")
+    return nltk
 
 
 def _build_plan(text: str) -> str:
     """Create a simple bullet-point plan using sentence tokenization."""
     try:
-        nltk = ensure_nltk_data()
+        ensure_nltk_data()
         sentences = nltk.sent_tokenize(text) if text else []
     except LookupError as exc:
         raise RuntimeError(
@@ -74,7 +93,7 @@ def implement_fn(state):
     steps = [line[2:].strip() for line in plan.splitlines() if line.startswith("- ")]
     code_lines = []
     try:
-        nltk = ensure_nltk_data()
+        ensure_nltk_data()
         for idx, step in enumerate(steps, 1):
             tokens = [t for t in nltk.word_tokenize(step) if t.isidentifier()]
             func_name = "_".join(tokens[:2]) or f"step_{idx}"
@@ -163,7 +182,7 @@ def human_review_fn(state):
     """Approve plans containing at least one verb."""
     plan = state.get("plan", "")
     try:
-        nltk = ensure_nltk_data()
+        ensure_nltk_data()
         tokens = nltk.word_tokenize(plan) if plan else []
         tags = nltk.pos_tag(tokens) if tokens else []
     except LookupError as exc:
