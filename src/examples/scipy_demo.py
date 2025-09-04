@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import math
+
 from scipy import integrate
 
 
@@ -25,5 +26,5 @@ def main():
     print(integrate_sin(args.a, args.b))
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()
