@@ -1,7 +1,9 @@
 import builtins
+
 import pytest
 
-from src.orchestrator.math_agent import app as math_app, parse_math_query
+from src.orchestrator.math_agent import app as math_app
+from src.orchestrator.math_agent import parse_math_query
 
 
 def test_parse_integrate_symbolic():
@@ -56,3 +58,8 @@ def test_malicious_expression_rejected():
 def test_invalid_integral_bound():
     with pytest.raises(ValueError):
         parse_math_query("integrate x from 0 to y")
+
+
+def test_parse_simplify():
+    result = parse_math_query("simplify sin(x)**2 + cos(x)**2")
+    assert str(result) == "1"
