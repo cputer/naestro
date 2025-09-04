@@ -90,6 +90,38 @@ def test_backpressure_guard_triggers(orch_module, monkeypatch, caplog):
     assert "Backpressure guard engaged" in caplog.text
 
 
+def test_orchestrator_import_without_nltk(monkeypatch):
+    class DummyGraph:
+        def add_node(self, *a, **k):
+            return None
+
+        def add_edge(self, *a, **k):
+            return None
+
+        def add_conditional_edge(self, *a, **k):
+            return None
+
+        def compile(self):
+            return None
+
+    monkeypatch.setitem(
+        sys.modules, "langgraph", types.SimpleNamespace(Graph=DummyGraph)
+    )
+
+    real_import = importlib.import_module
+
+    def fake_import(name, *a, **k):
+        if name == "nltk":
+            raise ModuleNotFoundError("No module named 'nltk'")
+        return real_import(name, *a, **k)
+
+    monkeypatch.setattr(importlib, "import_module", fake_import)
+    monkeypatch.delitem(sys.modules, "nltk", raising=False)
+
+    module = importlib.reload(importlib.import_module("src.orchestrator.orchestrator"))
+    assert module is not None
+
+
 def test_ensure_nltk_data_missing(monkeypatch):
     class DummyGraph:
         def add_node(self, *a, **k):
@@ -108,11 +140,13 @@ def test_ensure_nltk_data_missing(monkeypatch):
         sys.modules, "langgraph", types.SimpleNamespace(Graph=DummyGraph)
     )
     orch = importlib.reload(importlib.import_module("src.orchestrator.orchestrator"))
+    class DummyNltk:
+        class data:
+            @staticmethod
+            def find(path):
+                raise LookupError("missing")
 
-    def fake_find(path):
-        raise LookupError("missing")
-
-    monkeypatch.setattr(orch.nltk.data, "find", fake_find)
+    monkeypatch.setattr(orch.importlib, "import_module", lambda name: DummyNltk)
     with pytest.raises(LookupError) as exc:
         orch.ensure_nltk_data()
     msg = str(exc.value)
