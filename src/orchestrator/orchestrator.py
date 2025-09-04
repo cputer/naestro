@@ -4,7 +4,10 @@ import os
 import subprocess
 import tempfile
 
-import nltk
+try:
+    import nltk  # type: ignore[import-not-found]
+except ModuleNotFoundError:  # pragma: no cover - handled at runtime
+    nltk = None  # type: ignore[assignment]
 from langgraph import Graph
 
 _NLTK_READY = False
@@ -14,6 +17,10 @@ def ensure_nltk_data() -> None:
     """Ensure required NLTK corpora are available."""
 
     global _NLTK_READY
+    if nltk is None:
+        raise RuntimeError(
+            "NLTK is required but not installed. Install it with 'pip install nltk'."
+        )
     if _NLTK_READY:
         return
 
@@ -64,10 +71,16 @@ def implement_fn(state):
     plan = state.get("plan", "")
     steps = [line[2:].strip() for line in plan.splitlines() if line.startswith("- ")]
     code_lines = []
-    for idx, step in enumerate(steps, 1):
-        tokens = [t for t in nltk.word_tokenize(step) if t.isidentifier()]
-        func_name = "_".join(tokens[:2]) or f"step_{idx}"
-        code_lines.append(f'def {func_name}():\n    """{step}"""\n    pass\n')
+    try:
+        ensure_nltk_data()
+        for idx, step in enumerate(steps, 1):
+            tokens = [t for t in nltk.word_tokenize(step) if t.isidentifier()]
+            func_name = "_".join(tokens[:2]) or f"step_{idx}"
+            code_lines.append(f'def {func_name}():\n    """{step}"""\n    pass\n')
+    except LookupError as exc:
+        raise RuntimeError(
+            "Required NLTK corpora not available; install 'punkt' and 'averaged_perceptron_tagger'."
+        ) from exc
     code = "\n".join(code_lines)
     return {"code": code}
 
