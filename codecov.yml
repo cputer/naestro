@@ -1,21 +1,12 @@
-codecov:
-  notify:
-    after_n_builds: 3
-    wait_for_ci: true
 coverage:
   status:
-    # Establish baseline gates while coverage grows.
-    # TODO: Once all flags consistently meet these targets,
-    # increase each toward 100% and raise the project target accordingly.
-    flags:
-      ui:
-        target: 100
-        threshold: 0
-      python:
-        target: 100
-        threshold: 0
     project: off
     patch: off
+    flags:
+      python:
+        target: 100%
+      ui:
+        target: 100%
 
 flags:
   ui:

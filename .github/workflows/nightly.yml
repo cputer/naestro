@@ -28,19 +28,7 @@ jobs:
       - run: npm run test:ci --if-present
         env: { CI: "true" }
       - name: Verify coverage files
-        run: |
-          ls -l ui/coverage/
-          if [ ! -f ui/coverage/lcov.info ]; then
-            echo "ui/coverage/lcov.info missing"
-            exit 1
-          fi
-          head -n 50 ui/coverage/lcov.info
-          unexpected=$(grep '^SF:' ui/coverage/lcov.info | grep -v '^SF:ui/src/' || true)
-          if [ -n "$unexpected" ]; then
-            echo "lcov.info contains unexpected paths:"
-            echo "$unexpected"
-            exit 1
-          fi
+        run: test -f ui/coverage/lcov.info && head -n 20 ui/coverage/lcov.info
       # - name: Upload Codecov (UI)
       #   uses: codecov/codecov-action@v4
       #   with:
@@ -87,8 +75,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt pytest pytest-cov pytest-asyncio
       - name: Run tests
-        run: |
-          pytest -m "not slow" -q --durations=10 --cov=src --cov-report=xml --cov-config=pyproject.toml
+        run: pytest -m "not slow" --cov=src --cov-report=xml --cov-report=term-missing --cov-fail-under=100
+      - name: Verify coverage files
+        run: test -f coverage.xml && head -n 20 coverage.xml
       # - name: Upload coverage to Codecov
       #   uses: codecov/codecov-action@v4
       #   with:

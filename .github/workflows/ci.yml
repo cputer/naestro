@@ -44,7 +44,7 @@ jobs:
         working-directory: ui
         env: { CI: "true" }
       - name: Verify coverage files
-        run: test -f ui/coverage/lcov.info
+        run: test -f ui/coverage/lcov.info && head -n 20 ui/coverage/lcov.info
       - name: Upload Codecov (UI)
         if: success()
         uses: codecov/codecov-action@v4
@@ -117,10 +117,9 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt -r requirements-dev.txt
       - name: Run tests
-        run: |
-          pytest -m "not slow" -q --durations=10 --cov=src --cov-report=xml --cov-config=pyproject.toml
+        run: pytest -m "not slow" --cov=src --cov-report=xml --cov-report=term-missing --cov-fail-under=100
       - name: Verify coverage files
-        run: test -f coverage.xml
+        run: test -f coverage.xml && head -n 20 coverage.xml
       - name: Upload Codecov (Python)
         if: success()
         uses: codecov/codecov-action@v4
