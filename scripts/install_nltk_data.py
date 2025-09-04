@@ -9,5 +9,5 @@ def main() -> None:
     nltk.download("averaged_perceptron_tagger")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()
