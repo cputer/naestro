@@ -176,7 +176,7 @@ pre-commit install
 ## Testing
 ```bash
 pre-commit run --files <file>
-pytest
+pytest -m "not slow" -q --durations=10 --cov=src --cov-report=xml --cov-config=pyproject.toml
 ```
 
 ## 🤝 Contributing
