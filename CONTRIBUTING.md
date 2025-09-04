@@ -41,3 +41,14 @@ pre-commit run --all-files
 
 If nodeenv fails to fetch Node during setup, confirm you’re on Node 22 (`node -v`) and re-run with system Node enabled.
 
+## CI Profiles: Smoke vs Full Coverage
+
+Run these commands locally to mirror the CI jobs:
+
+- **UI smoke**: `npm ci -C ui && npm run test:smoke -C ui`
+- **Python smoke**: `pytest -q -k "health or smoke"`
+- **UI full**: `npm ci -C ui && CI=true npm run test:ci -C ui`
+- **Python full**: `pytest -m "not slow" --maxfail=1 -q --durations=10 --cov=src --cov-report=xml --cov-fail-under=100`
+
+Codecov uploads use flags `ui` and `python` with 100% targets.
+
