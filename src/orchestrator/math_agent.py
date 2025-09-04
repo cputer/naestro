@@ -2,7 +2,34 @@ import re
 from typing import Any, Dict
 
 import sympy as sp
-from langgraph.graph import StateGraph
+
+try:
+    from langgraph.graph import StateGraph
+except Exception:  # pragma: no cover - fallback for missing dependency
+    import logging
+
+    logging.warning("langgraph not available; using minimal StateGraph fallback")
+
+    class StateGraph:  # type: ignore[override]
+        def __init__(self, state_type: type) -> None:  # noqa: D401 - simple placeholder
+            self._nodes = {}
+            self._entry = None
+
+        def add_node(self, name: str, func) -> None:
+            self._nodes[name] = func
+
+        def set_entry_point(self, name: str) -> None:
+            self._entry = name
+
+        def compile(self):  # pragma: no cover - simple placeholder
+            nodes = self._nodes
+            entry = self._entry
+
+            class App:
+                def invoke(self, state):
+                    return nodes[entry](state)
+
+            return App()
 
 
 # Allowed symbols and functions for safe evaluation
@@ -51,6 +78,7 @@ def _safe_sympify(expr: str) -> sp.Expr:
     _validate_expr(expr)
     return sp.sympify(expr, locals=ALLOWED_NAMES, evaluate=False)
 
+
 def parse_math_query(query: str) -> Any:
     """Parse a math query and execute it using SymPy/SciPy.
 
@@ -72,6 +100,7 @@ def parse_math_query(query: str) -> Any:
         b = float(_safe_sympify(upper))
         try:
             from scipy import integrate
+
             val, _ = integrate.quad(func, a, b)
         except ImportError:
             val = float(sp.integrate(_safe_sympify(expr), (x, a, b)))
@@ -98,6 +127,7 @@ def parse_math_query(query: str) -> Any:
         return sp.simplify(_safe_sympify(expr))
 
     return sp.simplify(_safe_sympify(query))
+
 
 def math_agent_fn(state: Dict[str, Any]) -> Dict[str, Any]:
     query = state.get("query", "")
