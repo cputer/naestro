@@ -1,28 +1,29 @@
 import collections
+import importlib
 import math
 import os
 import subprocess
 import tempfile
+from types import ModuleType
 
-try:
-    import nltk  # type: ignore[import-not-found]
-except ModuleNotFoundError:  # pragma: no cover - handled at runtime
-    nltk = None  # type: ignore[assignment]
 from langgraph import Graph
 
 _NLTK_READY = False
+_nltk: ModuleType | None = None
 
 
-def ensure_nltk_data() -> None:
-    """Ensure required NLTK corpora are available."""
+def ensure_nltk_data() -> ModuleType:
+    """Ensure required NLTK corpora are available and return the nltk module."""
 
-    global _NLTK_READY
-    if nltk is None:
+    global _NLTK_READY, _nltk
+    if _NLTK_READY and _nltk is not None:
+        return _nltk
+    try:
+        _nltk = importlib.import_module("nltk")
+    except ModuleNotFoundError as exc:  # pragma: no cover - handled at runtime
         raise RuntimeError(
             "NLTK is required but not installed. Install it with 'pip install nltk'."
-        )
-    if _NLTK_READY:
-        return
+        ) from exc
 
     packages = {
         "punkt": "tokenizers/punkt",
@@ -31,7 +32,7 @@ def ensure_nltk_data() -> None:
     missing = []
     for pkg, path in packages.items():
         try:
-            nltk.data.find(path)
+            _nltk.data.find(path)
         except LookupError:
             missing.append(pkg)
 
@@ -44,12 +45,13 @@ def ensure_nltk_data() -> None:
         )
 
     _NLTK_READY = True
+    return _nltk
 
 
 def _build_plan(text: str) -> str:
     """Create a simple bullet-point plan using sentence tokenization."""
     try:
-        ensure_nltk_data()
+        nltk = ensure_nltk_data()
         sentences = nltk.sent_tokenize(text) if text else []
     except LookupError as exc:
         raise RuntimeError(
@@ -72,7 +74,7 @@ def implement_fn(state):
     steps = [line[2:].strip() for line in plan.splitlines() if line.startswith("- ")]
     code_lines = []
     try:
-        ensure_nltk_data()
+        nltk = ensure_nltk_data()
         for idx, step in enumerate(steps, 1):
             tokens = [t for t in nltk.word_tokenize(step) if t.isidentifier()]
             func_name = "_".join(tokens[:2]) or f"step_{idx}"
@@ -161,7 +163,7 @@ def human_review_fn(state):
     """Approve plans containing at least one verb."""
     plan = state.get("plan", "")
     try:
-        ensure_nltk_data()
+        nltk = ensure_nltk_data()
         tokens = nltk.word_tokenize(plan) if plan else []
         tags = nltk.pos_tag(tokens) if tokens else []
     except LookupError as exc:
