@@ -23,7 +23,7 @@ repos:
     rev: v9.32.0
     hooks:
       - id: eslint
-        args: [--fix]
+        args: [--fix, --resolve-plugins-relative-to, ui]
         files: ^ui/
         types_or: [javascript, jsx, ts, tsx]
         exclude: ^ui/node_modules/
