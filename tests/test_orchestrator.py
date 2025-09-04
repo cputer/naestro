@@ -146,6 +146,12 @@ def test_ensure_nltk_data_missing(monkeypatch):
             def find(path):
                 raise LookupError("missing")
 
+        @staticmethod
+        def download(*a, **k):
+            return None
+
+    orch._real_nltk = None
+    orch.nltk = orch._NLTKShim()
     monkeypatch.setattr(orch.importlib, "import_module", lambda name: DummyNltk)
     with pytest.raises(LookupError) as exc:
         orch.ensure_nltk_data()
