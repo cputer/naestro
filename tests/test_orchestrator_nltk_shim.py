@@ -70,3 +70,29 @@ def test_nltk_real_module(monkeypatch):
     assert orch.ensure_nltk_real() is True
     assert orch.ensure_nltk_data() is fake_nltk
     assert fake_nltk.downloads == []
+
+
+def test_ensure_nltk_data_custom_packages(monkeypatch):
+    _setup_dummy_langgraph(monkeypatch)
+
+    calls = []
+
+    class FakeNltk:
+        class data:
+            @staticmethod
+            def find(_):
+                raise LookupError("missing")
+
+        @staticmethod
+        def download(pkg, *a, **k):
+            calls.append(pkg)
+
+    monkeypatch.setitem(sys.modules, "nltk", FakeNltk)
+    orch = importlib.reload(importlib.import_module("src.orchestrator.orchestrator"))
+
+    with pytest.raises(LookupError):
+        orch.ensure_nltk_data(
+            packages={"punkt": "tokenizers/punkt", "stopwords": "corpora/stopwords"}
+        )
+
+    assert set(calls) == {"punkt", "stopwords"}

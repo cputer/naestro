@@ -5,6 +5,7 @@ import os
 import subprocess
 import tempfile
 import types
+from collections.abc import Mapping
 
 from langgraph import Graph
 
@@ -42,14 +43,17 @@ def ensure_nltk_real() -> bool:
     return True
 
 
-def ensure_nltk_data() -> types.ModuleType:
+def ensure_nltk_data(
+    packages: Mapping[str, str] | None = None,
+) -> types.ModuleType:
     """Ensure required NLTK corpora are available and return the nltk module."""
 
     ensure_nltk_real()
-    packages = {
-        "punkt": "tokenizers/punkt",
-        "averaged_perceptron_tagger": "taggers/averaged_perceptron_tagger",
-    }
+    if packages is None:
+        packages = {
+            "punkt": "tokenizers/punkt",
+            "averaged_perceptron_tagger": "taggers/averaged_perceptron_tagger",
+        }
     missing = []
     for pkg, path in packages.items():
         try:
