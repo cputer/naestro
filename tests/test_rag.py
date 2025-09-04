@@ -3,8 +3,8 @@ import sys
 import threading
 import time
 import types
-from types import SimpleNamespace
 from contextlib import contextmanager
+from types import SimpleNamespace
 
 import pytest
 
@@ -176,6 +176,7 @@ def test_update_feedback(rag):
     assert result.updated == 1
     assert rag.pool.conn.committed
 
+
 def test_insert_embedding_connection_failure(rag):
     class BadPool:
         def connection(self):
@@ -199,6 +200,68 @@ def test_hybrid_search_invalid_input(rag, monkeypatch):
     monkeypatch.setattr(rag, "embed_text", bad_embed)
     with pytest.raises(ValueError):
         rag.hybrid_search(None)
+
+
+def test_connection_pool_context(rag, monkeypatch):
+    class DummySP:
+        def __init__(self, minconn, maxconn, dsn):
+            self.conn = object()
+
+        def getconn(self):
+            return self.conn
+
+        def putconn(self, conn):
+            self.released = conn
+
+        def closeall(self):
+            self.closed = True
+
+    monkeypatch.setattr(rag, "SimpleConnectionPool", DummySP)
+    cp = rag.ConnectionPool("dsn", 1, 2)
+    with cp.connection() as conn:
+        assert conn is cp._pool.conn
+    assert cp._pool.released is cp._pool.conn
+    cp.close()
+    assert cp._pool.closed
+
+
+def test_init_connection_pool_requires_dsn(rag, monkeypatch):
+    rag.pool = None
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    with pytest.raises(ValueError):
+        rag.init_connection_pool()
+
+
+def test_close_pool(rag):
+    class DummyPool:
+        def __init__(self):
+            self.closed = False
+
+        def close(self):
+            self.closed = True
+
+    dummy = DummyPool()
+    rag.pool = dummy
+    rag.close_pool()
+    assert dummy.closed and rag.pool is None
+
+
+def test_insert_embedding_pool_none(rag):
+    rag.pool = None
+    with pytest.raises(RuntimeError):
+        rag.insert_embedding("text", [0.1])
+
+
+def test_hybrid_search_pool_none(rag):
+    rag.pool = None
+    with pytest.raises(RuntimeError):
+        rag.hybrid_search("x")
+
+
+def test_update_feedback_pool_none(rag):
+    rag.pool = None
+    with pytest.raises(RuntimeError):
+        rag.update_feedback(1)
 
 
 def test_init_model_thread_safe(rag, monkeypatch):
