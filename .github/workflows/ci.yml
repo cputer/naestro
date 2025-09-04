@@ -118,7 +118,7 @@ jobs:
           python -m pip install -r requirements.txt -r requirements-dev.txt
       - name: Run tests
         run: |
-          pytest -m "not slow" --maxfail=1 -q --durations=10 --cov=src --cov-report=xml
+          pytest -m "not slow" -q --durations=10 --cov=src --cov-report=xml --cov-config=pyproject.toml
       - name: Verify coverage files
         run: test -f coverage.xml
       - name: Upload Codecov (Python)

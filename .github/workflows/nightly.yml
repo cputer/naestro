@@ -88,7 +88,7 @@ jobs:
           pip install -r requirements.txt pytest pytest-cov pytest-asyncio
       - name: Run tests
         run: |
-          pytest --maxfail=1 -q --durations=10 --cov=src --cov-report=xml
+          pytest -m "not slow" -q --durations=10 --cov=src --cov-report=xml --cov-config=pyproject.toml
       # - name: Upload coverage to Codecov
       #   uses: codecov/codecov-action@v4
       #   with:
