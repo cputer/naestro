@@ -200,6 +200,25 @@ Naestro grows from a goal-driven multi-agent orchestrator into a continuously se
 - 10×–20× lower inference cost vs GPT-4o for translation tasks.
 - Demonstrated integration in live multi-model workflows (translation → RAG → reasoning).
 
+### H. Reinforcement-Learning Optimized Models (OpenPipe ART)
+
+**Goal:** Integrate reinforcement-learning-tuned smaller models (e.g., ART-E built on Qwen 2.5 14B) that can surpass frontier LLMs in accuracy on targeted benchmarks.
+
+**Why it matters for Naestro**
+- Proves that **task-specific tuning beats raw scale**.
+- Enables **cost-efficient fine-tuned providers** within Naestro.
+- Opens path for **continuous self-improvement loops** via validator agents + RL.
+
+**Deliverables**
+- `providers/art_openpipe.yaml` (integration with ART framework / HuggingFace model card).
+- RL fine-tuning pipeline in `training/rl/` (Naestro-compatible feedback loop).
+- Support for ART-E style models in `router/policies/rl_boost.py`.
+
+**Success criteria**
+- Demonstrated ART-tuned model integration with Naestro’s orchestrator.  
+- Accuracy uplift ≥ 20% over baseline LLM on real-world question answering (benchmarks like TruthfulQA, MMLU-subsets, BrowseComp).  
+- Cost-per-query ≤ 25% of GPT-4.1 while outperforming it in task accuracy.
+
 ---
 
 ## 9) Engineering Quality Gates (Always-On)
