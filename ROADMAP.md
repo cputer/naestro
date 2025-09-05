@@ -179,6 +179,27 @@ Naestro grows from a goal-driven multi-agent orchestrator into a continuously se
 - ≥ X% improvement on citation-matched accuracy vs baseline.
 - ≤ Y% hallucination/contradiction rate.
 - 2–4× lower cost vs cloud model for same tasks.
+
+### G. Specialist Micro-Models (LFM2-350M Case Study)
+
+**Goal:** Prove that "ML done right" with smaller open-weight models can outperform much larger models on domain-specific tasks (e.g., EN⇄JP translation).
+
+**Why it matters for Naestro**
+- Confirms that routing to small, fine-tuned models can give GPT-4-tier performance at 10–50× lower compute.
+- Validates the orchestration philosophy: size ≠ quality, specialization wins.
+- Allows Naestro to integrate **task-optimized experts** (translation, OCR, speech, math) rather than relying only on frontier LLMs.
+
+**Deliverables**
+- `providers/lfm2_350m.yaml` (HF endpoint + vLLM config)
+- `tools/translation/` package (EN⇄JP + other language adaptors)
+- Routing rules in `router/policies/translation.py` (if `capability: translation`, prefer LFM2-350M before falling back to GPT-4o/Gemini/Sonnet).
+- Benchmarks: LLM-JP-Eval + WMT.
+
+**Success criteria**
+- ≥ 0.85 LLM-JP Eval MT score (GPT-4o tier).
+- 10×–20× lower inference cost vs GPT-4o for translation tasks.
+- Demonstrated integration in live multi-model workflows (translation → RAG → reasoning).
+
 ---
 
 ## 9) Engineering Quality Gates (Always-On)
