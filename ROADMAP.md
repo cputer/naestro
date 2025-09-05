@@ -1,186 +1,194 @@
-# Naestro Roadmap
+# Naestro ROADMAP — Evolving Autonomous System (ASI Trajectory)
 
-_A living plan for Naestro — a local-first, cloud-augmented LLM orchestration platform that runs on a single NVIDIA DGX Spark (scalable to multiple desktops), coordinates top online models, controls agents, supports voice/vision/multilingual workflows, and maintains strict reliability & test coverage._
-
----
-
-## 0) Principles
-
-- **Local-first, cloud fallback:** keep latency/cost low on DGX; burst to cloud only for long-context or specialized tasks.  
-- **Composable & pluggable:** models, tools, memory, retrieval, evaluators, and UIs are hot-swappable behind stable interfaces.  
-- **Deterministic operations:** feature flags, circuit breakers, strict observability, canary rollouts, and 100% per-flag coverage.  
-- **Human-in-the-loop (HITL):** every auto action has a pause/revise/resume path with diff and audit trails.  
-- **Upgrade without fear:** self-improvement PRs gated by tests, reproducible benches, and instant rollback.
+**North Star**  
+Naestro evolves from a goal-driven multi-agent orchestrator into a continuously self-improving autonomous system that can: (1) decompose open-ended goals; (2) coordinate local+cloud LLMs and tools; (3) write, test, and ship production-quality code; (4) operate safely with strong observability and policy gates; (5) self-improve via guarded self-edits validated by rigorous evaluations.
 
 ---
 
-## 1) Target Runtime (Single DGX Spark → Multi-Desktop Scale)
+## 0) Current Status (Baseline)
 
-- **Hardware baseline (single box):** 128 GB GPU mem, 64 CPU cores; optimized for 3 concurrent local models.  
-- **Local model roster (production):**
-  - **Llama-3.1-70B (TensorRT-LLM FP8/INT8)** — _Judge / Proposer_
-  - **DeepSeek-V3.2-32B** — _Proposer / Synthesizer_
-  - **Qwen-3-32B-AWQ** — _Critic / Code assistant_
-- **Cloud fallbacks:** GPT-4/5 family, Claude 3.7+, Gemini 2.5+, Mistral Premium, Grok (latest), OpenELM (vLLM).  
-- **Routing policy:** Judge local → spill to cloud on OOM or P95 latency breach; Proposer/Synth local; long-context or special tools → cloud.  
-
-**Scale-out (multi-desktop):** labeled runners + job queue + distributed KV-cache; sticky sessions for workflow steps.
+- **Local-first model set (DGX Spark single node):** Llama-3.1-70B (FP8 TRT-LLM) as Judge/Planner; DeepSeek-32B as Proposer/Synth; Qwen-32B-AWQ as Critic/Code. Cloud spillover for long-context/specialty tasks (GPT-4/5-class, Claude 3.7+, Gemini-2.5+, Mistral, Grok, OpenELM via vLLM).
+- **Studio (Web UI):** Real-time runs (WS/SSE), dark theme, metrics (workflows, consensus, latency, KV cache hit, cost), run details and traces.
+- **Guardrails:** Thermal/VRAM caps; step-level re-route on OOM/timeouts; retry/backoff; consent prompts for sensitive actions.
+- **SDLC quality:** PR linting (commitlint), Release Please, Codecov with per-flag coverage, Node 22 standardization, deterministic UI+Python tests.
 
 ---
 
-## 2) Agent Collaboration Model
+## 1) Target Properties (what “evolving ASI” means here)
 
-- **Collab pipeline:** `propose → critique → synthesize → adjudicate`  
-- **Consensus:** majority, weighted (per-agent historical win-rate), or single judge.  
-- **Agent roles:** _Proposer_ (deep generation), _Critic_ (safety/correctness), _Synthesizer_ (merge/normalize), _Judge_ (final).  
-- **HITL:** pause points, patch prompts, accept/override decisions, re-run.  
-
-**Planned extensions**  
-- **Crew orchestration:** CrewAI/AutoGen patterns for parallel branches and role chatter.  
-- **Graph memory:** Graphiti for episodic + semantic memory graphs (each run becomes a subgraph with artifacts).  
-- **ART (OpenPipe):** auto-reflexion/evaluators integrated into Judge step to harden prompts/programs over time.
+1. **General goal execution** — Turn natural-language objectives into executable plans (DAGs) with budgets, SLAs, and success criteria.
+2. **Model+tool orchestration** — Choose the right LLM(s)/tool(s) per step using live telemetry + historical win-rates.
+3. **Formalized self-improvement** — Periodic self-proposals (self-PRs) that increase pass-rates, reduce latency/cost, and expand safe capability coverage.
+4. **Safety-first autonomy** — Hard capability boundaries, consent layers, and provable rollback; humans remain in control of scopes and secrets.
+5. **Observability & provenance** — Every action is explainable, replayable, and signed; drift and regressions are caught early.
 
 ---
 
-## 3) Interop & External Ecosystem (New 2025 Integrations)
+## 2) System Roles (logical components)
 
-### 3.1 Model Context Protocol (MCP)  
-Standard JSON-RPC to expose tools/data across vendors.  
-- Add `mcp/` adapter (transport, discovery, auth, timeouts).  
-- Feature flag: `MCP_ENABLED=true|false`.
-
-### 3.2 Unified AI APIs (single key)  
-Broker such as EdenAI (or equivalent) to normalize text/vision/speech.  
-- Add `providers/edenai.ts` with cost/latency-aware routing.  
-- Cost telemetry mapped into dashboard cards.
-
-### 3.3 NVIDIA NeMo (optional enterprise backend)  
-Microservices for custom agents on open-weights.  
-- Add `integrations/nemo/` client; activate only if `NEMO_URL` set.  
-- Use for specialized enterprise graphs or compliance-gated pipelines.
-
-### 3.4 Agent Client Protocol (ACP) + IDE panels (Zed/VS Code)  
-Embed Naestro Assistant into editors.  
-- Add `integrations/acp/` server shim + commands: _orchestrate_, _explain_, _test_, _trace_.  
-- Reuse Studio Live Monitor channels for in-IDE telemetry.
-
-### 3.5 AMD Gaia (edge RAG for contributors)  
-Local ONNX/Windows path to run RAG without DGX.  
-- Add `integrations/gaia/` (optional), flag-gated.
-
-### 3.6 AG-UI (CopilotKit-style)  
-Thin web UI with SSE streaming for token/events.  
-- Wire to Live Monitor; keep consistent UX with Studio.
+- **Planner** — Compiles Goal → `Plan.json` (tasks, deps, inputs/outputs, budgets, acceptance checks).
+- **Router** — Chooses model/provider per step (local vs cloud) using: win-rates, latency, context length, and cost.
+- **Agents** — Role types: Researcher, Coder, Reviewer, Runner, DataOps, Evaluator, Reporter. Spawned dynamically with scoped permissions.
+- **Policy Engine** — Enforces tool/network/path allowlists, data scopes, rate limits, and cost/time ceilings. Produces consent prompts and audit events.
+- **Tool/Skill Registry** — Typed contracts (JSON Schema), versioned adapters (MCP/HTTP/CLI/DB/Browser/PDF/Vision/ASR/TTS/SEO/Geo), deprecation paths.
+- **Memory Fabric** — Episodic (runs), semantic (facts/summaries), skill memories (reusable flows), user prefs. Graph-structured (Graphiti) with retrieval policies.
+- **Evaluators** — Code/test/typing/static analysis; factuality/consistency; safety; latency/cost; pass@K; metamorphic/program properties.
+- **Introspector** — Summarizes failures, extracts lessons, proposes prompt/route/tool upgrades (feeds Self-PR cycle).
+- **Self-PR Bot** — Opens PRs (prompt hardening, flaky test fixes, router weights, small refactors), runs canary, signs artifacts, auto-merges if green.
 
 ---
 
-## 4) Data Plane: Retrieval, Parsing, SEO & Geo
+## 3) Self-Rewrite Loop (guarded autonomy)
 
-- **RAG:** thread-safe lazy init; FAISS/Milvus/pgvector; per-task context windows; policy-based truncation.  
-- **Parsing:** robust DOM extraction, selector learning (CSS/XPath generalization), language/locale detection.  
-- **SEO/Geo:** SERP pipelines, entity extraction, geocoding, locale-aware content rewrite.  
-- **Structured I/O:** JSON schema validation with retry/backoff; OCR/PDF/LaTeX→JSON pipelines.  
+1. **Collect**: Surfacing failures (dropped runs, OOM, policy denials), slow traces (P95 spikes), evaluator misses, flaky tests.
+2. **Propose**: Agents generate *minimal* diffs (prompt deltas, router weights, tool config, tests) → PRs.
+3. **Validate**:  
+   - Unit + property + metamorphic tests (100% coverage).  
+   - Golden prompts via prompt-ops (regression suites).  
+   - Offline dataset replays; synthetic task suites (coding, agentic, PDF/LaTeX, SEO/Geo, browse).  
+4. **Canary**: Shadow traffic; watch SLOs (success, latency, cost, safety incidents). Automatic rollback if any breach.
+5. **Merge**: Provenance sign, release notes, version bump.  
+6. **Learn**: Update router priors from win-rates; store counter-examples in memory for future planning.
 
-**Unified “1-key” API hubs**  
-- Adapters for hubs (e.g., RapidAPI/EdenAI bundles) with per-provider quotas and rate-limiters.
-
----
-
-## 5) Voice / Vision / Multilingual
-
-- **Voice (local-first):** Zonos/Vosk/Whisper chains; VAD, diarization; streaming transcribe & TTS.  
-- **Multilingual:** region-specific models (e.g., Latam-GPT) included in routing policy.  
-- **Vision:** image→JSON extract (tables/fields) with confidence thresholds and post-rules.
+**Non-goals**: unrestricted self-modification, unsupervised network/file access, or secret exfiltration.
 
 ---
 
-## 6) Naestro Studio (UI) & DevEx
+## 4) Safety & Capability Governance
 
-- **Dashboard:** live runs, consensus %, cost, latency P50/P95, KV-cache hit, GPU memory/power/thermals.  
-- **Artifacts:** prompts, responses, diffs, traces; run replay.  
-- **Studio IDE:** code editor, prompt library, runbooks, workflow templates; “Open in Memory Graph” (Graphiti).  
-- **CLI:** `naestro run`, `naestro bench`, `naestro judge`, `naestro trace`.
-
----
-
-## 7) Reliability, Safety, Self-Improvement
-
-- **Guardrails:** provider circuit breakers, thermal throttling, OOM recovery with step-level reroute; timeouts/retries/jitter.  
-- **Self-improvement (safe):**
-  - Scheduled “self-PRs” (lint, small refactors, prompt hardening) signed by Naestro,  
-  - Fully gated by unit tests + 100% per-flag coverage + canary env,  
-  - Single-click rollback; signed artifacts; audit trail.  
-- **Policy:** PII scrubbing, configurable redaction, on-prem isolation mode.
+- **Modes**: `Guide` (suggest), `Copilot` (confirm), `Auto` (approved scopes only).
+- **Boundaries**:  
+  - Secrets: lease-scoped vault; never to client; redaction in traces.  
+  - Filesystem & network: path/domain allowlists; sandboxed exec; rate limits.  
+  - Data: PII classifiers; off-prem toggle; export redaction.  
+- **Kill switches**: Pause runs; revoke tokens; quarantine models/tools.
+- **Compliance**: comprehensive audit logs (immutable), purpose/consent receipts.
 
 ---
 
-## 8) Observability & Measurement
+## 5) Orchestration & Models
 
-- **Metrics:** tok/s, latency P50/P95, success rate by task class, cost/tokens, KV-cache hit, GPU health.  
-- **Tracing:** prompt/response spans, tool calls, network latencies; deterministic seeds when possible.  
-- **Coverage:** per-flag 100% (UI/Python); project gate disabled until every area is 100%.
-
----
-
-## 9) Performance
-
-- **TensorRT-LLM:** FP8/INT8 for Llama-70B; batcher + KV-cache reuse; pinned memory.  
-- **vLLM:** OpenELM/Gemma/GGUF for quick bring-up; set `--gpu-memory-utilization`.  
-- **Mojo (future):** hot-path operators where Python is limiting.
+- **Local (DGX Spark)**  
+  - Llama-3.1-70B FP8 TRT-LLM: Judge/Planner (batching, KV cache).  
+  - DeepSeek-32B: Proposer/Synth (fast code/reasoning).  
+  - Qwen-32B-AWQ: Critic/Refactor (low VRAM).  
+- **Cloud**  
+  - GPT-4/5-class (general), Claude 3.7+ (long reasoning), Gemini-2.5+ (long-context/multimodal), Mistral/Grok/OpenELM.  
+- **Routing policy**  
+  - Prefer local; spill to cloud on long context, specialty tools, or latency SLO breaches.  
+  - Bandit-style updates from evaluators’ win-rates.
 
 ---
 
-## 10) Configuration Flags (initial)
+## 6) Advanced Capabilities (to integrate)
 
-MCP_ENABLED=true|false UNIFIED_AI_ENABLED=true|false EDENAI_API_KEY= ACP_ENABLED=true|false NEMO_URL= GAIA_ENABLED=true|false VOICE_ENABLED=true|false LOCAL_MODELS=llama-3.1-70b-fp8,deepseek-v3.2-32b,qwen-3-32b-awq CONCURRENCY_MAX=8 WS_HEARTBEAT_MS=20000
-
----
-
-## 11) Milestones & Acceptance
-
-### M1 — Interop & Coverage (Now)  
-- MCP adapter (read-only tools)  
-- EdenAI connector (unified APIs)  
-- UI & Python flags at **100%** coverage; stable Codecov  
-**Acceptance:** demos recorded; zero regressions; cloud spill only on long-context; guardrails firing as expected.
-
-### M2 — IDE & Quality  
-- ACP panel (Zed/VS Code)  
-- AG-UI SSE integration  
-- ART in Judge loop (auto-reflexion/evaluators)  
-**Acceptance:** IDE quick-actions working; evaluator scores improving prompts/programs; canary passes.
-
-### M3 — Enterprise & Edge  
-- Optional NeMo backend  
-- AMD Gaia path for local RAG  
-- Expanded voice pipelines  
-**Acceptance:** NeMo tasks verifiably routed; Gaia RAG reproduces core queries; voice latency within target.
-
-### M4 — Scale & Autonomy  
-- Multi-desktop orchestration  
-- Safe self-PRs & rollbacks in production  
-- Mojo pilot for hot paths  
-**Acceptance:** distributed runs steady; self-PRs merged automatically with zero broken builds.
+- **Voice**: Local ASR (e.g., Zonos/Whisper-class), multilingual NLU; TTS output; streaming barge-in; voice memory.
+- **Vision/PDF**: OCR tables → structured JSON; formula/LaTeX extraction; chart/table synthesis.
+- **SEO/Geo**: Crawler/SERP parsers, sitemap audits, NER/geocoding, local ranking diffing; content/robots PRs.
+- **Prompt/Data-Ops**: Prompt regression tracking (e.g., ART-style), dataset curation, result drift detection.
+- **Workflow Runtimes**: Interop with LangGraph/CrewAI as optional backends for complex tool flows (still governed by Naestro policy/router).
+- **Unified API brokers**: “Single-key” providers for broad tool coverage (rate-limited through policy engine).
 
 ---
 
-## 12) Contribution Notes
+## 7) Observability & Metrics
 
-- **Tests:** MSW for UI, pytest for server; mock network by default; slow tests marked and skipped in smoke CI.  
-- **CI:** split into smoke vs full coverage jobs; Codecov per-flag gates (UI, Python).  
-- **Conventional commits** enforced on PR titles; pre-commit hooks with Node 22.
-
----
-
-## 13) Open Integration Stubs (to implement in separate PRs)
-
-- `integrations/mcp/` — transport, registry, feature flag, examples.  
-- `providers/edenai.ts` — unified text/vision/speech with cost telemetry.  
-- `integrations/acp/` — editor panel server shim + commands.  
-- `integrations/nemo/` — optional client for enterprise agent graphs.  
-- `integrations/gaia/` — edge RAG provider.
+- **Traces**: model, tokens, latency, cost, context, policy hits, memory I/O, tool effects.
+- **Dashboards**: success & consensus rates, router win-rates, KV hit %, cloud spill %, anomaly flags, thermo/VRAM.
+- **Benchmarks**: project-specific regression suites; public benchmarks proxied via adapters; trendlines and SLA alerts.
 
 ---
 
-_This roadmap evolves continuously; each milestone includes explicit acceptance criteria, coverage requirements, and demo artifacts._
+## 8) Phased Delivery Plan
 
+### Phase A (Weeks 1–6): Autonomous Planning & Policies
+- `schemas/plan.schema.json` (typed contract)
+- `orchestrator/planner.py` (goal→plan compiler, re-planning)
+- `policy/engine` (YAML rules, consent UI), deny/allow telemetry
+- Router v1 (heuristics: latency/cost/context)
+**Exit**: Complex multi-step tasks run with approvals; green CI; 100% coverage on new code.
+
+### Phase B (Weeks 6–12): Multi-Agent Programs & Evaluators
+- Dynamic role spawning/budgets; rate limiting
+- Evaluators: code/tests/static, factuality, safety; pass@K harness
+- Memory slices per role; episode linking in Graphiti
+**Exit**: End-to-end build-and-ship demo finishes within SLA; evaluator-weighted routing improves success/latency.
+
+### Phase C (Weeks 12–20): Self-PRs & Canary Rollouts
+- Self-PR bot (prompt/router/config/test deltas), provenance signing
+- Canary+rollback scripts; changelog synthesis
+- Prompt/data-ops (golden suites; regression dashboards)
+**Exit**: Weekly self-PRs auto-merge ≥90% without regressions; clear rollback proofs.
+
+### Phase D (Weeks 20–28): Multimodal & Domain Skills
+- Voice I/O; PDF/LaTeX→tables; vision extraction
+- SEO/Geo skills; browser tools & safe browsing policies
+- Cross-device sessions; artifact sharing
+**Exit**: Voice-driven plan edits; PDF→CSV/Charts works; SEO audits produce actionable PRs.
+
+### Phase E (Ongoing): Adaptive Router & Skill Induction
+- Bandit router updates from evaluator win-rates
+- Distill frequent plans into typed, reusable “skills”
+- Public “skill market” with safety metadata
+**Exit**: Faster convergence on plans; fewer tokens per success; richer toolchain with guardrails.
+
+---
+
+## 9) Engineering Quality Gates (always-on)
+
+- **Coverage**: Per-area (UI/Server/Python) 100% with branch coverage and exclusions only for bootstrap.
+- **Static checks**: TS strict/mypy, ESLint, Semgrep/Bandit, supply-chain scan, IaC lint if infra present.
+- **Tests**: Unit + property + metamorphic; MSW/network stubs; golden prompt suites.
+- **Repro**: Pinned versions; snapshots for plans & prompts; deterministic seeds.
+
+---
+
+## 10) File/Module Backlog (next PRs)
+
+- `schemas/plan.schema.json`
+- `orchestrator/planner.py` + tests
+- `router/policy.yaml` + `policy/engine.ts` + Studio consent banners
+- `registry/tools.json` + adapters (MCP/HTTP/CLI/DB/Browser/PDF/ASR/TTS)
+- `integrations/graphiti/*` writers/retrievers
+- `evaluators/*` harness (code/factuality/safety/latency/cost)
+- `self_pr/bot.ts` + `.github/workflows/canary.yml` + rollback
+- `voice/*` (ASR/TTS, streaming UI), `vision/*` (OCR/table/latex)
+- `studio/*` (Plan preview, policy notices, memory timeline, evaluator panels)
+
+_All new modules must ship with tests, docs, and coverage; merges blocked if any scope <100%._
+
+---
+
+## 11) Example Use-Cases Unlocked
+
+- **End-to-end repo creation** from a spec (code, tests, CI, container, deploy, docs).
+- **PDF data extraction** (financial/maths) to tables/charts with sanity checks.
+- **SEO/Geo audits** — crawl, analyze, propose changes, open PRs.
+- **Voice-driven sprints** — stand-ups, issue updates, PR summaries, plan edits.
+
+---
+
+## 12) Risk Register & Mitigations
+
+- **Model drift / regression** → Golden suites, canary + rollback, evaluator gating.
+- **Cost spikes** → Local-first, budgets, adaptive routing, KV cache, batch.
+- **Data/secret exposure** → Vault leases, redaction, path/domain allowlists.
+- **Over-autonomy** → Mode gating, consent prompts, kill switches, strict policies.
+- **Supply-chain** → Lockfiles, signature verification, SBOM (optional).
+
+---
+
+### Appendices
+
+**A. Local Models (DGX Spark)**  
+- Llama-3.1-70B FP8 TRT-LLM — Judge/Planner  
+- DeepSeek-32B — Proposer/Synth  
+- Qwen-32B-AWQ — Critic/Refactor
+
+**B. Cloud Pool**  
+- GPT-4/5-class, Claude 3.7+, Gemini-2.5+, Mistral, Grok, OpenELM via vLLM
+
+**C. Key Integrations**  
+- Graphiti (memory graphs), LangGraph/CrewAI (optional runtime), prompt/data-ops (ART-style), Zonos (voice), MCP (tool bus), unified API brokers (single-key), SEO/Geo toolkits.
+
+---
