@@ -8,7 +8,7 @@
   <img src="docs/naestro-logo.svg" alt="NAESTRO Logo" width="300"/>
 </p>
 
-**Production-grade LLM orchestrator** with LangGraph-style workflow execution, pgvector-backed RAG,
+**Production-grade LLM orchestrator** with LangGraph-style workflow execution, pgvector-backed RAG,  
 secure sandboxing, and multi-model routing (NIM / vLLM / SLM).
 
 Naestro is an AI Orchestrator for multi-model collaboration.
@@ -28,6 +28,7 @@ Naestro is designed to evolve into a continuously improving **Autonomous System*
 ---
 
 ## Documentation
+
 - [Whitepaper](./WHITEPAPER.md)
 - [Architecture](./ARCHITECTURE.md)
 - [Single-node deployment](docs/DEPLOY_SINGLE_NODE.md)
@@ -39,22 +40,35 @@ Naestro is designed to evolve into a continuously improving **Autonomous System*
 - [VS Code Extension](docs/VS_CODE_EXTENSION.md)
 - [No-Replit deployment](docs/NO_REPLIT_DEPLOY.md)
 
+---
+
 ### Scale-out from single node
-Naestro runs great on a single DGX Spark desktop. When you’re ready to expand across multiple desktops (“cells”), see [Multi-node deployment](docs/DEPLOY_MULTI_NODE.md). Cells register with the router; the scheduler places steps by VRAM headroom, temperature, and queue pressure—local-first with cloud spillover only when needed.
+
+Naestro runs great on a single DGX Spark desktop.  
+When you’re ready to expand across multiple desktops (“cells”), see [Multi-node deployment](docs/DEPLOY_MULTI_NODE.md).  
+
+Cells register with the router; the scheduler places steps by VRAM headroom, temperature, and queue pressure — local-first with cloud spillover only when needed.
+
+---
 
 ### Naestro Studio (local UI)
-First-party dashboard (React + Vite + Tailwind + shadcn/ui) served by Naestro Core on the DGX.  
-Real-time Live Runs, model metrics, GPU health, KV cache hit-rate, cloud spillover %, and incidents.  
-See [Studio ↔ Core API contract](docs/UI_API_CONTRACT.md) and [Single-node deployment](docs/DEPLOY_SINGLE_NODE.md).
 
-To configure the WebSocket base URL during build, set `VITE_SOCKET_BASE_URL`:
+Dashboard (React + Vite + Tailwind + shadcn/ui) served by Naestro Core.  
+Real-time Live Runs, model metrics, GPU health, KV cache hit-rate, cloud spillover %, and incidents.  
+
+To configure the WebSocket base URL during build:
 
 ```bash
 VITE_SOCKET_BASE_URL=https://naestro.example.com npm run build
 
+
+---
+
 VS Code Extension (Qoder-style)
 
-A lightweight extension that talks to Naestro Core (/api/runs, /ws/live) to refactor code, explain errors, and generate tests without leaving the IDE.
+A lightweight extension that talks to Naestro Core (/api/runs, /ws/live)
+to refactor code, explain errors, and generate tests without leaving the IDE.
+
 Spec and scaffolding guidance in VS Code Extension.
 
 
@@ -117,6 +131,13 @@ Install SciPy for numeric demos:
 
 pip install scipy
 
+> NVIDIA images: If enabling the inference profile (NIM/SLM from nvcr.io/*), authenticate first:
+
+docker login nvcr.io
+# Use your NVIDIA NGC API key/token
+
+
+
 
 ---
 
@@ -128,9 +149,13 @@ pip install -r requirements.lock
 pip install -r scripts/requirements.txt
 python scripts/install_nltk_data.py
 
-# Start services with hot reload
+Start services with hot reload:
+
 uvicorn src.orchestrator.main:app --reload --port 8081 &
 uvicorn src.gateway.main:app --reload --port 8080 &
+
+Dependencies are pinned for reproducibility.
+After editing any requirements.txt, regenerate the corresponding *.lock file with pip-compile.
 
 
 ---
@@ -140,6 +165,19 @@ uvicorn src.gateway.main:app --reload --port 8080 &
 Create a .env from the example:
 
 cp .env.example .env
+
+Key variables:
+
+PG_DSN=postgresql://postgres:secure@postgres:5432/naestro
+REDIS_URL=redis://redis:6379/0
+ORCH_URL=http://orchestrator:8081
+NIM_BASE_URL=http://nim:8000/v1
+VLLM_BASE_URL=http://vllm:8000/v1
+SLM_BASE_URL=http://slm:8000/v1
+
+To point the gateway at a local orchestrator instead of the Compose service:
+
+export ORCH_URL=http://localhost:8081
 
 
 ---
@@ -153,15 +191,15 @@ Naestro includes Graph Memory with Graphiti → see Graphiti Guide.
 
 🗂 Structure
 
-docs/            # logo, diagrams
-src/gateway/     # FastAPI entry service
-src/orchestrator # Orchestrator service
-sql/schema.sql   # pgvector schema + indexes
-etc/docker/      # sandbox config
-config/          # prometheus + otel
-scripts/         # pinning, governor, validation
-jobs/            # PII calibration
-.github/         # CI
+docs/                      # logo, diagrams
+src/gateway/               # FastAPI entry service
+src/orchestrator/          # Orchestrator service
+sql/schema.sql             # pgvector schema + indexes
+etc/docker/                # sandbox config
+config/                    # prometheus + otel
+scripts/                   # pinning, governor, validation
+jobs/                      # PII calibration
+.github/                   # CI
 docker-compose.yml
 
 
@@ -169,7 +207,8 @@ docker-compose.yml
 
 🔬 Example Scripts
 
-See Examples.
+Sample SymPy and SciPy demonstrations live in src/examples/.
+See Examples for setup instructions and troubleshooting tips.
 
 
 ---
@@ -184,6 +223,7 @@ See Architecture.
 🔒 Security
 
 See Security.
+Sandbox is network-isolated with a strict seccomp profile.
 
 
 ---
@@ -205,7 +245,8 @@ pytest -m "not slow" -q --cov=src --cov-report=xml
 
 🤝 Contributing
 
-Contributions welcome! Open an issue or PR. Run tests/linters before submitting.
+Contributions welcome! Open an issue or PR.
+Run tests/linters before submitting.
 
 
 ---
@@ -226,7 +267,8 @@ Studio (UI)	v0.9.x	Core v1.4+, Graphiti v0.3+
 Providers schema	v0.6+	Core v1.4+
 
 
-> Automated updates via Dependabot.
+> Automated dependency updates via Dependabot are enabled (npm & GitHub Actions).
 
 
 
+---
