@@ -82,25 +82,27 @@ Naestro evolves from a goal-driven multi-agent orchestrator into a continuously 
 
 ## 6) Advanced Capabilities (to integrate)
 
-- **Voice**: Parlant + Whisper/Zonos, multilingual ASR, streaming TTS, barge-in, voice memory.
-- **Vision/PDF**: OCR tables → structured JSON; formula/LaTeX extraction; chart/table synthesis.
-- **SEO/Geo**: Crawler/SERP parsers, sitemap audits, NER/geocoding, local ranking diffing; content/robots PRs.
-- **Prompt/Data-Ops**: Prompt regression tracking (ART), dataset curation, result drift detection.
-- **Workflow Runtimes**: Interop with LangGraph/CrewAI as optional backends for complex tool flows (still governed by Naestro policy/router).
-- **Unified API brokers**: “Single-key” providers for broad API/tool coverage (via RapidAPI-like services).
-- **n8n Integration**: Export Naestro workflows to n8n YAML, enabling low-code automation (email agents, Telegram bots, Reddit pipelines).
-- **Translation**: LFM2-350M integration for efficient JP↔EN translation, outperforming larger models for domain-specific multilingual workflows.
-- **vLLM Enhancements**: Paged attention, prefix caching, speculative decoding, multi-GPU/multi-node serving with auto-tuning.
-- **Elastic scaling**: LMCache/NIXL connectors for KV-cache transfer across nodes, enabling disaggregated prefill/decode pipelines.
-- **Metadata-Augmented RAG**: Embed semantic + structural metadata (page type, domain, layout) alongside embeddings to filter irrelevant chunks, improving precision, lowering cost, and boosting accuracy.
+- **Voice**: Parlant + Whisper/Zonos, multilingual ASR, streaming TTS, barge-in, voice memory.  
+- **Vision/PDF**: OCR tables → structured JSON; formula/LaTeX extraction; chart/table synthesis.  
+- **SEO/Geo**: Crawler/SERP parsers, sitemap audits, NER/geocoding, local ranking diffing; content/robots PRs.  
+- **Prompt/Data-Ops**: Prompt regression tracking (ART), dataset curation, result drift detection.  
+- **Workflow Runtimes**: Interop with LangGraph/CrewAI as optional backends for complex tool flows (still governed by Naestro policy/router).  
+- **Unified API brokers**: “Single-key” providers for broad API/tool coverage (via RapidAPI-like services).  
+- **n8n Integration**: Export Naestro workflows to n8n YAML, enabling low-code automation (email agents, Telegram bots, Reddit pipelines).  
+- **Translation**: LFM2-350M integration for efficient JP↔EN translation, outperforming larger models for domain-specific multilingual workflows.  
+- **vLLM Enhancements**: Paged attention, prefix caching, speculative decoding, multi-GPU/multi-node serving with auto-tuning.  
+- **Elastic scaling**: LMCache/NIXL connectors for KV-cache transfer across nodes, enabling disaggregated prefill/decode pipelines.  
+- **RAG Metadata Augmentation**: TensorLake-style page classification & metadata injection for more accurate, cheaper retrieval.  
+- **InfoSeek Integration**: Use InfoSeek data-synthesis framework to improve reasoning coverage with smaller models.  
+- **Code Editing**: Instinct (Next Edit model) integrated via Ollama and VS Code for surgical code edits within Self-PRs.  
 
 ---
 
 ## 7) Observability & Metrics
 
-- **Traces**: model, tokens, latency, cost, context, policy hits, memory I/O, tool effects.
-- **Dashboards**: success & consensus rates, router win-rates, KV hit %, cloud spill %, anomaly flags, thermo/VRAM.
-- **Benchmarks**: project-specific regression suites; public benchmarks proxied via adapters; trendlines and SLA alerts.
+- **Traces**: model, tokens, latency, cost, context, policy hits, memory I/O, tool effects.  
+- **Dashboards**: success & consensus rates, router win-rates, KV hit %, cloud spill %, anomaly flags, thermo/VRAM.  
+- **Benchmarks**: project-specific regression suites; public benchmarks proxied via adapters; trendlines and SLA alerts.  
 
 ---
 
@@ -123,6 +125,7 @@ Naestro evolves from a goal-driven multi-agent orchestrator into a continuously 
 - Self-PR bot (prompt/router/config/test deltas), provenance signing
 - Canary+rollback scripts; changelog synthesis
 - Prompt/data-ops (golden suites; regression dashboards)  
+- **Instinct integration** for fine-grained code edits in PRs.  
 **Exit**: Weekly self-PRs auto-merge ≥90% without regressions; clear rollback proofs.
 
 ### Phase D (Weeks 20–28): Multimodal & Domain Skills
@@ -140,9 +143,8 @@ Naestro evolves from a goal-driven multi-agent orchestrator into a continuously 
 ### Phase F (Add-ons): External Automation & APIs
 - n8n flow exports, low-code pipelines (Telegram, Reddit, Email).
 - Unified API brokers integration for single-key access to thousands of APIs.
-- ART-driven prompt regression tracking.
-- Metadata-Augmented RAG support in Graphiti + pgvector.  
-**Exit**: Contributors can compose automation via n8n; regression suites harden prompts/tools; RAG precision improves with metadata filtering.
+- ART-driven prompt regression tracking.  
+**Exit**: Contributors can compose automation via n8n; regression suites harden prompts/tools.
 
 ### Phase H (Scaling & Performance)
 - vLLM multi-GPU/multi-node serving (paged attention, prefix caching, speculative decoding).
@@ -179,22 +181,22 @@ _All new modules must ship with tests, docs, and coverage; merges blocked if any
 
 ## 11) Example Use-Cases Unlocked
 
-- **End-to-end repo creation** from a spec (code, tests, CI, container, deploy, docs).
-- **PDF data extraction** (financial/maths) to tables/charts with sanity checks.
-- **SEO/Geo audits** — crawl, analyze, propose changes, open PRs.
-- **Voice-driven sprints** — stand-ups, issue updates, PR summaries, plan edits.
-- **n8n Pipelines** — Reddit→Claude→Telegram, email responders, content reposters.
-- **Metadata-RAG** — Bank statements classified into “transactions/terms/etc.” before embedding, improving retrieval accuracy.
+- **End-to-end repo creation** from a spec (code, tests, CI, container, deploy, docs).  
+- **PDF data extraction** (financial/maths) to tables/charts with sanity checks.  
+- **SEO/Geo audits** — crawl, analyze, propose changes, open PRs.  
+- **Voice-driven sprints** — stand-ups, issue updates, PR summaries, plan edits.  
+- **n8n Pipelines** — Reddit→Claude→Telegram, email responders, content reposters.  
+- **Instinct Edits** — fine-grained code modifications inside PRs.  
 
 ---
 
 ## 12) Risk Register & Mitigations
 
-- **Model drift / regression** → Golden suites, canary + rollback, evaluator gating.
-- **Cost spikes** → Local-first, budgets, adaptive routing, KV cache, batch.
-- **Data/secret exposure** → Vault leases, redaction, path/domain allowlists.
-- **Over-autonomy** → Mode gating, consent prompts, kill switches, strict policies.
-- **Supply-chain** → Lockfiles, signature verification, SBOM (optional).
+- **Model drift / regression** → Golden suites, canary + rollback, evaluator gating.  
+- **Cost spikes** → Local-first, budgets, adaptive routing, KV cache, batch.  
+- **Data/secret exposure** → Vault leases, redaction, path/domain allowlists.  
+- **Over-autonomy** → Mode gating, consent prompts, kill switches, strict policies.  
+- **Supply-chain** → Lockfiles, signature verification, SBOM (optional).  
 
 ---
 
@@ -203,10 +205,10 @@ _All new modules must ship with tests, docs, and coverage; merges blocked if any
 **A. Local Models (DGX Spark)**  
 - Llama-3.1-70B FP8 TRT-LLM — Judge/Planner  
 - DeepSeek-32B — Proposer/Synth  
-- Qwen-32B-AWQ — Critic/Refactor
+- Qwen-32B-AWQ — Critic/Refactor  
 
 **B. Cloud Pool**  
-- GPT-4/5-class, Claude 3.7+, Gemini-2.5+, Mistral, Grok, OpenELM via vLLM
+- GPT-4/5-class, Claude 3.7+, Gemini-2.5+, Mistral, Grok, OpenELM via vLLM  
 
 **C. Key Integrations**  
-- Graphiti (memory graphs), LangGraph/CrewAI (optional runtime), ART (prompt regression), Zonos/Parlant (voice), MCP (tool bus), unified API brokers (single-key), SEO/Geo toolkits, n8n (low-code pipelines), LFM2 (translation), InfoSeek (data synthesis), Metadata-Augmented RAG, vLLM advanced features (paged attention, speculative decoding, multi-node scaling).
+- Graphiti (memory graphs), LangGraph/CrewAI (optional runtime), ART (prompt regression), Zonos/Parlant (voice), MCP (tool bus), unified API brokers (single-key), SEO/Geo toolkits, n8n (low-code pipelines), LFM2 (translation), vLLM advanced features (paged attention, speculative decoding, multi-node scaling), **TensorLake metadata augmentation**, **InfoSeek synthesis**, **Instinct code editing**.
