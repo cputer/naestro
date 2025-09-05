@@ -15,7 +15,19 @@ Naestro is an AI Orchestrator for multi-model collaboration.
 
 ➡️ See the project [**Roadmap**](./ROADMAP.md) for milestones, integrations, and acceptance criteria.
 
+
 ---
+
+
+## Vision
+
+Naestro is designed to evolve into a continuously improving **Autonomous System** capable of orchestrating agents, managing tools, rewriting itself safely, and solving open-ended tasks — from research and code generation to SEO, Geo analytics, and multimodal interaction.
+
+📖 Read the full [Naestro Vision](./VISION.md)
+
+
+---
+
 
 ## Documentation
 - **Whitepaper** → [WHITEPAPER.md](WHITEPAPER.md)
