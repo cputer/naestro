@@ -207,6 +207,78 @@ _All new modules must ship with tests, docs, and coverage; merges blocked if any
 
 ---
 
+## 13) New Integrations (Q3–Q4 2025)
+
+### 13.1 Agent Lightning — RL Fine-Tuning for Agents
+**Goal.** Автоматическое улучшение качества и экономичности агентов через RL-петлю с использованием трейс-логов Naestro.  
+**Scope.**
+- Ввод “reward events” (успех шага, экономия токенов/мс, штрафы за safety-инциденты).
+- Offline RL цикл на реплеях (без влияния на прод), shadow-политика с canary-прогоном.
+- Патчи промптов/маршрутизации/параметров инструментов с автотестами.
+**Exit.** На golden-наборах: ↑pass@1/↑pass@K, ↓p95 latency/cost, нулевые safety-регрессии.
+
+### 13.2 AlphaEvolve-style Evolvers — Performance-guided Code Generation
+**Goal.** Эволюционная оптимизация горячих участков (GPU-ядра, трансформы данных, парсеры).  
+**Scope.**
+- Интеграция “evolver” в `introspector` + микробенчи `evaluators/perf`.
+- Генерация вариантов, отбор по Pareto (время/корректность/стабильность).
+**Exit.** ≥10–15% ускорение на целевых узких местах, 100% корректность по тестам.
+
+### 13.3 AWS Bedrock AgentCore + MCP (Enterprise Reference Backend)
+**Goal.** Опциональный энтерпрайз-бэкенд для инструментов/памяти/идентичности.  
+**Scope.**
+- MCP адаптеры (tools) с политиками доступа и аудитом.
+- Пилотный поток “Naestro Plan → MCP Tools → Audit”.
+**Exit.** Успешный сквозной сценарий с полным аудитом и отключаемыми флагами.
+
+### 13.4 Agentic Web — Safe Interop with External Agents
+**Goal.** Безопасное взаимодействие с внешними агентами/сервисами с наблюдаемостью.  
+**Scope.**
+- Registry внешних агентов, безопасный handshake, скоупы, квоты, доменные allowlists.
+- Полные трассы в Studio, вкл. показатели затрат и инцидентов.
+**Exit.** Демонстрации кросс-агентных задач без нарушений политики/бюджета.
+
+### 13.5 SuperAGI Runtime (Optional)
+**Goal.** Подключаемый альтернативный рантайм для исполнения планов.  
+**Scope.**
+- Адаптер `runtimes/superagi/*`, параметризуемая схема Plan→SuperAGI Flow.
+- Сравнение SLO с LangGraph/CrewAI под одинаковыми задачами.
+**Exit.** Эквивалентные результаты/трассы, выключаемый профилем.
+
+---
+
+## 14) Roadmap Phases (Addenda)
+
+### Phase I — RL & Evolutionary Optimization (builds on Phase C/E)
+- Agent Lightning offline RL на трейc-логах.
+- Evolver в `introspector` для производительности.
+- Acceptance: улучшение pass@K и p95 latency/cost на golden-наборах; без safety-регрессий.
+
+### Phase J — Interop & Enterprise Backends (builds on Phase F/H)
+- MCP/Bedrock как опциональный бэкенд; Agentic Web handshake.
+- SuperAGI как дополнительный runtime (opt-in).
+- Acceptance: сквозные сценарии, полные аудиты, соответствие политикам, зелёные SLO.
+
+---
+
+## 15) Tasks (Backlog for PRs)
+
+- `evaluators/rl/` — reward-логика, конфиги, оффлайн тренинг-скрипт.
+- `introspector/evolver/` — генерация, микробенчи, Pareto-отбор, репорты в CI.
+- `integrations/mcp/` — адаптеры, маппинг политик, audit events.
+- `gateway/agents-api/` — регистрация внешних агентов, скоупы, квоты, доменные allowlists.
+- `runtimes/superagi/` — Flow-адаптер, совместимость с текущим Plan.json.
+- Studio: панели RL/Evolver, Agentic Web трассы, MCP audit.
+
+---
+
+## 16) Risks & Mitigations (Addendum)
+
+- **RL нестабильность** → только offline + shadow, canary, auto-rollback.
+- **Шум бенчмарков** → фиксированные семена, референс-датасеты, множественные профайлеры.
+- **Внешние бэкенды** → фича-флаги, строгие allowlists, контрактные тесты.
+- **Interop безопасность** → песочницы, квоты/QPS, PII-редакторы, явные consent-промпты.
+
 ### Appendices
 
 **A. Local Models (DGX Spark)**  
