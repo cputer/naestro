@@ -157,6 +157,28 @@ Naestro grows from a goal-driven multi-agent orchestrator into a continuously se
 - Public skill registry with safety metadata  
 **Exit:** Faster plan convergence; lower tokens/success; richer toolchains with guardrails.
 
+### F. Deep-Research Data Synthesis (InfoSeek-style)
+
+**Goal:** Train a compact, local “InfoSeeker-7B” specialist that matches/beats larger generalists on web research tasks via curated browse traces.
+
+**Deliverables**
+- `tools/web_research/*` (SERP, browser, extractors, policies)
+- `pipelines/infoseek/{collector,curator,grader,packager}.py`
+- `train/infoseek_sft.py` (LoRA/QLoRA, optional DPO/RLAIF)
+- `models/infoseeker/*` (vLLM config, AWQ quant)
+- `eval/deep_research/*` (citation-aware benchmarks)
+
+**Routing**
+- Router prefers `infoseeker-*` for `capability: deep_research` when local VRAM permits; cloud spill for LC/XL context.
+
+**Safety**
+- robots.txt compliance, domain allowlist, PII redaction, consent receipts.
+- Verifier pass (cross-model) before high-impact actions.
+
+**Success criteria**
+- ≥ X% improvement on citation-matched accuracy vs baseline.
+- ≤ Y% hallucination/contradiction rate.
+- 2–4× lower cost vs cloud model for same tasks.
 ---
 
 ## 9) Engineering Quality Gates (Always-On)
