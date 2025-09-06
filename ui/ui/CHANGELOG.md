@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.5](https://github.com/cputer/naestro/compare/v0.2.4...v0.2.5) (2025-09-06)
+
+
+### Features
+
+* **ui:** add jest-dom alias for vitest ([1d0b5b5](https://github.com/cputer/naestro/commit/1d0b5b5ab69f7b2ad9b87cca7cefa654fe33181c))
+* **ui:** add smoke test script ([95e4b10](https://github.com/cputer/naestro/commit/95e4b108892eabe7ba1dce23928b4846f20ad267))
+* **ui:** add smoke test script ([0a27628](https://github.com/cputer/naestro/commit/0a27628f485e2bcd5d8d075300c7df4a95829be3))
+* **ui:** configure vitest globals and jest-dom alias ([5bf9b76](https://github.com/cputer/naestro/commit/5bf9b76b0edc3f31d7c0f0f212e498f69e49e869))
+
 ## [0.2.4](https://github.com/cputer/naestro/compare/v0.2.3...v0.2.4) (2025-09-03)
 
 
