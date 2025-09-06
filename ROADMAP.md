@@ -42,109 +42,116 @@ Naestro evolves from a goal-driven multi-agent orchestrator into a continuously 
 
 ```mermaid
 flowchart TB
-  subgraph Studio["Studio (Web UI)"]
-    UI[Runs/Traces/Metrics]
-    Consent[Consent Banners]
-    Panels[Nango SaaS Panel & n8n Export]
-  end
+    subgraph Studio["Studio (Web UI)"]
+      UI[Runs/Traces/Metrics]
+      Consent[Consent Banners]
+      Panels[Nango SaaS Panel & n8n Export]
+    end
 
-  subgraph Core["Naestro Core"]
-    Planner
-    Router
-    Policy[Policy Engine]
-    Registry[Tool/Skill Registry (MCP, HTTP, DB, Browser, PDF, ASR/TTS, SEO/Geo, n8n, Nango)]
-    Memory[Graphiti Memory Fabric]
-    Evaluators
-    Introspector
-    SelfPR[Self-PR Bot]
-  end
+    subgraph Core["Naestro Core"]
+      Planner
+      Router
+      Policy[Policy Engine]
+      Registry[Tool/Skill Registry (MCP, HTTP, DB, Browser, PDF, ASR/TTS, SEO/Geo, n8n, Nango)]
+      Memory[Graphiti Memory Fabric]
+      Evaluators
+      Introspector
+      SelfPR[Self-PR Bot]
+    end
 
-  subgraph Engines["Serving Engines"]
-    VLLM[vLLM / SGLang]
-    TRTLLM[TensorRT-LLM]
-    Triton[Triton Inference Server]
-  end
+    subgraph Engines["Serving Engines"]
+      VLLM[vLLM / SGLang]
+      TRTLLM[TensorRT-LLM]
+      Triton[Triton Inference Server]
+    end
 
-  subgraph ModelsLocal["Local Models (DGX Spark)"]
-    Llama[Llama-3.1-70B FP8]
-    DeepSeek[DeepSeek-32B]
-    Qwen[Qwen-32B-AWQ]
-    GPTOSS[GPT-OSS 20B/120B]
-  end
+    subgraph ModelsLocal["Local Models (DGX Spark)"]
+      Llama[Llama-3.1-70B FP8]
+      DeepSeek[DeepSeek-32B]
+      Qwen[Qwen-32B-AWQ]
+      GPTOSS[GPT-OSS 20B/120B]
+    end
 
-  subgraph Cloud["Cloud Pool"]
-    OpenAI[GPT-4/5 class]
-    Claude[Claude 3.7+]
-    Gemini[Gemini-2.5+]
-    Mistral[Mistral/Grok/OpenELM]
-    LFM2[LFM2-350M (JP↔EN)]
-  end
+    subgraph Cloud["Cloud Pool"]
+      OpenAI[GPT-4/5 class]
+      Claude[Claude 3.7+]
+      Gemini[Gemini-2.5+]
+      Mistral[Mistral/Grok/OpenELM]
+      LFM2[LFM2-350M (JP↔EN)]
+    end
 
-  subgraph Integrations["Integrations"]
-    MCP[MCP Client/Server]
-    Parlant[Parlant + VibeVoice (ASR/TTS)]
-    n8n[n8n Flow Export]
-    Nango[Nango SaaS API Hub]
-    ART[ART Prompt-Ops]
-    Tensorlake[Tensorlake Metadata-RAG]
-    OmniNova[OmniNova (Planner/Critic)]
-    Symphony[Symphony (Decentralized)]
-    OCA[Open Computer Agent (Browser/UI)]
-    LMCache[LMCache/NIXL KV-Transfer]
-    AgentScope[AgentScope Runtime/Studio (optional)]
-  end
+    subgraph Integrations["Integrations"]
+      MCP[MCP Client/Server]
+      Parlant[Parlant + VibeVoice (ASR/TTS)]
+      DIA[DIA TTS (multi-speaker one-pass)]
+      n8n[n8n Flow Export]
+      Nango[Nango SaaS API Hub]
+      ART[ART Prompt-Ops]
+      Tensorlake[Tensorlake Metadata-RAG]
+      OmniNova[OmniNova (Planner/Critic)]
+      Symphony[Symphony (Decentralized)]
+      OCA[Open Computer Agent (Browser/UI)]
+      LMCache[LMCache/NIXL KV-Transfer]
+      AgentScope[AgentScope Runtime/Studio (optional)]
+      GraphRAG[GraphRAG/LazyGraphRAG (optional)]
+    end
 
-  Studio --> |WS/SSE| Core
-  Panels --> Registry
+    Studio --> |WS/SSE| Core
+    Panels --> Registry
 
-  Planner --> Router
-  Router --> |selects| Engines
-  Policy --> |gates| Router
-  Registry --> Agents
-  Agents --> Engines
-  Agents --> Memory
-  Engines --> ModelsLocal
-  Engines --> Cloud
+    Planner --> Router
+    Router --> |selects| Engines
+    Policy --> |gates| Router
+    Registry --> Agents
+    Agents --> Engines
+    Agents --> Memory
+    Engines --> ModelsLocal
+    Engines --> Cloud
 
-  Evaluators --> Introspector
-  Introspector --> SelfPR
-  SelfPR --> |PRs| Studio
+    Evaluators --> Introspector
+    Introspector --> SelfPR
+    SelfPR --> |PRs| Studio
 
-  ART --> Evaluators
-  Tensorlake --> Memory
-  MCP --> Registry
-  n8n --> Registry
-  Nango --> Registry
-  Parlant --> Registry
-  OCA --> Registry
-  LMCache --> Engines
-  AgentScope --> Core
+    ART --> Evaluators
+    Tensorlake --> Memory
+    MCP --> Registry
+    n8n --> Registry
+    Nango --> Registry
+    Parlant --> Registry
+    DIA --> Registry
+    OCA --> Registry
+    LMCache --> Engines
+    AgentScope --> Core
+    GraphRAG --> Memory
 ```
 
 ---
 
 ## 4) Self-Rewrite Loop (guarded autonomy)
 
-- **Collect:** surfaced failures (dropped runs, OOM, policy denials), slow traces (P95 spikes), evaluator misses, flaky tests.  
-- **Propose:** agents generate *minimal* diffs (prompt deltas, router weights, tool config, tests) → PRs.  
-- **Validate:** unit + property + metamorphic tests (100% coverage); golden prompts via prompt-ops (ART); dataset replays; synthetic suites (coding, agentic, PDF/LaTeX, SEO/Geo, browse).  
-- **Canary:** shadow traffic; watch SLOs (success, latency, cost, safety incidents). Auto-rollback on breach.  
-- **Merge:** provenance sign, release notes, version bump.  
-- **Learn:** update router priors from win-rates; store counter-examples in memory.
+1. **Collect**: Surface failures (dropped runs, OOM, policy denials), slow traces (P95 spikes), evaluator misses, flaky tests.  
+2. **Propose**: Agents generate *minimal* diffs (prompt deltas, router weights, tool config, tests) → PRs.  
+3. **Validate**:  
+   - Unit + property + metamorphic tests (100% coverage).  
+   - Golden prompts via prompt-ops (ART integration).  
+   - Offline dataset replays; synthetic task suites (coding, agentic, PDF/LaTeX, SEO/Geo, browse).  
+4. **Canary**: Shadow traffic; watch SLOs (success, latency, cost, safety incidents). Automatic rollback if any breach.  
+5. **Merge**: Provenance sign, release notes, version bump.  
+6. **Learn**: Update router priors from win-rates; store counter-examples in memory for future planning.  
 
-**Non-goals:** unrestricted self-modification, unsupervised network/file access, or secret exfiltration.
+**Non-goals**: unrestricted self-modification, unsupervised network/file access, or secret exfiltration.
 
 ---
 
 ## 5) Safety & Capability Governance
 
-- **Modes:** `Guide` (suggest), `Copilot` (confirm), `Auto` (approved scopes only).
-- **Boundaries:**  
-  - *Secrets:* lease-scoped vault; never to client; redaction in traces.  
-  - *Filesystem & network:* path/domain allowlists; sandboxed exec; rate limits.  
-  - *Data:* PII classifiers; off-prem toggle; export redaction.  
-- **Kill switches:** Pause runs; revoke tokens; quarantine models/tools.  
-- **Compliance:** comprehensive audit logs (immutable), purpose/consent receipts.
+- **Modes**: `Guide` (suggest), `Copilot` (confirm), `Auto` (approved scopes only).  
+- **Boundaries**:  
+  - Secrets: lease-scoped vault; never to client; redaction in traces.  
+  - Filesystem & network: path/domain allowlists; sandboxed exec; rate limits.  
+  - Data: PII classifiers; off-prem toggle; export redaction.  
+- **Kill switches**: Pause runs; revoke tokens; quarantine models/tools.  
+- **Compliance**: comprehensive audit logs (immutable), purpose/consent receipts.
 
 ---
 
@@ -154,43 +161,46 @@ flowchart TB
   - Llama-3.1-70B FP8 TRT-LLM: Judge/Planner (batching, KV cache).  
   - DeepSeek-32B: Proposer/Synth (fast code/reasoning).  
   - Qwen-32B-AWQ: Critic/Refactor (low VRAM).  
-  - GPT-OSS 20B/120B: open GPT-level local-first options.  
+  - GPT-OSS 20B/120B: open GPT-level local-first options.
+
 - **Cloud**  
-  - GPT-4/5-class (general), Claude 3.7+ (long reasoning), Gemini-2.5+ (long-context/multimodal), Mistral, Grok, OpenELM.  
-  - LFM2-350M (JP↔EN) for efficient high-quality translation.  
+  - GPT-4/5-class (general), Claude 3.7+ (long reasoning), Gemini-2.5+ (long-context/multimodal), Mistral/Grok/OpenELM.  
+  - LFM2-350M (JP↔EN) for efficient high-quality translation.
+
 - **Routing policy**  
   - Prefer local; spill to cloud on long context, specialty tools, or latency SLO breaches.  
   - Bandit-style updates from evaluators’ win-rates.  
-  - **Reasoning budget knobs** (`think/on/off`, `reasoning_effort`) normalized across providers.
+  - **Reasoning budget knobs** (think/on/off; effort levels) normalized across providers.
 
 ---
 
 ## 7) Advanced Capabilities (to integrate)
 
-- **Voice:** Parlant + Whisper/Zonos, **VibeVoice** (long-form/emotional TTS), multilingual ASR, streaming TTS, barge-in, voice memory.  
-- **Vision/PDF:** OCR tables → structured JSON; formula/LaTeX extraction; chart/table synthesis.  
-- **SEO/Geo:** Crawler/SERP parsers, sitemap audits, NER/geocoding, local ranking diffing; content/robots PRs.  
-- **Prompt/Data-Ops:** **ART** prompt regression tracking, dataset curation, result drift detection.  
-- **Workflow Runtimes:** Interop with **LangGraph/CrewAI/AgentScope** as optional backends for complex tool flows (still governed by Naestro policy/router).  
-- **Unified API brokers:** Single-key providers for broad API/tool coverage (RapidAPI-style).  
-- **n8n Integration:** Export Naestro workflows to **n8n YAML**, enabling low-code automation (email agents, Telegram bots, Reddit pipelines).  
-- **Translation:** **LFM2-350M** integration for efficient JP↔EN translation.  
-- **vLLM Enhancements:** Paged attention, prefix caching, speculative decoding, multi-GPU/multi-node serving with auto-tuning.  
-- **Elastic scaling:** **LMCache/NIXL** connectors for KV-cache transfer across nodes, disaggregated prefill/decode pipelines.  
-- **Metadata RAG:** **Tensorlake**-style metadata enrichment for embeddings; classifying pages (tables/text/terms) to pre-filter retrieval.  
-- **MCP (Model Context Protocol):** Standardized tool & data connectors (client+server).  
-- **Open Computer Agent:** Headless browser/UI automation for real-world tasks (SEO/Geo ops).  
-- **OmniNova / Symphony:** Agent orchestration/consensus frameworks (optional adapters).  
-- **Nango SaaS Hub:** 400+ SaaS APIs (CRM/HR/Finance/etc.) via one OAuth, with Studio panel & **n8n autogen nodes**.
+- **Voice**: Parlant + Whisper/Zonos, **VibeVoice** (long-form/emotional TTS), **DIA TTS (multi-speaker one-pass dialogue)**, multilingual ASR, streaming TTS, barge-in, voice memory.  
+- **Vision/PDF**: OCR tables → structured JSON; formula/LaTeX extraction; chart/table synthesis.  
+- **SEO/Geo**: Crawler/SERP parsers, sitemap audits, NER/geocoding, local ranking diffing; content/robots PRs.  
+- **Prompt/Data-Ops**: ART prompt regression tracking, dataset curation, result drift detection.  
+- **Workflow Runtimes**: Interop with LangGraph/CrewAI/**AgentScope** as optional backends for complex tool flows (still governed by Naestro policy/router).  
+- **Unified API brokers**: Single-key providers for broad API/tool coverage (RapidAPI-style).  
+- **n8n Integration**: Export Naestro workflows to n8n YAML, enabling low-code automation (email agents, Telegram bots, Reddit pipelines).  
+- **Translation**: LFM2-350M integration for efficient JP↔EN translation.  
+- **vLLM Enhancements**: Paged attention, prefix caching, speculative decoding, multi-GPU/multi-node serving with auto-tuning.  
+- **Elastic scaling**: LMCache/NIXL connectors for KV-cache transfer across nodes, disaggregated prefill/decode pipelines.  
+- **Metadata RAG**: Tensorlake-style metadata enrichment for embeddings; classifying pages (tables/text/terms) to pre-filter retrieval.  
+- **MCP (Model Context Protocol)**: Standardized tool & data connectors (client+server).  
+- **Open Computer Agent**: Headless browser/UI automation for real-world tasks (SEO/Geo ops).  
+- **OmniNova / Symphony**: Agent orchestration/consensus frameworks (optional adapters).  
+- **Nango SaaS Hub**: 400+ SaaS APIs (CRM/HR/Finance/etc.) via one OAuth, with Studio panel & n8n autogen nodes.  
+- **GraphRAG/LazyGraphRAG**: Graph-aware retrieval modes for deep reasoning.
 
 ---
 
 ## 8) Observability & Metrics
 
-- **Traces:** model, tokens, latency (TTFT/ITL), cost, context, policy hits, memory I/O, tool effects.  
-- **Dashboards:** success & consensus rates, router win-rates, KV hit %, cloud spill %, anomaly flags, thermo/VRAM.  
-- **Benchmarks:** project-specific regression suites; public benchmarks proxied via adapters; trendlines and SLA alerts (**SWE-bench Verified**, **LiveBench**).  
-- **OpenTelemetry GenAI semantic conventions** as first-class.
+- **Traces**: model, tokens, latency (TTFT/ITL), cost, context, policy hits, memory I/O, tool effects.  
+- **Dashboards**: success & consensus rates, router win-rates, KV hit %, cloud spill %, anomaly flags, thermo/VRAM.  
+- **Benchmarks**: project-specific regression suites; public benchmarks proxied via adapters; trendlines and SLA alerts (SWE-bench Verified, LiveBench).  
+- **OpenTelemetry GenAI** semantic conventions as first-class.
 
 ---
 
@@ -201,68 +211,68 @@ flowchart TB
 - `orchestrator/planner.py` (goal→plan compiler, re-planning)  
 - `policy/engine` (YAML rules, consent UI), deny/allow telemetry  
 - Router v1 (heuristics: latency/cost/context)  
-**Exit:** Complex multi-step tasks run with approvals; green CI; 100% coverage on new code.
+**Exit**: Complex multi-step tasks run with approvals; green CI; 100% coverage on new code.
 
 ### Phase B (Weeks 6–12): Multi-Agent Programs & Evaluators
 - Dynamic role spawning/budgets; rate limiting  
 - Evaluators: code/tests/static, factuality, safety; pass@K harness  
 - Memory slices per role; episode linking in Graphiti  
-**Exit:** End-to-end build-and-ship demo finishes within SLA; evaluator-weighted routing improves success/latency.
+**Exit**: End-to-end build-and-ship demo finishes within SLA; evaluator-weighted routing improves success/latency.
 
 ### Phase C (Weeks 12–20): Self-PRs & Canary Rollouts
 - Self-PR bot (prompt/router/config/test deltas), provenance signing  
 - Canary+rollback scripts; changelog synthesis  
-- Prompt/data-ops (golden suites; regression dashboards via **ART**)  
-**Exit:** Weekly self-PRs auto-merge ≥90% without regressions; clear rollback proofs.
+- Prompt/data-ops (golden suites; regression dashboards via ART)  
+**Exit**: Weekly self-PRs auto-merge ≥90% without regressions; clear rollback proofs.
 
 ### Phase D (Weeks 20–28): Multimodal & Domain Skills
-- Voice I/O (**Parlant + VibeVoice**); PDF/LaTeX→tables; vision extraction  
+- Voice I/O (**Parlant + VibeVoice + DIA**); PDF/LaTeX→tables; vision extraction  
 - SEO/Geo skills; browser tools & safe browsing policies  
 - Cross-device sessions; artifact sharing  
-**Exit:** Voice-driven plan edits; PDF→CSV/Charts works; SEO audits produce actionable PRs.
+**Exit**: Voice-driven plan edits; PDF→CSV/Charts works; SEO audits produce actionable PRs.
 
 ### Phase E (Ongoing): Adaptive Router & Skill Induction
 - Bandit router updates from evaluator win-rates  
 - Distill frequent plans into typed, reusable “skills”  
 - Public “skill market” with safety metadata  
-**Exit:** Faster convergence on plans; fewer tokens per success; richer toolchain with guardrails.
+**Exit**: Faster convergence on plans; fewer tokens per success; richer toolchain with guardrails.
 
 ### Phase F (Add-ons): External Automation & APIs
-- **n8n** flow exports, low-code pipelines (Telegram, Reddit, Email)  
-- **Unified API brokers** integration for single-key access to thousands of APIs  
-- **Nango** integration (Studio panel, MCP bridge, autogen nodes)  
-- **ART**-driven prompt regression tracking  
-**Exit:** Contributors compose automation via n8n; regression suites harden prompts/tools; SaaS automation in Studio.
+- n8n flow exports, low-code pipelines (Telegram, Reddit, Email)  
+- Unified API brokers integration for single-key access to thousands of APIs  
+- **Nango integration** (Studio panel, MCP bridge, autogen nodes)  
+- ART-driven prompt regression tracking  
+**Exit**: Contributors compose automation via n8n; regression suites harden prompts/tools; SaaS automation in Studio.
 
 ### Phase G (Knowledge & Metadata RAG)
-- **Tensorlake** metadata-augmented embeddings for context filtering  
+- Tensorlake metadata-augmented embeddings for context filtering  
 - Fine-grained classification (page-level, domain-specific)  
-**Exit:** RAG answers become cheaper, faster, more accurate.
+**Exit**: RAG answers become cheaper, faster, more accurate.
 
 ### Phase H (Scaling & Performance)
-- **vLLM** multi-GPU/multi-node serving (paged attention, prefix caching, speculative decoding)  
-- **LMCache/NIXL** connectors for KV transfer and disaggregated P/D pipelines  
+- vLLM multi-GPU/multi-node serving (paged attention, prefix caching, speculative decoding)  
+- LMCache/NIXL connectors for KV transfer and disaggregated P/D pipelines  
 - Auto-tuning of latency vs throughput tradeoffs  
-**Exit:** Near-linear scaling across nodes with auto-optimized SLOs.
+**Exit**: Near-linear scaling across nodes with auto-optimized SLOs.
 
 ### Phase I — RL & Evolutionary Optimization (builds on C/E)
-- **Agent Lightning** offline RL on trace logs (reward events: success, token/ms savings, safety penalties)  
-- **Evolver** in Introspector for performance (GPU kernels, data transforms) with Pareto selection  
-**Exit:** ↑pass@1/↑pass@K, ↓p95 latency/cost, zero safety regressions.
+- Agent Lightning offline RL on trace logs (reward events: success, token/ms savings, safety penalties)  
+- Evolver in introspector for perf (GPU kernels, data transforms) with Pareto selection  
+**Exit**: ↑pass@1/↑pass@K, ↓p95 latency/cost, zero safety regressions.
 
 ### Phase J — Interop & Enterprise Backends (builds on F/H)
-- **MCP/Bedrock** backend; **Agentic Web** handshake; optional **SuperAGI** runtime  
+- MCP/Bedrock backend; Agentic Web handshake; optional SuperAGI/**AgentScope Runtime**  
 - Full audits, feature flags, domain allowlists, quotas  
-**Exit:** Enterprise-ready flows with policy compliance and green SLOs.
+**Exit**: Enterprise-ready flows with policy compliance and green SLOs.
 
 ---
 
 ## 10) Engineering Quality Gates (always-on)
 
-- **Coverage:** Per-area (UI/Server/Python) 100% with branch coverage (exclusions only for bootstrap).  
-- **Static checks:** TS strict/mypy, ESLint, Semgrep/Bandit, supply-chain scan, IaC lint (if infra).  
-- **Tests:** Unit + property + metamorphic; MSW/network stubs; golden prompt suites.  
-- **Repro:** Pinned versions; snapshots for plans & prompts; deterministic seeds.
+- **Coverage**: Per-area (UI/Server/Python) 100% with branch coverage (exclusions only for bootstrap).  
+- **Static checks**: TS strict/mypy, ESLint, Semgrep/Bandit, supply-chain scan, IaC lint (if infra).  
+- **Tests**: Unit + property + metamorphic; MSW/network stubs; golden prompt suites.  
+- **Repro**: Pinned versions; snapshots for plans & prompts; deterministic seeds.
 
 ---
 
@@ -271,15 +281,16 @@ flowchart TB
 - `schemas/plan.schema.json`  
 - `orchestrator/planner.py` + tests  
 - `router/policy.yaml` + `policy/engine.ts` + Studio consent banners  
-- `registry/tools.json` + adapters (MCP/HTTP/CLI/DB/Browser/PDF/ASR/TTS/SEO/Geo/n8n/Nango)  
+- `registry/tools.json` + adapters (MCP/HTTP/CLI/DB/Browser/PDF/ASR/TTS/SEO/Geo/n8n/Nango/DIA)  
 - `integrations/graphiti/*` writers/retrievers  
 - `evaluators/*` harness (code/factuality/safety/latency/cost)  
 - `self_pr/bot.ts` + `.github/workflows/canary.yml` + rollback  
 - `voice/*` (ASR/TTS, streaming UI), `vision/*` (OCR/table/latex)  
 - `studio/*` (Plan preview, policy notices, memory timeline, evaluator panels)  
-- `integrations/lmcache/*` (KV transfer), `engines/vllm|trtllm|sglang/*`
+- `integrations/lmcache/*` (KV transfer), `engines/vllm|trtllm|sglang/*`  
+- `runtimes/{langgraph,crewai,agentscope,superagi}/*` adapters
 
-> **All new modules must ship with tests, docs, and coverage; merges blocked if any scope <100%.**
+_All new modules must ship with tests, docs, and coverage; merges blocked if any scope <100%._
 
 ---
 
@@ -288,7 +299,7 @@ flowchart TB
 - **End-to-end repo creation** from a spec (code, tests, CI, container, deploy, docs).  
 - **PDF data extraction** (financial/maths) to tables/charts with sanity checks.  
 - **SEO/Geo audits** — crawl, analyze, propose changes, open PRs.  
-- **Voice-driven sprints** — stand-ups, issue updates, PR summaries, plan edits.  
+- **Voice-driven sprints** — stand-ups, issue updates, PR summaries, plan edits (now **multi-speaker DIA** for agent debates).  
 - **n8n Pipelines** — Reddit→Claude→Telegram, email responders, content reposters.  
 - **Metadata-RAG** — bank statements, contracts, logs filtered by page type.  
 - **SaaS automations** — HubSpot→Slack→GitHub via **Nango** in one click.
@@ -307,43 +318,42 @@ flowchart TB
 
 ## 14) New Integrations (Q3–Q4 2025)
 
-### 14.1 Agent Lightning — RL Fine-Tuning for Agents
-**Goal.** Automatically improve agent quality & efficiency via offline RL on Naestro traces.  
-**Scope.** Reward events (success, token/ms savings, safety penalties); shadow policy; canary rollout.  
-**Exit.** ↑pass@K, ↓p95 latency/cost, no safety regressions.
+**14.1 Agent Lightning — RL Fine-Tuning for Agents**  
+*Goal.* Auto-improve agent quality & cost via offline RL on Naestro traces.  
+*Scope.* Reward events (success, token/ms savings, safety penalties); shadow policies; canary.  
+*Exit.* ↑pass@K / ↓p95 latency&cost; no safety regressions.
 
-### 14.2 AlphaEvolve-style Evolvers — Performance-Guided Codegen
-**Goal.** Evolutionary optimization of hot paths (GPU kernels, parsers, data transforms).  
-**Scope.** `introspector/evolver` + microbench evaluators; Pareto selection (speed/correctness/stability).  
-**Exit.** ≥10–15% speed-up on targeted paths with 100% correctness.
+**14.2 AlphaEvolve-style Evolvers — Performance-guided Codegen**  
+*Goal.* Evo-optimization of hot paths (GPU kernels, parsers).  
+*Scope.* `introspector/evolver` + microbench evaluators; Pareto (speed/correctness/stability).  
+*Exit.* ≥10–15% speedup with 100% correctness.
 
-### 14.3 AWS Bedrock AgentCore + MCP
-**Goal.** Optional enterprise backend for tools/memory/identity with full audit.  
-**Scope.** MCP adapters; Plan→MCP tools; policy mapping + consent records.  
-**Exit.** Audit-complete reference flow behind feature flags.
+**14.3 AWS Bedrock AgentCore + MCP**  
+*Goal.* Optional enterprise backend for tools/memory/identity with audit.  
+*Scope.* MCP adapters; Plan→MCP tools; policy mapping.  
+*Exit.* Audit-complete reference flow with feature flags.
 
-### 14.4 Agentic Web — Safe Interop with External Agents
-**Goal.** Safe interaction with external agents/services with full observability.  
-**Scope.** Agent registry, handshakes, scopes, quotas, domain allowlists; Studio traces.  
-**Exit.** Cross-agent tasks without policy/budget violations.
+**14.4 Agentic Web — Safe Interop with External Agents**  
+*Goal.* Safe interaction with external agents/services.  
+*Scope.* Registry, handshakes, scopes, quotas, domain allowlists; full traces in Studio.  
+*Exit.* Cross-agent tasks without policy/budget violations.
 
-### 14.5 SuperAGI Runtime (Optional)
-**Goal.** Pluggable runtime alternative to LangGraph/CrewAI/AgentScope.  
-**Scope.** Flow adapter; Plan.json mapping; parity tests.  
-**Exit.** Equivalent traces/SLO; opt-in profile.
+**14.5 SuperAGI / AgentScope Runtime (Optional)**  
+*Goal.* Pluggable runtime alternatives to LangGraph/CrewAI.  
+*Scope.* Flow adapters; Plan.json mapping; parity tests.  
+*Exit.* Equivalent traces/SLO; opt-in profile.
 
 ---
 
 ## 15) Roadmap Phases (Addenda)
 
-### Phase I — RL & Evolutionary Optimization (reinforced)
-- Agent Lightning offline RL on trace logs.  
-- Evolver in Introspector with micro-bench suite.  
-**Acceptance:** ↑pass@K & ↓p95 latency/cost; zero safety regressions.
+**Phase I — RL & Evolutionary Optimization (reinforced)**  
+Agent Lightning offline RL; Evolver with microbench suite.  
+*Acceptance:* ↑pass@K & ↓p95 latency/cost; 0 safety regressions.
 
-### Phase J — Interop & Enterprise Backends (reinforced)
-- MCP/Bedrock; Agentic Web; SuperAGI runtime (opt-in).  
-**Acceptance:** Full audits; policy compliance; green SLOs.
+**Phase J — Interop & Enterprise Backends (reinforced)**  
+MCP/Bedrock; Agentic Web; SuperAGI/AgentScope runtime (opt-in).  
+*Acceptance:* full audits; policy compliance; green SLOs.
 
 ---
 
@@ -359,4 +369,4 @@ flowchart TB
 - GPT-4/5-class, Claude 3.7+, Gemini-2.5+, Mistral, Grok, OpenELM, **LFM2-350M (JP↔EN)**
 
 **C. Key Integrations**  
-- Graphiti (memory graphs), LangGraph/CrewAI/AgentScope (optional runtimes), **ART** (prompt regression), **Parlant + VibeVoice** (voice), **MCP** (tool bus), **OmniNova** (planner/critic), **Symphony** (decentralized), **Open Computer Agent** (UI automation), **unified API brokers**, **n8n** (low-code pipelines), **Nango** (SaaS hub), **LFM2**, **Tensorlake** (metadata RAG), **GPT-OSS** (open models), **vLLM/LMCache** (scaling stack).
+- Graphiti (memory graphs), LangGraph/CrewAI/**AgentScope** (optional runtime), ART (prompt regression), **Parlant + VibeVoice + DIA** (voice), MCP (tool bus), OmniNova (planner/critic), Symphony (decentralized), Open Computer Agent (UI automation), unified API brokers, n8n (low-code pipelines), **Nango** (SaaS hub), LFM2, Tensorlake (metadata RAG), GPT-OSS (open models), vLLM/LMCache (scaling stack), GraphRAG/LazyGraphRAG.
