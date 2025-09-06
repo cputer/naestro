@@ -3,6 +3,9 @@ on:
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   ui:
@@ -30,7 +33,7 @@ jobs:
       - name: Verify coverage files
         run: test -f ui/coverage/lcov.info && head -n 20 ui/coverage/lcov.info
       # - name: Upload Codecov (UI)
-      #   uses: codecov/codecov-action@v4
+      #   uses: codecov/codecov-action@v5
       #   with:
       #     files: ui/coverage/lcov.info
       #     flags: ui
@@ -53,7 +56,7 @@ jobs:
       - run: npm run test:ci --if-present
         env: { CI: "true" }
       # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v4
+      #   uses: codecov/codecov-action@v5
       #   with:
       #     files: server/coverage/lcov.info
       #     flags: server
@@ -79,7 +82,7 @@ jobs:
       - name: Verify coverage files
         run: test -f coverage.xml && head -n 20 coverage.xml
       # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v4
+      #   uses: codecov/codecov-action@v5
       #   with:
       #     files: coverage.xml
       #     flags: python
