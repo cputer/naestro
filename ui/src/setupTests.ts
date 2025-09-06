@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom/vitest';
+import '@testing-library/jest-dom';
 import { server } from './mocks/server';
 
 const originalError = console.error;
