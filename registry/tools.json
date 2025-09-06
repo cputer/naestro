@@ -1,0 +1,12 @@
+{
+  "firecrawl:crawl": {
+    "description": "Crawl a webpage using the Firecrawl API",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "url": { "type": "string" }
+      },
+      "required": ["url"]
+    }
+  }
+}
