@@ -3,11 +3,6 @@ import react from '@vitejs/plugin-react-swc';
 
 export default defineConfig({
   plugins: [react()],
-  resolve: {
-    alias: {
-      '@testing-library/jest-dom': '@testing-library/jest-dom/vitest',
-    },
-  },
   test: {
     globals: true,
     environment: 'jsdom',
