@@ -22,12 +22,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: ui/package-lock.json
+          cache: pnpm
+          cache-dependency-path: ui/pnpm-lock.yaml
+
+      - run: corepack enable && corepack prepare pnpm@9.12.0 --activate
 
       - name: Install and build UI
         working-directory: ui
-        run: npm ci && npm run build
+        run: pnpm install && pnpm build
 
       - name: Package UI dist
         run: tar -czf ui-dist-${{ github.ref_name }}.tar.gz -C ui dist
