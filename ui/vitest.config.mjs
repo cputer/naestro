@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@testing-library/jest-dom$': '@testing-library/jest-dom/vitest',
+      '@testing-library/jest-dom': '@testing-library/jest-dom/vitest',
     },
   },
   test: {
