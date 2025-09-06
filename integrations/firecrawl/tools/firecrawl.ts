@@ -1,4 +1,6 @@
 import { z } from "zod";
+import fs from "fs";
+import path from "path";
 
 const USER_AGENT = "NaestroBot/1.0";
 const CONTACT_EMAIL = "contact@naestro.ai";
@@ -23,6 +25,29 @@ const domainStates = new Map<
   { tokens: number; last: number; queue: Promise<any> }
 >();
 const robotsCache = new Map<string, { disallow: string[] }>();
+
+interface CrawlLedgerEntry {
+  url: string;
+  depth: number;
+  status: number;
+  bytes: number;
+  runtime: number;
+}
+
+const ledgerPath = path.join(
+  process.cwd(),
+  "integrations",
+  "firecrawl",
+  "crawl-ledger.jsonl"
+);
+
+function recordLedger(entry: CrawlLedgerEntry) {
+  try {
+    fs.appendFileSync(ledgerPath, JSON.stringify(entry) + "\n");
+  } catch {
+    /* ignore ledger write errors */
+  }
+}
 
 function getLimit(domain: string): DomainLimit {
   return policy.perDomain[domain] ?? {
@@ -139,6 +164,7 @@ export async function firecrawl(options: FirecrawlOptions) {
   await ensureRobotsAllowed(target);
 
   return scheduleDomain(domain, async () => {
+    const start = Date.now();
     const res = await fetch("https://api.firecrawl.dev/v1/crawl", {
       method: "POST",
       headers: {
@@ -150,11 +176,22 @@ export async function firecrawl(options: FirecrawlOptions) {
       body: JSON.stringify(body),
     });
 
+    const runtime = Date.now() - start;
+    const text = await res.text();
+    const bytes = Buffer.byteLength(text);
+    const depth = (body as any).depth ?? 0;
+    recordLedger({
+      url: body.url,
+      depth,
+      status: res.status,
+      bytes,
+      runtime,
+    });
+
     if (!res.ok) {
-      const text = await res.text();
       throw new Error(`Firecrawl request failed: ${res.status} ${text}`);
     }
 
-    return res.json();
+    return JSON.parse(text);
   });
 }
