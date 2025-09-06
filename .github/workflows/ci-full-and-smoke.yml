@@ -2,6 +2,9 @@ name: CI Full and Smoke
 on:
   push: { branches: [main] }
   pull_request: { branches: [main] }
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   ui_smoke:
@@ -118,7 +121,7 @@ jobs:
         run: test -f ui/coverage/lcov.info && head -n 20 ui/coverage/lcov.info
       - name: Upload Codecov (UI)
         if: success()
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           files: ui/coverage/lcov.info
           flags: ui
@@ -159,7 +162,7 @@ jobs:
         run: test -f coverage.xml && head -n 20 coverage.xml
       - name: Upload Codecov (Python)
         if: success()
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           files: coverage.xml
           flags: python
