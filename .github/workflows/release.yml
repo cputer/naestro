@@ -27,8 +27,10 @@ jobs:
           node-version: 22
           cache: pnpm
           cache-dependency-path: ui/pnpm-lock.yaml
-
-      - run: corepack enable && corepack prepare pnpm@9.12.0 --activate
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
 
       - name: Install and build UI
         working-directory: ui
