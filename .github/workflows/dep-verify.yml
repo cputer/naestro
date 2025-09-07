@@ -1,13 +1,12 @@
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 name: Dep Verify (Install • Typecheck • Build • Test • Coverage)
 
 on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
-
-concurrency:
-  group: dep-verify-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
 
 permissions:
   contents: read
