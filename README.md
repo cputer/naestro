@@ -65,9 +65,10 @@ Spec and scaffolding guidance in [VS Code Extension](docs/VS_CODE_EXTENSION.md).
 - **Secure Sandbox** — Docker-executed verification with seccomp + no-network.  
 - **PII Calibration** — Shannon entropy thresholds with a 550-item dataset.  
 - **Observability First** — OTEL traces, Prometheus metrics, Grafana dashboards.  
-- **CI/CD** — GitHub Actions with healthchecks and hooks for shadow/canary logic.  
-- **Interactive Web UI** — Vite-powered React dashboard with Monaco editor.  
-- **SymPy & SciPy Demos** — quadratic solving and sine integration.  
+- **CI/CD** — GitHub Actions with healthchecks and hooks for shadow/canary logic.
+- **Interactive Web UI** — Vite-powered React dashboard with Monaco editor.
+- **SymPy & SciPy Demos** — quadratic solving and sine integration.
+- **Firecrawl Web Ingestion** — crawl websites, extract headings, embed pages, and compute sitemap coverage ratios.
 
 See the [User Manual](docs/USER_MANUAL.md) for a complete guide.
 
