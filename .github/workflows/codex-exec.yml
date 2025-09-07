@@ -17,6 +17,9 @@ jobs:
     defaults: { run: { working-directory: ui } }
     steps:
       - uses: actions/checkout@v5
-      - run: corepack enable && corepack prepare pnpm@9.12.0 --activate
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - run: ${{ inputs.command }}
         env: { CI: "true" }
