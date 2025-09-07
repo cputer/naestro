@@ -1,12 +1,18 @@
+codecov:
+  require_ci_to_pass: true
+
 coverage:
   status:
-    project: off
-    patch: off
-    flags:
-      python:
-        target: 100%
+    project:
       ui:
-        target: 100%
+        target: 100
+        flags: ui
+        threshold: 0
+      python:
+        target: 100
+        flags: python
+        threshold: 0
+    patch: off
 
 flags:
   ui:
@@ -20,9 +26,10 @@ flags:
 
 ignore:
   - "tests/**"
-  - "docs/**"
   - "scripts/**"
   - "**/node_modules/**"
-comment:
-  layout: "reach, diff, flags, files"
-  behavior: default
+  - "**/*.md"
+  - "docs/**"
+  - "**/*.d.ts"
+
+comment: false
