@@ -64,6 +64,7 @@ describe('Firecrawl error mapping', () => {
   beforeEach(() => {
     vi.spyOn(fs, 'appendFileSync').mockImplementation(() => {});
     (FirecrawlTool as any).robotsCache?.clear?.();
+    (FirecrawlTool as any).domainStates?.clear?.();
   });
 
   afterEach(() => {
@@ -98,6 +99,96 @@ describe('Firecrawl error mapping', () => {
     await expect(firecrawl({ url: 'https://example.com' })).rejects.toThrow(
       /Firecrawl request failed: 500 boom/
     );
+  });
+});
+
+describe('Firecrawl robots.txt handling', () => {
+  let firecrawl: any;
+  beforeEach(async () => {
+    vi.spyOn(fs, 'appendFileSync').mockImplementation(() => {});
+    await vi.resetModules();
+    const mod: any = await import('../tools/firecrawl');
+    firecrawl = mod.firecrawl;
+    mod.robotsCache?.clear?.();
+    mod.domainStates?.clear?.();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    global.fetch = originalFetch;
+  });
+
+  it('rejects URLs blocked by robots.txt', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        text: async () => 'User-agent: *\nDisallow: /private',
+      });
+
+    // @ts-ignore
+    global.fetch = fetchMock;
+
+    await expect(
+      firecrawl({ url: 'https://example.com/private/page' })
+    ).rejects.toThrow(/Blocked by robots.txt/);
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://example.com/robots.txt',
+      expect.any(Object)
+    );
+  });
+});
+
+describe('Firecrawl ledger logging', () => {
+  let firecrawl: any;
+  beforeEach(async () => {
+    await vi.resetModules();
+    const mod: any = await import('../tools/firecrawl');
+    firecrawl = mod.firecrawl;
+    mod.robotsCache?.clear?.();
+    mod.domainStates?.clear?.();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    global.fetch = originalFetch;
+  });
+
+  it('records crawl details to the ledger', async () => {
+    const appendSpy = vi
+      .spyOn(fs, 'appendFileSync')
+      .mockImplementation(() => {});
+
+    const fetchMock = vi
+      .fn()
+      // robots.txt request
+      .mockResolvedValueOnce({ ok: true, text: async () => '' })
+      // crawl API request
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        text: async () => '{"items":[]}',
+      });
+
+    // @ts-ignore
+    global.fetch = fetchMock;
+
+    await firecrawl({ url: 'https://example.com/foo', depth: 3 });
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(appendSpy).toHaveBeenCalledTimes(1);
+    const [filePath, content] = appendSpy.mock.calls[0];
+    expect(filePath).toMatch(/crawl-ledger\.jsonl$/);
+    const entry = JSON.parse(String(content).trim());
+    expect(entry).toMatchObject({
+      url: 'https://example.com/foo',
+      depth: 3,
+      status: 200,
+    });
+    expect(entry.bytes).toBeGreaterThan(0);
+    expect(entry.runtime).toBeGreaterThanOrEqual(0);
   });
 });
 
