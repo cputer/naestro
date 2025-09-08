@@ -5,6 +5,7 @@
 ## TL;DR
 | Integration | Purpose | Configuration |
 |-------------|---------|---------------|
+| [Firecrawl](integrations/firecrawl.md) | Web crawling & ingestion | None |
 | Graphiti | Real-time knowledge graph memory | Set `GRAPHITI_URL` and `GRAPHITI_API_KEY` |
 | VS Code Extension | Developer tooling for local agents | Install Naestro VS Code extension |
 | UI API | Contract between UI and core | See `UI_API_CONTRACT.md` |
