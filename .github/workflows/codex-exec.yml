@@ -17,13 +17,14 @@ jobs:
     defaults: { run: { working-directory: ui } }
     steps:
       - uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9.12.0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+          run_install: false
+          cache: true
           cache-dependency-path: ui/pnpm-lock.yaml
       - run: ${{ inputs.command }}
         env: { CI: "true" }
