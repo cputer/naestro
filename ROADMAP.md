@@ -21,7 +21,8 @@ Naestro evolves from a goal-driven multi-agent orchestrator into a continuously 
 3. **Formalized self-improvement** — Periodic self-proposals (self-PRs) that increase pass-rates, reduce latency/cost, and expand safe capability coverage.  
 4. **Safety-first autonomy** — Hard capability boundaries, consent layers, and provable rollback; humans remain in control of scopes and secrets.  
 5. **Observability & provenance** — Every action is explainable, replayable, and signed; drift and regressions are caught early.  
-**(Added)** 6. **Hallucination-resilience** — The system actively prevents, detects, and corrects unsupported claims via retrieval-first planning, verifiers, uncertainty/abstention, and citation-grounded outputs.
+**(Added)** 6. **Hallucination-resilience** — The system actively prevents, detects, and corrects unsupported claims via retrieval-first planning, verifiers, uncertainty/abstention, and citation-grounded outputs.  
+**(Added)** 7. **Long-context acceleration** — **REFRAG compression lane** enables 16× effective context and order-of-magnitude lower TTFT/cost on self-hosted models while preserving accuracy.
 
 ---
 
@@ -37,7 +38,8 @@ Naestro evolves from a goal-driven multi-agent orchestrator into a continuously 
 **(Added)** - **Claim Verifier** — Tool-using checker that enforces **citation-backed answers**, performs **chain-of-verification**, and can **abstain** or **ask for retrieval** when evidence is insufficient.  
 - **Introspector** — Summarizes failures, extracts lessons, proposes prompt/route/tool upgrades (feeds Self-PR cycle).  
 - **Self-PR Bot** — Opens PRs (prompt hardening, flaky test fixes, router weights, small refactors), runs canary, signs artifacts, auto-merges if green.  
-**(Added)** - **Evidence Store** — Short-lived artifact bucket for retrieved passages, URLs, repo digests (from **Gitingest**), and crawl chunks (from **Firecrawl**) used by verifiers and provenance signing.
+**(Added)** - **Evidence Store** — Short-lived artifact bucket for retrieved passages, URLs, repo digests (from **Gitingest**), and crawl chunks (from **Firecrawl**) used by verifiers and provenance signing.  
+**(Added)** - **REFRAG Controller** — Orchestrates compression policy: selects chunks to compress/expand, calls encoder+projection, and supplies mixed inputs (tokens + embeddings) to local decoders.
 
 ---
 
@@ -62,12 +64,14 @@ flowchart TB
       Introspector
       SelfPR[Self-PR Bot]
       Evidence[Evidence Store (citations/digests)]
+      REFRAGC[REFRAG Controller]
     end
 
     subgraph Engines["Serving Engines"]
       VLLM[vLLM / SGLang]
       TRTLLM[TensorRT-LLM]
       Triton[Triton Inference Server]
+      REFRAGE[REFRAG Encoder+Projection]
     end
 
     subgraph ModelsLocal["Local Models (DGX Spark)"]
@@ -136,6 +140,10 @@ flowchart TB
     Firecrawl --> Evidence
     Gitingest --> Evidence
     AutoAgent --> Core
+
+    Memory --> REFRAGC
+    REFRAGC --> REFRAGE
+    REFRAGE --> Engines
 ```
 
 ---
@@ -176,16 +184,19 @@ flowchart TB
   - Llama-3.1-70B FP8 TRT-LLM: Judge/Planner (batching, KV cache).  
   - DeepSeek-32B: Proposer/Synth (fast code/reasoning).  
   - Qwen-32B-AWQ: Critic/Refactor (low VRAM).  
-  - GPT-OSS 20B/120B: open GPT-level local-first options.
+  - GPT-OSS 20B/120B: open GPT-level local-first options.  
+  **(Added)** - **REFRAG Compression Lane (local only)**: lightweight encoder + projection that compresses retrieved chunks into dense embeddings consumed by local decoders; **RL/heuristic expansion** preserves critical spans; requires vLLM/TRT-LLM hook for mixed inputs.
 
 - **Cloud**  
   - GPT-4/5-class (general), Claude 3.7+ (long reasoning), Gemini-2.5+ (long-context/multimodal), Mistral/Grok/OpenELM.  
-  - **LFM2 (multi-language)** for high-quality translation and multilingual workflows (EN, RU, ES, JP, etc.).
+  - **LFM2 (multi-language)** for high-quality translation and multilingual workflows (EN, RU, ES, JP, etc.).  
+  **(Note)**: REFRAG path **not** applied to closed API models; router will bypass.
 
 - **Routing policy**  
   - Prefer local; spill to cloud on long context, specialty tools, or latency SLO breaches.  
   - Bandit-style updates from evaluators’ win-rates.  
-  - **Reasoning budget knobs** (think/on/off; effort levels) normalized across providers.
+  - **Reasoning budget knobs** (think/on/off; effort levels) normalized across providers.  
+  **(Added)** - **REFRAG routing rule**: if model ∈ {vLLM/TRT-LLM local} and context_len > threshold → use REFRAG lane; else baseline RAG.
 
 ---
 
@@ -203,7 +214,8 @@ flowchart TB
 - **RAG Quality**: **Tensorlake-style metadata augmentation** (page type/table vs text/section tags) for cheaper, faster, more accurate retrieval.  
 - **Scaling**: **vLLM** (paged/prefix/speculative) + **TensorRT-LLM**; **LMCache/NIXL** KV transfer; multi-node disaggregated prefill/decode.  
 **(Added)** - **Repo Ingestion**: **Gitingest** to turn any Git repo (or `github.com → gitingest.com` URL swap) into a prompt-friendly **repository digest** (code + docs), feeding **Evidence Store** for coding agents.  
-**(Added)** - **Hallucination-Resistant Generation (HRG)**: Retrieval-first planning, **self-consistency**, **chain-of-verification (CoVe)**, **calibrated uncertainty**, **abstention**, **structured outputs** with JSON Schema, and **tool-use preference** for factual queries.
+**(Added)** - **Hallucination-Resistant Generation (HRG)**: Retrieval-first planning, **self-consistency**, **chain-of-verification (CoVe)**, **calibrated uncertainty**, **abstention**, **structured outputs** with JSON Schema, and **tool-use preference** for factual queries.  
+**(Added)** - **REFRAG Long-Context Acceleration**: compression of retrieved context (k=8–32), KV/cache savings, RL/heuristic expansion of critical spans; metrics wired to Observability.
 
 ---
 
@@ -213,7 +225,8 @@ flowchart TB
 - **Dashboards**: success & consensus rates, router win-rates, KV hit %, cloud spill %, anomaly flags, thermo/VRAM.  
 - **Benchmarks**: project-specific regression suites; public benchmarks proxied via adapters; trendlines and SLA alerts (**SWE-bench Verified**, **LiveBench**).  
 - **OpenTelemetry GenAI** semantic conventions as first-class.  
-**(Added)** - **Truthfulness KPIs**: hallucination rate (unsupported-claim%), abstention%, citation coverage%, verifier pass rate, evidence freshness, and repo-digest usage rate (Gitingest/Firecrawl).
+**(Added)** - **Truthfulness KPIs**: hallucination rate (unsupported-claim%), abstention%, citation coverage%, verifier pass rate, evidence freshness, and repo-digest usage rate (Gitingest/Firecrawl).  
+**(Added)** - **REFRAG KPIs**: TTFT speedup vs baseline, input-token reduction factor, KV cache memory delta, accuracy parity (exact-match/F1/judge), expansion rate (% tokens bypassing compression), cache hit for precomputed embeddings.
 
 ---
 
@@ -266,11 +279,18 @@ flowchart TB
 **(Added)** – **Gitingest** repo-digest adapter + Studio “Ingest Repo” action; **Evidence Store** wiring  
 **Exit**: RAG answers become cheaper, faster, more accurate.
 
-### Phase H (Scaling & Performance)
+### **Phase H (Scaling & Performance)**  
 - vLLM multi-GPU/multi-node serving (paged attention, prefix caching, speculative decoding)  
 - LMCache/NIXL connectors for KV transfer and disaggregated P/D pipelines  
 - Auto-tuning of latency vs throughput tradeoffs  
 **Exit**: Near-linear scaling across nodes with auto-optimized SLOs.
+
+### **Phase H.1 (New) — REFRAG Long-Context Acceleration**
+- Implement **REFRAG Compression Lane** for local models: encoder+projection, mixed-input decode hook (tokens + embeddings)  
+- Retriever: store raw chunks + precomputed embeddings; cache keys `(doc_id, chunk_idx, hash)`  
+- Expansion policy: heuristic → RL policy; feature flag + routing rule (local-only)  
+- Observability: TTFT, KV delta, accuracy parity dashboards; A/B harness vs baseline RAG  
+**Exit**: ≥10× TTFT improvement on long-doc RAG with accuracy parity; production flag on local models, cloud bypass intact.
 
 ### Phase I — RL & Evolutionary Optimization (builds on C/E)
 - Agent Lightning offline RL on trace logs (reward events: success, token/ms savings, safety penalties)  
@@ -295,7 +315,8 @@ flowchart TB
 - **Static checks**: TS strict/mypy, ESLint, Semgrep/Bandit, supply-chain scan, IaC lint (if infra).  
 - **Tests**: Unit + property + metamorphic; MSW/network stubs; golden prompt suites.  
 - **Repro**: Pinned versions; snapshots for plans & prompts; deterministic seeds.  
-**(Added)** - **Truthfulness CI**: fail PR if hallucination red-team suite regresses; require citation coverage and verifier pass for knowledge tests.
+**(Added)** - **Truthfulness CI**: fail PR if hallucination red-team suite regresses; require citation coverage and verifier pass for knowledge tests.  
+**(Added)** - **REFRAG CI**: synthetic long-context suite (exact-answer sets); block merges if TTFT regression >X% at target compression (k=16) or accuracy delta >Y%.
 
 ---
 
@@ -313,7 +334,11 @@ flowchart TB
 - `integrations/lmcache/*` (KV transfer), `engines/vllm|trtllm|sglang/*`  
 - `runtimes/{langgraph,crewai,agentscope,autoagent,superagi}/*` adapters  
 **(Added)** - `verifier/*` (claim-checker, abstention, CoVe prompts, calibration)  
-**(Added)** - `evidence/*` (Firecrawl/Gitingest/GraphRAG artifact store + provenance signing)
+**(Added)** - `evidence/*` (Firecrawl/Gitingest/GraphRAG artifact store + provenance signing)  
+**(Added)** - `refrag/encoder/*` (lightweight encoder + projection, training scripts)  
+**(Added)** - `refrag/controller/*` (compression policy, expansion heuristics/RL, router hook)  
+**(Added)** - `refrag/inference-hooks/*` (vLLM/TRT-LLM embedding injection, mixed-input API)  
+**(Added)** - `refrag/ab_harness/*` (baseline vs REFRAG, metrics exporters)
 
 _All new modules must ship with tests, docs, and coverage; merges blocked if any scope <100%._
 
@@ -330,7 +355,8 @@ _All new modules must ship with tests, docs, and coverage; merges blocked if any
 - **SaaS automations** — HubSpot→Slack→GitHub via **Nango** in one click.  
 - **Full-site ingestion** — **Firecrawl** crawl/extract to vector/graph stores.  
 - **Agent swarms** — **AutoAgent** clustered multi-agent runs.  
-**(Added)** - **Codebase Q&A with guarantees** — ingest a GitHub repo via **Gitingest** → ask questions with **citations** to specific files/lines; verifier blocks answers without evidence.
+**(Added)** - **Codebase Q&A with guarantees** — ingest a GitHub repo via **Gitingest** → ask questions with **citations** to specific files/lines; verifier blocks answers without evidence.  
+**(Added)** - **Whole-report reasoning at speed** — REFRAG lets local models read entire docs/logs with **accuracy parity** and **dramatically lower latency/cost**.
 
 ---
 
@@ -341,7 +367,8 @@ _All new modules must ship with tests, docs, and coverage; merges blocked if any
 - **Data/secret exposure** → Vault leases, redaction, path/domain allowlists.  
 - **Over-autonomy** → Mode gating, consent prompts, kill switches, strict policies.  
 - **Supply-chain** → Lockfiles, signature verification, SBOM (optional).  
-**(Added)** - **Hallucinations** → Retrieval-first, verifier with abstention, citation enforcement, red-team tests, uncertainty calibration.
+**(Added)** - **Hallucinations** → Retrieval-first, verifier with abstention, citation enforcement, red-team tests, uncertainty calibration.  
+**(Added)** - **REFRAG compatibility** → Works only on **self-hosted open-weight models**; router enforces bypass for closed APIs. Fallback to baseline RAG if expansion policy uncertainty high or KPIs regress.
 
 ---
 
@@ -382,7 +409,7 @@ Agent Lightning offline RL; Evolver with microbench suite.
 
 **Phase J — Interop & Enterprise Backends (reinforced)**  
 MCP/Bedrock; Agentic Web; SuperAGI/AgentScope runtime (opt-in).  
-*Acceptance:* full audits; policy compliance; green SLOs.
+*Acceptance:* full audits; policy compliance and green SLOs.
 
 **Phase K — Clustered Swarms (reinforced)**  
 AutoAgent runtime; MoA/consensus templates; resilience tests.  
@@ -396,10 +423,13 @@ AutoAgent runtime; MoA/consensus templates; resilience tests.
 - Llama-3.1-70B FP8 TRT-LLM — Judge/Planner  
 - DeepSeek-32B — Proposer/Synth  
 - Qwen-32B-AWQ — Critic/Refactor  
-- GPT-OSS — open 20B/120B-class
+- GPT-OSS — open 20B/120B-class  
+**(Added)** - **REFRAG components** — encoder+projection weights; controller; inference hooks (vLLM/TRT-LLM) with mixed-input support.
 
 **B. Cloud Pool**  
-- GPT-4/5-class, Claude 3.7+, Gemini-2.5+, Mistral, Grok, OpenELM, **LFM2 (multi-language: EN/RU/ES/JP/etc.)**
+- GPT-4/5-class, Claude 3.7+, Gemini-2.5+, Mistral, Grok, OpenELM, **LFM2 (multi-language: EN/RU/ES/JP/etc.)**  
+**(Note)**: REFRAG bypass (closed APIs).
 
 **C. Key Integrations**  
-- Graphiti (memory graphs), LangGraph/CrewAI/**AgentScope/AutoAgent** (optional runtimes), ART (prompt regression), **Parlant + VibeVoice + DIA** (voice), MCP (tool bus), OmniNova (planner/critic), Symphony (decentralized), Open Computer Agent (UI automation), unified API brokers, **n8n** (low-code pipelines), **Nango** (SaaS hub), **Firecrawl** (web ingestion), **Tensorlake** (metadata RAG), GPT-OSS (open models), **vLLM/LMCache** (scaling stack), **GraphRAG/LazyGraphRAG**, **Gitingest** (repo → digest for grounded code Q&A).
+- Graphiti (memory graphs), LangGraph/CrewAI/**AgentScope/AutoAgent** (optional runtimes), ART (prompt regression), **Parlant + VibeVoice + DIA** (voice), MCP (tool bus), OmniNova (planner/critic), Symphony (decentralized), Open Computer Agent (UI automation), unified API brokers, **n8n** (low-code pipelines), **Nango** (SaaS hub), **Firecrawl** (web ingestion), **Tensorlake** (metadata RAG), GPT-OSS (open models), **vLLM/LMCache** (scaling stack), **GraphRAG/LazyGraphRAG**, **Gitingest** (repo → digest for grounded code Q&A), **(Added)** **REFRAG** (local long-context compression lane).
+````0
