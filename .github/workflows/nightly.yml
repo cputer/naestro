@@ -17,15 +17,14 @@ jobs:
     defaults: { run: { working-directory: ui } }
     steps:
       - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
           cache-dependency-path: ui/pnpm-lock.yaml
-      - name: Enable corepack & pin pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@9.12.0 --activate
       - uses: actions/cache@v4
         with:
           path: ui/node_modules/.vite
