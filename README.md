@@ -68,7 +68,7 @@ Spec and scaffolding guidance in [VS Code Extension](docs/VS_CODE_EXTENSION.md).
 - **CI/CD** — GitHub Actions with healthchecks and hooks for shadow/canary logic.
 - **Interactive Web UI** — Vite-powered React dashboard with Monaco editor.
 - **SymPy & SciPy Demos** — quadratic solving and sine integration.
-- **Firecrawl Web Ingestion** — crawl sites, extract headings, embed pages, and compute sitemap coverage ratios.
+- **Firecrawl Web Ingestion** — crawl sites with policy controls, evaluate coverage, extract headings, and embed pages ([docs](docs/integrations/firecrawl.md)).
 
 See the [User Manual](docs/USER_MANUAL.md) for a complete guide.
 
