@@ -21,8 +21,9 @@ Naestro evolves from a goal-driven multi-agent orchestrator into a continuously 
 3. **Formalized self-improvement** — Periodic self-proposals (self-PRs) that increase pass-rates, reduce latency/cost, and expand safe capability coverage.  
 4. **Safety-first autonomy** — Hard capability boundaries, consent layers, and provable rollback; humans remain in control of scopes and secrets.  
 5. **Observability & provenance** — Every action is explainable, replayable, and signed; drift and regressions are caught early.  
-**(Added)** 6. **Hallucination-resilience** — The system actively prevents, detects, and corrects unsupported claims via retrieval-first planning, verifiers, uncertainty/abstention, and citation-grounded outputs.  
-**(Added)** 7. **Long-context acceleration** — **REFRAG compression lane** enables 16× effective context and order-of-magnitude lower TTFT/cost on self-hosted models while preserving accuracy.
+6. **Hallucination-resilience** — The system actively prevents, detects, and corrects unsupported claims via retrieval-first planning, verifiers, uncertainty/abstention, and citation-grounded outputs.  
+7. **Long-context acceleration** — REFRAG compression lane enables 16× effective context and order-of-magnitude lower TTFT/cost on self-hosted models while preserving accuracy.  
+8. **Preference-optimized policies** — Expansion, routing, and planner policies leverage advanced preference optimization methods (PVPO, DCPO, GRPO-RoC, ARPO, TreePO, MixGRPO, DuPO) for stability, efficiency, and reasoning accuracy.
 
 ---
 
@@ -32,14 +33,15 @@ Naestro evolves from a goal-driven multi-agent orchestrator into a continuously 
 - **Router** — Chooses model/provider per step (local vs cloud) using: win-rates, latency, context length, and cost.  
 - **Agents** — Role types: Researcher, Coder, Reviewer, Runner, DataOps, Evaluator, Reporter. Spawned dynamically with scoped permissions.  
 - **Policy Engine** — Enforces tool/network/path allowlists, data scopes, rate limits, and cost/time ceilings. Produces consent prompts and audit events.  
-- **Tool/Skill Registry** — Typed contracts (JSON Schema), versioned adapters (MCP/HTTP/CLI/DB/Browser/PDF/Vision/ASR/TTS/SEO/Geo/**n8n/Nango/Firecrawl/Gitingest**), deprecation paths.  
+- **Tool/Skill Registry** — Typed contracts (JSON Schema), versioned adapters (MCP/HTTP/CLI/DB/Browser/PDF/Vision/ASR/TTS/SEO/Geo/n8n/Nango/Firecrawl/Gitingest), deprecation paths.  
 - **Memory Fabric** — Episodic (runs), semantic (facts/summaries), skill memories (reusable flows), user prefs. Graph-structured (Graphiti) with retrieval policies.  
 - **Evaluators** — Code/test/typing/static analysis; factuality/consistency; safety; latency/cost; pass@K; metamorphic/program properties.  
-**(Added)** - **Claim Verifier** — Tool-using checker that enforces **citation-backed answers**, performs **chain-of-verification**, and can **abstain** or **ask for retrieval** when evidence is insufficient.  
+- **Claim Verifier** — Tool-using checker that enforces citation-backed answers, performs chain-of-verification, and can abstain or ask for retrieval when evidence is insufficient.  
 - **Introspector** — Summarizes failures, extracts lessons, proposes prompt/route/tool upgrades (feeds Self-PR cycle).  
 - **Self-PR Bot** — Opens PRs (prompt hardening, flaky test fixes, router weights, small refactors), runs canary, signs artifacts, auto-merges if green.  
-**(Added)** - **Evidence Store** — Short-lived artifact bucket for retrieved passages, URLs, repo digests (from **Gitingest**), and crawl chunks (from **Firecrawl**) used by verifiers and provenance signing.  
-**(Added)** - **REFRAG Controller** — Orchestrates compression policy: selects chunks to compress/expand, calls encoder+projection, and supplies mixed inputs (tokens + embeddings) to local decoders.
+- **Evidence Store** — Short-lived artifact bucket for retrieved passages, URLs, repo digests (from Gitingest), and crawl chunks (from Firecrawl) used by verifiers and provenance signing.  
+- **REFRAG Controller** — Orchestrates compression policy: selects chunks to compress/expand, calls encoder+projection, and supplies mixed inputs (tokens + embeddings) to local decoders.  
+- **PO Policy Module** — Encapsulates preference optimization strategies (PVPO, DCPO, GRPO-RoC for REFRAG; ARPO for tool agents; TreePO for planner branching; MixGRPO for exploration vs exploitation).
 
 ---
 
@@ -65,6 +67,7 @@ flowchart TB
       SelfPR[Self-PR Bot]
       Evidence[Evidence Store (citations/digests)]
       REFRAGC[REFRAG Controller]
+      PO[PO Policy Module]
     end
 
     subgraph Engines["Serving Engines"]
@@ -144,6 +147,9 @@ flowchart TB
     Memory --> REFRAGC
     REFRAGC --> REFRAGE
     REFRAGE --> Engines
+    PO --> Router
+    PO --> Planner
+    PO --> REFRAGC
 ```
 
 ---
@@ -156,7 +162,7 @@ flowchart TB
    - Unit + property + metamorphic tests (100% coverage).  
    - Golden prompts via prompt-ops (ART integration).  
    - Offline dataset replays; synthetic task suites (coding, agentic, PDF/LaTeX, SEO/Geo, browse).  
-   **(Added)** – **Hallucination red-team suite**: contradiction sets, unsupported-claim traps, source-omission tests; require **citation coverage ≥ X%** for knowledge answers.  
+   - Hallucination red-team suite: contradiction sets, unsupported-claim traps, source-omission tests; require citation coverage for knowledge answers.  
 4. **Canary**: Shadow traffic; watch SLOs (success, latency, cost, safety incidents). Automatic rollback if any breach.  
 5. **Merge**: Provenance sign, release notes, version bump.  
 6. **Learn**: Update router priors from win-rates; store counter-examples in memory for future planning.  
@@ -174,7 +180,7 @@ flowchart TB
   - Data: PII classifiers; off-prem toggle; export redaction.  
 - **Kill switches**: Pause runs; revoke tokens; quarantine models/tools.  
 - **Compliance**: comprehensive audit logs (immutable), purpose/consent receipts.  
-**(Added)** - **Output truthfulness gates**: For knowledge/claims tasks, **force retrieval** (Firecrawl/Gitingest/GraphRAG), require **inline citations**, enable **abstain-on-uncertainty**, and **block delivery** if verification fails.
+- **Output truthfulness gates**: For knowledge/claims tasks, force retrieval (Firecrawl/Gitingest/GraphRAG), require inline citations, enable abstain-on-uncertainty, and block delivery if verification fails.
 
 ---
 
@@ -185,37 +191,39 @@ flowchart TB
   - DeepSeek-32B: Proposer/Synth (fast code/reasoning).  
   - Qwen-32B-AWQ: Critic/Refactor (low VRAM).  
   - GPT-OSS 20B/120B: open GPT-level local-first options.  
-  **(Added)** - **REFRAG Compression Lane (local only)**: lightweight encoder + projection that compresses retrieved chunks into dense embeddings consumed by local decoders; **RL/heuristic expansion** preserves critical spans; requires vLLM/TRT-LLM hook for mixed inputs.
+  - REFRAG Compression Lane (local only): lightweight encoder + projection that compresses retrieved chunks into dense embeddings consumed by local decoders; RL/heuristic expansion preserves critical spans; requires vLLM/TRT-LLM hook for mixed inputs.  
+  - PO Policy Layer: expansion/routing/planner policies trained with PVPO (anchor guidance), DCPO (stability), GRPO-RoC (accuracy bias); later experiments with ARPO, TreePO, MixGRPO, DuPO.
 
 - **Cloud**  
   - GPT-4/5-class (general), Claude 3.7+ (long reasoning), Gemini-2.5+ (long-context/multimodal), Mistral/Grok/OpenELM.  
-  - **LFM2 (multi-language)** for high-quality translation and multilingual workflows (EN, RU, ES, JP, etc.).  
-  **(Note)**: REFRAG path **not** applied to closed API models; router will bypass.
+  - LFM2 (multi-language) for high-quality translation and multilingual workflows (EN, RU, ES, JP, etc.).  
+  - REFRAG path not applied to closed API models; router will bypass.
 
 - **Routing policy**  
   - Prefer local; spill to cloud on long context, specialty tools, or latency SLO breaches.  
   - Bandit-style updates from evaluators’ win-rates.  
-  - **Reasoning budget knobs** (think/on/off; effort levels) normalized across providers.  
-  **(Added)** - **REFRAG routing rule**: if model ∈ {vLLM/TRT-LLM local} and context_len > threshold → use REFRAG lane; else baseline RAG.
+  - Reasoning budget knobs (think/on/off; effort levels) normalized across providers.  
+  - REFRAG routing rule: if model ∈ {vLLM/TRT-LLM local} and context_len > threshold → use REFRAG lane; else baseline RAG.
 
 ---
 
 ## 7) Advanced Capabilities (to integrate)
 
-- **Voice**: Parlant + Whisper/Zonos, **VibeVoice** (long-form/emotional TTS), **DIA TTS (multi-speaker one-pass dialogue)**, multilingual ASR, streaming TTS, barge-in, voice memory.  
+- **Voice**: Parlant + Whisper/Zonos, VibeVoice (long-form/emotional TTS), DIA TTS (multi-speaker one-pass dialogue), multilingual ASR, streaming TTS, barge-in, voice memory.  
 - **Vision/PDF**: OCR tables → structured JSON; formula/LaTeX extraction; chart/table synthesis.  
 - **SEO/Geo**: Crawler/SERP parsers, sitemap audits, NER/geocoding, local ranking diffing; content/robots PRs.  
 - **Prompt/Data-Ops**: ART prompt regression tracking, dataset curation, result drift detection.  
-- **Workflow Runtimes**: Interop with LangGraph/CrewAI/**AgentScope**/**AutoAgent** as optional backends for complex tool flows (still governed by Naestro policy/router).  
-- **Unified API brokers**: Single-key providers for broad API/tool coverage (RapidAPI-style).  
-- **n8n Integration**: Export Naestro workflows to n8n YAML, enabling low-code automation (email agents, Telegram bots, Reddit pipelines).  
-- **Web Ingestion**: **Firecrawl** for crawl→extract→chunk→index pipelines with robots.txt compliance and selector-based extraction.  
-- **Knowledge**: **GraphRAG/LazyGraphRAG** modes for graph-aware retrieval.  
-- **RAG Quality**: **Tensorlake-style metadata augmentation** (page type/table vs text/section tags) for cheaper, faster, more accurate retrieval.  
-- **Scaling**: **vLLM** (paged/prefix/speculative) + **TensorRT-LLM**; **LMCache/NIXL** KV transfer; multi-node disaggregated prefill/decode.  
-**(Added)** - **Repo Ingestion**: **Gitingest** to turn any Git repo (or `github.com → gitingest.com` URL swap) into a prompt-friendly **repository digest** (code + docs), feeding **Evidence Store** for coding agents.  
-**(Added)** - **Hallucination-Resistant Generation (HRG)**: Retrieval-first planning, **self-consistency**, **chain-of-verification (CoVe)**, **calibrated uncertainty**, **abstention**, **structured outputs** with JSON Schema, and **tool-use preference** for factual queries.  
-**(Added)** - **REFRAG Long-Context Acceleration**: compression of retrieved context (k=8–32), KV/cache savings, RL/heuristic expansion of critical spans; metrics wired to Observability.
+- **Workflow Runtimes**: Interop with LangGraph/CrewAI/AgentScope/AutoAgent as optional backends for complex tool flows (still governed by Naestro policy/router).  
+- **Unified API brokers**: Single-key providers for broad API/tool coverage.  
+- **n8n Integration**: Export Naestro workflows to n8n YAML, enabling low-code automation.  
+- **Web Ingestion**: Firecrawl for crawl→extract→chunk→index pipelines.  
+- **Knowledge**: GraphRAG/LazyGraphRAG modes for graph-aware retrieval.  
+- **RAG Quality**: Tensorlake-style metadata augmentation for cheaper, faster, more accurate retrieval.  
+- **Scaling**: vLLM + TensorRT-LLM; LMCache/NIXL KV transfer; multi-node disaggregated prefill/decode.  
+- **Repo Ingestion**: Gitingest to turn any Git repo into a repository digest feeding Evidence Store for coding agents.  
+- **Hallucination-Resistant Generation**: Retrieval-first planning, self-consistency, chain-of-verification, calibrated uncertainty, abstention, structured outputs, tool-use preference for factual queries.  
+- **REFRAG Long-Context Acceleration**: compression of retrieved context, KV/cache savings, RL/heuristic expansion of critical spans; metrics wired to Observability.  
+- **PO-Optimized Policies**: stability, efficiency, and reasoning improvements via PVPO, DCPO, GRPO-RoC, ARPO, TreePO, MixGRPO, DuPO.
 
 ---
 
@@ -223,10 +231,11 @@ flowchart TB
 
 - **Traces**: model, tokens, TTFT/ITL latency, cost, context, policy hits, memory I/O, tool effects.  
 - **Dashboards**: success & consensus rates, router win-rates, KV hit %, cloud spill %, anomaly flags, thermo/VRAM.  
-- **Benchmarks**: project-specific regression suites; public benchmarks proxied via adapters; trendlines and SLA alerts (**SWE-bench Verified**, **LiveBench**).  
+- **Benchmarks**: project-specific regression suites; public benchmarks proxied via adapters; trendlines and SLA alerts (SWE-bench Verified, LiveBench).  
 - **OpenTelemetry GenAI** semantic conventions as first-class.  
-**(Added)** - **Truthfulness KPIs**: hallucination rate (unsupported-claim%), abstention%, citation coverage%, verifier pass rate, evidence freshness, and repo-digest usage rate (Gitingest/Firecrawl).  
-**(Added)** - **REFRAG KPIs**: TTFT speedup vs baseline, input-token reduction factor, KV cache memory delta, accuracy parity (exact-match/F1/judge), expansion rate (% tokens bypassing compression), cache hit for precomputed embeddings.
+- **Truthfulness KPIs**: hallucination rate (unsupported-claim%), abstention%, citation coverage%, verifier pass rate, evidence freshness, repo-digest usage rate.  
+- **REFRAG KPIs**: TTFT speedup vs baseline, input-token reduction factor, KV cache memory delta, accuracy parity, expansion rate, cache hit for precomputed embeddings.  
+- **PO KPIs**: policy stability, efficiency gains, reasoning accuracy delta, exploration/exploitation balance.
 
 ---
 
@@ -243,18 +252,18 @@ flowchart TB
 - Dynamic role spawning/budgets; rate limiting  
 - Evaluators: code/tests/static, factuality, safety; pass@K harness  
 - Memory slices per role; episode linking in Graphiti  
-**(Added)** – **Claim Verifier MVP** (CoVe + abstain), **Evidence Store MVP**  
+- Claim Verifier MVP (CoVe + abstain), Evidence Store MVP  
 **Exit**: End-to-end build-and-ship demo finishes within SLA; evaluator-weighted routing improves success/latency.
 
 ### Phase C (Weeks 12–20): Self-PRs & Canary Rollouts
 - Self-PR bot (prompt/router/config/test deltas), provenance signing  
 - Canary+rollback scripts; changelog synthesis  
 - Prompt/data-ops (golden suites; regression dashboards via ART)  
-**(Added)** – **Hallucination red-team tests** wired to canary gates  
+- Hallucination red-team tests wired to canary gates  
 **Exit**: Weekly self-PRs auto-merge ≥90% without regressions; clear rollback proofs.
 
 ### Phase D (Weeks 20–28): Multimodal & Domain Skills
-- Voice I/O (**Parlant + VibeVoice + DIA**); PDF/LaTeX→tables; vision extraction  
+- Voice I/O (Parlant + VibeVoice + DIA); PDF/LaTeX→tables; vision extraction  
 - SEO/Geo skills; browser tools & safe browsing policies  
 - Cross-device sessions; artifact sharing  
 **Exit**: Voice-driven plan edits; PDF→CSV/Charts works; SEO audits produce actionable PRs.
@@ -268,25 +277,25 @@ flowchart TB
 ### Phase F (Add-ons): External Automation & APIs
 - n8n flow exports, low-code pipelines (Telegram, Reddit, Email)  
 - Unified API brokers integration for single-key access to thousands of APIs  
-- **Nango integration** (Studio panel, MCP bridge, autogen nodes)  
+- Nango integration (Studio panel, MCP bridge, autogen nodes)  
 - ART-driven prompt regression tracking  
 **Exit**: Contributors compose automation via n8n; regression suites harden prompts/tools; SaaS automation in Studio.
 
 ### Phase G (Knowledge & Metadata RAG)
 - Tensorlake metadata-augmented embeddings for context filtering  
 - Fine-grained classification (page-level, domain-specific)  
-- **Firecrawl** ingestion jobs and pipelines  
-**(Added)** – **Gitingest** repo-digest adapter + Studio “Ingest Repo” action; **Evidence Store** wiring  
+- Firecrawl ingestion jobs and pipelines  
+- Gitingest repo-digest adapter + Studio “Ingest Repo” action; Evidence Store wiring  
 **Exit**: RAG answers become cheaper, faster, more accurate.
 
-### **Phase H (Scaling & Performance)**  
+### Phase H (Scaling & Performance)
 - vLLM multi-GPU/multi-node serving (paged attention, prefix caching, speculative decoding)  
 - LMCache/NIXL connectors for KV transfer and disaggregated P/D pipelines  
 - Auto-tuning of latency vs throughput tradeoffs  
 **Exit**: Near-linear scaling across nodes with auto-optimized SLOs.
 
-### **Phase H.1 (New) — REFRAG Long-Context Acceleration**
-- Implement **REFRAG Compression Lane** for local models: encoder+projection, mixed-input decode hook (tokens + embeddings)  
+### Phase H.1 — REFRAG Long-Context Acceleration
+- Implement REFRAG Compression Lane for local models: encoder+projection, mixed-input decode hook (tokens + embeddings)  
 - Retriever: store raw chunks + precomputed embeddings; cache keys `(doc_id, chunk_idx, hash)`  
 - Expansion policy: heuristic → RL policy; feature flag + routing rule (local-only)  
 - Observability: TTFT, KV delta, accuracy parity dashboards; A/B harness vs baseline RAG  
@@ -295,15 +304,16 @@ flowchart TB
 ### Phase I — RL & Evolutionary Optimization (builds on C/E)
 - Agent Lightning offline RL on trace logs (reward events: success, token/ms savings, safety penalties)  
 - Evolver in introspector for perf (GPU kernels, data transforms) with Pareto selection  
+- PO Policy Training: PVPO (anchor), DCPO (stability), GRPO-RoC (reasoning accuracy); experiments with ARPO (tool use), TreePO (branch pruning), MixGRPO (exploration balance), DuPO (encoder pretraining).  
 **Exit**: ↑pass@1/↑pass@K, ↓p95 latency/cost, zero safety regressions.
 
 ### Phase J — Interop & Enterprise Backends (builds on F/H)
-- MCP/Bedrock backend; Agentic Web handshake; optional SuperAGI/**AgentScope Runtime**  
+- MCP/Bedrock backend; Agentic Web handshake; optional SuperAGI/AgentScope Runtime  
 - Full audits, feature flags, domain allowlists, quotas  
 **Exit**: Enterprise-ready flows with policy compliance and green SLOs.
 
 ### Phase K — Clustered Swarms (AutoAgent)
-- **AutoAgent** runtime adapter (clustered multi-agent execution)  
+- AutoAgent runtime adapter (clustered multi-agent execution)  
 - Patterns: planner–worker, verifier, debate, MoA ensembles  
 **Exit**: Scalable agent swarms with fault-tolerant coordination and trace parity.
 
@@ -315,8 +325,9 @@ flowchart TB
 - **Static checks**: TS strict/mypy, ESLint, Semgrep/Bandit, supply-chain scan, IaC lint (if infra).  
 - **Tests**: Unit + property + metamorphic; MSW/network stubs; golden prompt suites.  
 - **Repro**: Pinned versions; snapshots for plans & prompts; deterministic seeds.  
-**(Added)** - **Truthfulness CI**: fail PR if hallucination red-team suite regresses; require citation coverage and verifier pass for knowledge tests.  
-**(Added)** - **REFRAG CI**: synthetic long-context suite (exact-answer sets); block merges if TTFT regression >X% at target compression (k=16) or accuracy delta >Y%.
+- **Truthfulness CI**: fail PR if hallucination red-team suite regresses; require citation coverage and verifier pass for knowledge tests.  
+- **REFRAG CI**: synthetic long-context suite (exact-answer sets); block merges if TTFT regression at target compression or accuracy delta exceeds thresholds.  
+- **PO CI**: stability checks (variance of expansion/routing), pass@K deltas, exploration/exploitation sanity.
 
 ---
 
@@ -325,7 +336,7 @@ flowchart TB
 - `schemas/plan.schema.json`  
 - `orchestrator/planner.py` + tests  
 - `router/policy.yaml` + `policy/engine.ts` + Studio consent banners  
-- `registry/tools.json` + adapters (MCP/HTTP/CLI/DB/Browser/PDF/ASR/TTS/SEO/Geo/**n8n/Nango/Firecrawl/DIA/Gitingest**)  
+- `registry/tools.json` + adapters (MCP/HTTP/CLI/DB/Browser/PDF/ASR/TTS/SEO/Geo/n8n/Nango/Firecrawl/DIA/Gitingest)  
 - `integrations/graphiti/*` writers/retrievers  
 - `evaluators/*` harness (code/factuality/safety/latency/cost)  
 - `self_pr/bot.ts` + `.github/workflows/canary.yml` + rollback  
@@ -333,12 +344,13 @@ flowchart TB
 - `studio/*` (Plan preview, policy notices, memory timeline, evaluator panels)  
 - `integrations/lmcache/*` (KV transfer), `engines/vllm|trtllm|sglang/*`  
 - `runtimes/{langgraph,crewai,agentscope,autoagent,superagi}/*` adapters  
-**(Added)** - `verifier/*` (claim-checker, abstention, CoVe prompts, calibration)  
-**(Added)** - `evidence/*` (Firecrawl/Gitingest/GraphRAG artifact store + provenance signing)  
-**(Added)** - `refrag/encoder/*` (lightweight encoder + projection, training scripts)  
-**(Added)** - `refrag/controller/*` (compression policy, expansion heuristics/RL, router hook)  
-**(Added)** - `refrag/inference-hooks/*` (vLLM/TRT-LLM embedding injection, mixed-input API)  
-**(Added)** - `refrag/ab_harness/*` (baseline vs REFRAG, metrics exporters)
+- `verifier/*` (claim-checker, abstention, CoVe prompts, calibration)  
+- `evidence/*` (Firecrawl/Gitingest/GraphRAG artifact store + provenance signing)  
+- `refrag/encoder/*` (lightweight encoder + projection, training scripts)  
+- `refrag/controller/*` (compression policy, expansion heuristics/RL, router hook)  
+- `refrag/inference-hooks/*` (vLLM/TRT-LLM embedding injection, mixed-input API)  
+- `refrag/ab_harness/*` (baseline vs REFRAG, metrics exporters)  
+- `po_policies/*` (PVPO, DCPO, GRPO-RoC implementations; configs for ARPO/TreePO/MixGRPO/DuPO experiments)
 
 _All new modules must ship with tests, docs, and coverage; merges blocked if any scope <100%._
 
@@ -346,29 +358,34 @@ _All new modules must ship with tests, docs, and coverage; merges blocked if any
 
 ## 12) Example Use-Cases Unlocked
 
-- **End-to-end repo creation** from a spec (code, tests, CI, container, deploy, docs).  
-- **PDF data extraction** (financial/maths) to tables/charts with sanity checks.  
-- **SEO/Geo audits** — crawl, analyze, propose changes, open PRs.  
-- **Voice-driven sprints** — stand-ups, issue updates, PR summaries, plan edits (now **multi-speaker DIA** for agent debates).  
-- **n8n Pipelines** — Reddit→Claude→Telegram, email responders, content reposters.  
-- **Metadata-RAG** — bank statements, contracts, logs filtered by page type.  
-- **SaaS automations** — HubSpot→Slack→GitHub via **Nango** in one click.  
-- **Full-site ingestion** — **Firecrawl** crawl/extract to vector/graph stores.  
-- **Agent swarms** — **AutoAgent** clustered multi-agent runs.  
-**(Added)** - **Codebase Q&A with guarantees** — ingest a GitHub repo via **Gitingest** → ask questions with **citations** to specific files/lines; verifier blocks answers without evidence.  
-**(Added)** - **Whole-report reasoning at speed** — REFRAG lets local models read entire docs/logs with **accuracy parity** and **dramatically lower latency/cost**.
+- End-to-end repo creation from a spec (code, tests, CI, container, deploy, docs).  
+- PDF data extraction (financial/maths) to tables/charts with sanity checks.  
+- SEO/Geo audits — crawl, analyze, propose changes, open PRs.  
+- Voice-driven sprints — stand-ups, issue updates, PR summaries, plan edits (multi-speaker DIA for agent debates).  
+- n8n Pipelines — Reddit→LLM→Telegram, email responders, content reposters.  
+- Metadata-RAG — bank statements, contracts, logs filtered by page type.  
+- SaaS automations — HubSpot→Slack→GitHub via Nango in one click.  
+- Full-site ingestion — Firecrawl crawl/extract to vector/graph stores.  
+- Agent swarms — AutoAgent clustered multi-agent runs.  
+- Codebase Q&A with guarantees — ingest a GitHub repo via Gitingest → ask questions with citations to specific files/lines; verifier blocks answers without evidence.  
+- Whole-report reasoning at speed — REFRAG lets local models read entire docs/logs with accuracy parity and dramatically lower latency/cost.  
+- Stable expansion policies — PVPO + DCPO maintain accuracy while compressing context.  
+- Reasoning accuracy bias — GRPO-RoC increases correctness on long-context reasoning.  
+- Planner pruning — TreePO trims low-value branches, speeding complex goal DAGs.  
+- Exploration balance — MixGRPO helps the Self-PR loop avoid local minima in self-edits.
 
 ---
 
 ## 13) Risks & Mitigations
 
-- **Model drift / regression** → Golden suites, canary + rollback, evaluator gating.  
-- **Cost spikes** → Local-first, budgets, adaptive routing, KV cache, batch.  
-- **Data/secret exposure** → Vault leases, redaction, path/domain allowlists.  
-- **Over-autonomy** → Mode gating, consent prompts, kill switches, strict policies.  
-- **Supply-chain** → Lockfiles, signature verification, SBOM (optional).  
-**(Added)** - **Hallucinations** → Retrieval-first, verifier with abstention, citation enforcement, red-team tests, uncertainty calibration.  
-**(Added)** - **REFRAG compatibility** → Works only on **self-hosted open-weight models**; router enforces bypass for closed APIs. Fallback to baseline RAG if expansion policy uncertainty high or KPIs regress.
+- Model drift / regression → Golden suites, canary + rollback, evaluator gating.  
+- Cost spikes → Local-first, budgets, adaptive routing, KV cache, batch.  
+- Data/secret exposure → Vault leases, redaction, path/domain allowlists.  
+- Over-autonomy → Mode gating, consent prompts, kill switches, strict policies.  
+- Supply-chain → Lockfiles, signature verification, SBOM (optional).  
+- Hallucinations → Retrieval-first, verifier with abstention, citation enforcement, red-team tests, uncertainty calibration.  
+- REFRAG compatibility → Works only on self-hosted open-weight models; router bypasses closed APIs. Fallback to baseline RAG if policy uncertainty high or KPIs regress.  
+- PO stability → Constrain with DCPO-style clipping/standardization; revert to heuristics on instability; monitor pass@K deltas.
 
 ---
 
@@ -424,12 +441,12 @@ AutoAgent runtime; MoA/consensus templates; resilience tests.
 - DeepSeek-32B — Proposer/Synth  
 - Qwen-32B-AWQ — Critic/Refactor  
 - GPT-OSS — open 20B/120B-class  
-**(Added)** - **REFRAG components** — encoder+projection weights; controller; inference hooks (vLLM/TRT-LLM) with mixed-input support.
+- REFRAG components — encoder+projection weights; controller; inference hooks (vLLM/TRT-LLM) with mixed-input support.  
+- PO policies — PVPO, DCPO, GRPO-RoC (primary), ARPO/TreePO/MixGRPO/DuPO (experimental).
 
 **B. Cloud Pool**  
-- GPT-4/5-class, Claude 3.7+, Gemini-2.5+, Mistral, Grok, OpenELM, **LFM2 (multi-language: EN/RU/ES/JP/etc.)**  
-**(Note)**: REFRAG bypass (closed APIs).
+- GPT-4/5-class, Claude 3.7+, Gemini-2.5+, Mistral, Grok, OpenELM, LFM2 (multi-language).  
+- REFRAG bypass (closed APIs).
 
 **C. Key Integrations**  
-- Graphiti (memory graphs), LangGraph/CrewAI/**AgentScope/AutoAgent** (optional runtimes), ART (prompt regression), **Parlant + VibeVoice + DIA** (voice), MCP (tool bus), OmniNova (planner/critic), Symphony (decentralized), Open Computer Agent (UI automation), unified API brokers, **n8n** (low-code pipelines), **Nango** (SaaS hub), **Firecrawl** (web ingestion), **Tensorlake** (metadata RAG), GPT-OSS (open models), **vLLM/LMCache** (scaling stack), **GraphRAG/LazyGraphRAG**, **Gitingest** (repo → digest for grounded code Q&A), **(Added)** **REFRAG** (local long-context compression lane).
-````0
+- Graphiti (memory graphs), LangGraph/CrewAI/AgentScope/AutoAgent (optional runtimes), ART (prompt regression), Parlant + VibeVoice + DIA (voice), MCP (tool bus), OmniNova (planner/critic), Symphony (decentralized), Open Computer Agent (UI automation), unified API brokers, n8n (low-code pipelines), Nango (SaaS hub), Firecrawl (web ingestion), Tensorlake (metadata RAG), GPT-OSS (open models), vLLM/LMCache (scaling stack), GraphRAG/LazyGraphRAG, Gitingest (repo → digest for grounded code Q&A), REFRAG (local long-context compression lane).
