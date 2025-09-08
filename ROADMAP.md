@@ -20,7 +20,8 @@ Naestro evolves from a goal-driven multi-agent orchestrator into a continuously 
 2. **Model+tool orchestration** — Choose the right LLM(s)/tool(s) per step using live telemetry + historical win-rates.  
 3. **Formalized self-improvement** — Periodic self-proposals (self-PRs) that increase pass-rates, reduce latency/cost, and expand safe capability coverage.  
 4. **Safety-first autonomy** — Hard capability boundaries, consent layers, and provable rollback; humans remain in control of scopes and secrets.  
-5. **Observability & provenance** — Every action is explainable, replayable, and signed; drift and regressions are caught early.
+5. **Observability & provenance** — Every action is explainable, replayable, and signed; drift and regressions are caught early.  
+**(Added)** 6. **Hallucination-resilience** — The system actively prevents, detects, and corrects unsupported claims via retrieval-first planning, verifiers, uncertainty/abstention, and citation-grounded outputs.
 
 ---
 
@@ -30,11 +31,13 @@ Naestro evolves from a goal-driven multi-agent orchestrator into a continuously 
 - **Router** — Chooses model/provider per step (local vs cloud) using: win-rates, latency, context length, and cost.  
 - **Agents** — Role types: Researcher, Coder, Reviewer, Runner, DataOps, Evaluator, Reporter. Spawned dynamically with scoped permissions.  
 - **Policy Engine** — Enforces tool/network/path allowlists, data scopes, rate limits, and cost/time ceilings. Produces consent prompts and audit events.  
-- **Tool/Skill Registry** — Typed contracts (JSON Schema), versioned adapters (MCP/HTTP/CLI/DB/Browser/PDF/Vision/ASR/TTS/SEO/Geo/**n8n/Nango/Firecrawl**), deprecation paths.  
+- **Tool/Skill Registry** — Typed contracts (JSON Schema), versioned adapters (MCP/HTTP/CLI/DB/Browser/PDF/Vision/ASR/TTS/SEO/Geo/**n8n/Nango/Firecrawl/Gitingest**), deprecation paths.  
 - **Memory Fabric** — Episodic (runs), semantic (facts/summaries), skill memories (reusable flows), user prefs. Graph-structured (Graphiti) with retrieval policies.  
 - **Evaluators** — Code/test/typing/static analysis; factuality/consistency; safety; latency/cost; pass@K; metamorphic/program properties.  
+**(Added)** - **Claim Verifier** — Tool-using checker that enforces **citation-backed answers**, performs **chain-of-verification**, and can **abstain** or **ask for retrieval** when evidence is insufficient.  
 - **Introspector** — Summarizes failures, extracts lessons, proposes prompt/route/tool upgrades (feeds Self-PR cycle).  
-- **Self-PR Bot** — Opens PRs (prompt hardening, flaky test fixes, router weights, small refactors), runs canary, signs artifacts, auto-merges if green.
+- **Self-PR Bot** — Opens PRs (prompt hardening, flaky test fixes, router weights, small refactors), runs canary, signs artifacts, auto-merges if green.  
+**(Added)** - **Evidence Store** — Short-lived artifact bucket for retrieved passages, URLs, repo digests (from **Gitingest**), and crawl chunks (from **Firecrawl**) used by verifiers and provenance signing.
 
 ---
 
@@ -52,11 +55,13 @@ flowchart TB
       Planner
       Router
       Policy[Policy Engine]
-      Registry[Tool/Skill Registry (MCP, HTTP, DB, Browser, PDF, ASR/TTS, SEO/Geo, n8n, Nango, Firecrawl)]
+      Registry[Tool/Skill Registry (MCP, HTTP, DB, Browser, PDF, ASR/TTS, SEO/Geo, n8n, Nango, Firecrawl, Gitingest)]
       Memory[Graphiti Memory Fabric]
       Evaluators
+      Verifier[Claim Verifier & CoVe]
       Introspector
       SelfPR[Self-PR Bot]
+      Evidence[Evidence Store (citations/digests)]
     end
 
     subgraph Engines["Serving Engines"]
@@ -95,6 +100,7 @@ flowchart TB
       AgentScope[AgentScope Runtime/Studio (optional)]
       GraphRAG[GraphRAG/LazyGraphRAG (optional)]
       Firecrawl[Firecrawl (Web Crawl & Extract)]
+      Gitingest[Gitingest (Repo → Digest)]
       AutoAgent[AutoAgent (Clustered Agents)]
     end
 
@@ -110,6 +116,8 @@ flowchart TB
     Engines --> ModelsLocal
     Engines --> Cloud
 
+    Evaluators --> Verifier
+    Verifier --> Evidence
     Evaluators --> Introspector
     Introspector --> SelfPR
     SelfPR --> |PRs| Studio
@@ -125,7 +133,8 @@ flowchart TB
     LMCache --> Engines
     AgentScope --> Core
     GraphRAG --> Memory
-    Firecrawl --> Registry
+    Firecrawl --> Evidence
+    Gitingest --> Evidence
     AutoAgent --> Core
 ```
 
@@ -139,6 +148,7 @@ flowchart TB
    - Unit + property + metamorphic tests (100% coverage).  
    - Golden prompts via prompt-ops (ART integration).  
    - Offline dataset replays; synthetic task suites (coding, agentic, PDF/LaTeX, SEO/Geo, browse).  
+   **(Added)** – **Hallucination red-team suite**: contradiction sets, unsupported-claim traps, source-omission tests; require **citation coverage ≥ X%** for knowledge answers.  
 4. **Canary**: Shadow traffic; watch SLOs (success, latency, cost, safety incidents). Automatic rollback if any breach.  
 5. **Merge**: Provenance sign, release notes, version bump.  
 6. **Learn**: Update router priors from win-rates; store counter-examples in memory for future planning.  
@@ -154,8 +164,9 @@ flowchart TB
   - Secrets: lease-scoped vault; never to client; redaction in traces.  
   - Filesystem & network: path/domain allowlists; sandboxed exec; rate limits.  
   - Data: PII classifiers; off-prem toggle; export redaction.  
-- **Kill switches**: Pause runs; revoke tokens; quarantine models/tools.
-- **Compliance**: comprehensive audit logs (immutable), purpose/consent receipts.
+- **Kill switches**: Pause runs; revoke tokens; quarantine models/tools.  
+- **Compliance**: comprehensive audit logs (immutable), purpose/consent receipts.  
+**(Added)** - **Output truthfulness gates**: For knowledge/claims tasks, **force retrieval** (Firecrawl/Gitingest/GraphRAG), require **inline citations**, enable **abstain-on-uncertainty**, and **block delivery** if verification fails.
 
 ---
 
@@ -190,7 +201,9 @@ flowchart TB
 - **Web Ingestion**: **Firecrawl** for crawl→extract→chunk→index pipelines with robots.txt compliance and selector-based extraction.  
 - **Knowledge**: **GraphRAG/LazyGraphRAG** modes for graph-aware retrieval.  
 - **RAG Quality**: **Tensorlake-style metadata augmentation** (page type/table vs text/section tags) for cheaper, faster, more accurate retrieval.  
-- **Scaling**: **vLLM** (paged/prefix/speculative) + **TensorRT-LLM**; **LMCache/NIXL** KV transfer; multi-node disaggregated prefill/decode.
+- **Scaling**: **vLLM** (paged/prefix/speculative) + **TensorRT-LLM**; **LMCache/NIXL** KV transfer; multi-node disaggregated prefill/decode.  
+**(Added)** - **Repo Ingestion**: **Gitingest** to turn any Git repo (or `github.com → gitingest.com` URL swap) into a prompt-friendly **repository digest** (code + docs), feeding **Evidence Store** for coding agents.  
+**(Added)** - **Hallucination-Resistant Generation (HRG)**: Retrieval-first planning, **self-consistency**, **chain-of-verification (CoVe)**, **calibrated uncertainty**, **abstention**, **structured outputs** with JSON Schema, and **tool-use preference** for factual queries.
 
 ---
 
@@ -199,7 +212,8 @@ flowchart TB
 - **Traces**: model, tokens, TTFT/ITL latency, cost, context, policy hits, memory I/O, tool effects.  
 - **Dashboards**: success & consensus rates, router win-rates, KV hit %, cloud spill %, anomaly flags, thermo/VRAM.  
 - **Benchmarks**: project-specific regression suites; public benchmarks proxied via adapters; trendlines and SLA alerts (**SWE-bench Verified**, **LiveBench**).  
-- **OpenTelemetry GenAI** semantic conventions as first-class.
+- **OpenTelemetry GenAI** semantic conventions as first-class.  
+**(Added)** - **Truthfulness KPIs**: hallucination rate (unsupported-claim%), abstention%, citation coverage%, verifier pass rate, evidence freshness, and repo-digest usage rate (Gitingest/Firecrawl).
 
 ---
 
@@ -216,12 +230,14 @@ flowchart TB
 - Dynamic role spawning/budgets; rate limiting  
 - Evaluators: code/tests/static, factuality, safety; pass@K harness  
 - Memory slices per role; episode linking in Graphiti  
+**(Added)** – **Claim Verifier MVP** (CoVe + abstain), **Evidence Store MVP**  
 **Exit**: End-to-end build-and-ship demo finishes within SLA; evaluator-weighted routing improves success/latency.
 
 ### Phase C (Weeks 12–20): Self-PRs & Canary Rollouts
 - Self-PR bot (prompt/router/config/test deltas), provenance signing  
 - Canary+rollback scripts; changelog synthesis  
 - Prompt/data-ops (golden suites; regression dashboards via ART)  
+**(Added)** – **Hallucination red-team tests** wired to canary gates  
 **Exit**: Weekly self-PRs auto-merge ≥90% without regressions; clear rollback proofs.
 
 ### Phase D (Weeks 20–28): Multimodal & Domain Skills
@@ -247,6 +263,7 @@ flowchart TB
 - Tensorlake metadata-augmented embeddings for context filtering  
 - Fine-grained classification (page-level, domain-specific)  
 - **Firecrawl** ingestion jobs and pipelines  
+**(Added)** – **Gitingest** repo-digest adapter + Studio “Ingest Repo” action; **Evidence Store** wiring  
 **Exit**: RAG answers become cheaper, faster, more accurate.
 
 ### Phase H (Scaling & Performance)
@@ -277,7 +294,8 @@ flowchart TB
 - **Coverage**: Per-area (UI/Server/Python) 100% with branch coverage (exclusions only for bootstrap).  
 - **Static checks**: TS strict/mypy, ESLint, Semgrep/Bandit, supply-chain scan, IaC lint (if infra).  
 - **Tests**: Unit + property + metamorphic; MSW/network stubs; golden prompt suites.  
-- **Repro**: Pinned versions; snapshots for plans & prompts; deterministic seeds.
+- **Repro**: Pinned versions; snapshots for plans & prompts; deterministic seeds.  
+**(Added)** - **Truthfulness CI**: fail PR if hallucination red-team suite regresses; require citation coverage and verifier pass for knowledge tests.
 
 ---
 
@@ -286,14 +304,16 @@ flowchart TB
 - `schemas/plan.schema.json`  
 - `orchestrator/planner.py` + tests  
 - `router/policy.yaml` + `policy/engine.ts` + Studio consent banners  
-- `registry/tools.json` + adapters (MCP/HTTP/CLI/DB/Browser/PDF/ASR/TTS/SEO/Geo/**n8n/Nango/Firecrawl/DIA**)  
+- `registry/tools.json` + adapters (MCP/HTTP/CLI/DB/Browser/PDF/ASR/TTS/SEO/Geo/**n8n/Nango/Firecrawl/DIA/Gitingest**)  
 - `integrations/graphiti/*` writers/retrievers  
 - `evaluators/*` harness (code/factuality/safety/latency/cost)  
 - `self_pr/bot.ts` + `.github/workflows/canary.yml` + rollback  
 - `voice/*` (ASR/TTS, streaming UI), `vision/*` (OCR/table/latex)  
 - `studio/*` (Plan preview, policy notices, memory timeline, evaluator panels)  
 - `integrations/lmcache/*` (KV transfer), `engines/vllm|trtllm|sglang/*`  
-- `runtimes/{langgraph,crewai,agentscope,autoagent,superagi}/*` adapters
+- `runtimes/{langgraph,crewai,agentscope,autoagent,superagi}/*` adapters  
+**(Added)** - `verifier/*` (claim-checker, abstention, CoVe prompts, calibration)  
+**(Added)** - `evidence/*` (Firecrawl/Gitingest/GraphRAG artifact store + provenance signing)
 
 _All new modules must ship with tests, docs, and coverage; merges blocked if any scope <100%._
 
@@ -309,7 +329,8 @@ _All new modules must ship with tests, docs, and coverage; merges blocked if any
 - **Metadata-RAG** — bank statements, contracts, logs filtered by page type.  
 - **SaaS automations** — HubSpot→Slack→GitHub via **Nango** in one click.  
 - **Full-site ingestion** — **Firecrawl** crawl/extract to vector/graph stores.  
-- **Agent swarms** — **AutoAgent** clustered multi-agent runs.
+- **Agent swarms** — **AutoAgent** clustered multi-agent runs.  
+**(Added)** - **Codebase Q&A with guarantees** — ingest a GitHub repo via **Gitingest** → ask questions with **citations** to specific files/lines; verifier blocks answers without evidence.
 
 ---
 
@@ -319,7 +340,8 @@ _All new modules must ship with tests, docs, and coverage; merges blocked if any
 - **Cost spikes** → Local-first, budgets, adaptive routing, KV cache, batch.  
 - **Data/secret exposure** → Vault leases, redaction, path/domain allowlists.  
 - **Over-autonomy** → Mode gating, consent prompts, kill switches, strict policies.  
-- **Supply-chain** → Lockfiles, signature verification, SBOM (optional).
+- **Supply-chain** → Lockfiles, signature verification, SBOM (optional).  
+**(Added)** - **Hallucinations** → Retrieval-first, verifier with abstention, citation enforcement, red-team tests, uncertainty calibration.
 
 ---
 
@@ -380,4 +402,4 @@ AutoAgent runtime; MoA/consensus templates; resilience tests.
 - GPT-4/5-class, Claude 3.7+, Gemini-2.5+, Mistral, Grok, OpenELM, **LFM2 (multi-language: EN/RU/ES/JP/etc.)**
 
 **C. Key Integrations**  
-- Graphiti (memory graphs), LangGraph/CrewAI/**AgentScope/AutoAgent** (optional runtimes), ART (prompt regression), **Parlant + VibeVoice + DIA** (voice), MCP (tool bus), OmniNova (planner/critic), Symphony (decentralized), Open Computer Agent (UI automation), unified API brokers, **n8n** (low-code pipelines), **Nango** (SaaS hub), **Firecrawl** (web ingestion), **Tensorlake** (metadata RAG), GPT-OSS (open models), **vLLM/LMCache** (scaling stack), **GraphRAG/LazyGraphRAG**.
+- Graphiti (memory graphs), LangGraph/CrewAI/**AgentScope/AutoAgent** (optional runtimes), ART (prompt regression), **Parlant + VibeVoice + DIA** (voice), MCP (tool bus), OmniNova (planner/critic), Symphony (decentralized), Open Computer Agent (UI automation), unified API brokers, **n8n** (low-code pipelines), **Nango** (SaaS hub), **Firecrawl** (web ingestion), **Tensorlake** (metadata RAG), GPT-OSS (open models), **vLLM/LMCache** (scaling stack), **GraphRAG/LazyGraphRAG**, **Gitingest** (repo → digest for grounded code Q&A).
