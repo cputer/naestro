@@ -40,6 +40,17 @@ def test_run(orch_module, monkeypatch):
     assert data["model_url"] == "http://slm"
 
 
+def test_run_no_model_endpoints(orch_module, monkeypatch):
+    monkeypatch.delenv("SLM_BASE_URL", raising=False)
+    monkeypatch.delenv("VLLM_BASE_URL", raising=False)
+    monkeypatch.delenv("NIM_BASE_URL", raising=False)
+    app = orch_module.app
+    client = TestClient(app)
+    resp = client.post("/run", json={"input": "hello"})
+    assert resp.status_code == 500
+    assert resp.json()["detail"] == "No model endpoints configured"
+
+
 def test_run_unknown_policy(orch_module):
     app = orch_module.app
     client = TestClient(app)
@@ -140,6 +151,7 @@ def test_ensure_nltk_data_missing(monkeypatch):
         sys.modules, "langgraph", types.SimpleNamespace(Graph=DummyGraph)
     )
     orch = importlib.reload(importlib.import_module("src.orchestrator.orchestrator"))
+
     class DummyNltk:
         class data:
             @staticmethod
