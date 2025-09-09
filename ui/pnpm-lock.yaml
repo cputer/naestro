@@ -1,4 +1,3 @@
-# pnpm lockfile refreshed after React 19 bump
 lockfileVersion: '9.0'
 
 settings:
@@ -32,7 +31,7 @@ importers:
         version: 4.8.1
     devDependencies:
       '@eslint/js':
-        specifier: ^9.34.0
+        specifier: ^9.35.0
         version: 9.35.0
       '@testing-library/jest-dom':
         specifier: ^6.8.0
