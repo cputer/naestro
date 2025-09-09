@@ -42,8 +42,9 @@ Naestro evolves from a goal-driven multi-agent orchestrator into a continuously 
 5. **Observability & provenance** — Every action is explainable, replayable, and signed; drift and regressions are caught early.  
 6. **Hallucination-resilience** — The system actively prevents, detects, and corrects unsupported claims via retrieval-first planning, verifiers, uncertainty/abstention, and citation-grounded outputs.  
 7. **Long-context acceleration** — **REFRAG compression lane** enables 16× effective context and order-of-magnitude lower TTFT/cost on self-hosted models while preserving accuracy.  
-8. **Preference-optimized policies** — Expansion, routing, and planner policies leverage advanced preference optimization methods (PVPO, DCPO, GRPO-RoC, ARPO, TreePO, MixGRPO, DuPO) for stability, efficiency, and reasoning accuracy.  
-9. **Runtime interop** — Naestro supports pluggable runtimes (LangGraph, CrewAI, AgentScope, AutoAgent, Agent Squad) with policy/trace parity.
+8. **AgentOps maturity** — First-class support for multi-agent **Agentic RAG**, trajectory/final-response/HITL evaluation, and contractor-style task specifications for production robustness.
+9. **Preference-optimized policies** — Expansion, routing, and planner policies leverage advanced preference optimization methods (PVPO, DCPO, GRPO-RoC, ARPO, TreePO, MixGRPO, DuPO) for stability, efficiency, and reasoning accuracy.  
+10. **Runtime interop** — Naestro supports pluggable runtimes (LangGraph, CrewAI, AgentScope, AutoAgent, Agent Squad) with policy/trace parity.
 
 ---
 
@@ -61,6 +62,7 @@ Naestro evolves from a goal-driven multi-agent orchestrator into a continuously 
 - **Self-PR Bot** — Opens PRs (prompt hardening, flaky test fixes, router weights, small refactors), runs canary, signs artifacts, auto-merges if green.  
 - **Evidence Store** — Short-lived artifact bucket for retrieved passages, URLs, repo digests (from Gitingest), and crawl chunks (from Firecrawl) used by verifiers and provenance signing.  
 - **REFRAG Controller** — Orchestrates compression policy: selects chunks to compress/expand, calls encoder+projection, and supplies mixed inputs (tokens + embeddings) to local decoders.  
+- **AgentOps Orchestrator** — Unifies capability → trajectory → final-response evaluators, manages human-in-the-loop (HITL) gates, and logs multi-agent scalability/efficiency metrics (tool-call precision/recall, latency, quality vs agent-count).
 - **PO Policy Module** — Encapsulates preference optimization strategies (PVPO, DCPO, GRPO-RoC for REFRAG; ARPO for tool agents; TreePO for planner branching; MixGRPO for exploration vs exploitation).  
 - **Runtime Adapters** — Plug-in backends: LangGraph, CrewAI, AgentScope, AutoAgent, **Agent Squad**. Unified contract ensures policy gating, trace parity, and conformance with Evaluators.
 
@@ -222,6 +224,7 @@ ___
 family (e.g., DeepSeek‑V3 → V3.1, Llama‑3.2 → Llama‑4). Older versions stay in
 the registry for reproducibility but are deprioritized. If a family is missing
 locally, fall back to cloud APIs while respecting REFRAG routing rules.
+**Agentic RAG integration.** Router supports **Agentic RAG** flows where retrieval is iteratively refined by autonomous agents (query expansion, multi-step retrieval, adaptive source selection) and cross-checked by evaluator agents before synthesis, improving accuracy and explainability for complex domains.
 
 - **Local (DGX Spark)**
   - Llama-3.1-70B FP8 TRT-LLM: Judge/Planner (batching, KV cache).
@@ -262,6 +265,8 @@ locally, fall back to cloud APIs while respecting REFRAG routing rules.
 - **Repo Ingestion**: **Gitingest** to turn any Git repo (or `github.com → gitingest.com` URL swap) into a prompt-friendly **repository digest** (code + docs), feeding **Evidence Store** for coding agents.
 - **Hallucination-Resistant Generation (HRG)**: Retrieval-first planning, **self-consistency**, **chain-of-verification (CoVe)**, **calibrated uncertainty**, **abstention**, **structured outputs** with JSON Schema, and **tool-use preference** for factual queries.
 - **REFRAG Long-Context Acceleration**: compression of retrieved context (k=8–32), KV/cache savings, RL/heuristic expansion of critical spans; metrics wired to Observability.
+- **Agentic RAG**: Multi-agent retrieval that expands/refines queries, decomposes multi-step questions, selects sources adaptively, and validates/repairs before generation; crucial for complex, evolving knowledge domains.
+- **Contract-adhering Agents (“Contractors”)**: Schema-driven task contracts with deliverables/specs, negotiation/clarification loops, and subcontract rules; promotes production reliability for high-stakes tasks.
 - **Research Orchestration (Nebius UDR prototype)**: FastAPI backend + Next.js frontend configurable strategies for deep research; integrates via OpenAI-compatible Nebius API and Tavily search (experimental; non-production).
 - **PO-Optimized Policies**: stability, efficiency, accuracy gains across reasoning, planning, routing, expansion.
 
@@ -275,6 +280,7 @@ locally, fall back to cloud APIs while respecting REFRAG routing rules.
 - **OpenTelemetry GenAI** semantic conventions as first-class.  
 - **Truthfulness KPIs**: hallucination rate (unsupported-claim%), abstention%, citation coverage%, verifier pass rate, evidence freshness, and repo-digest usage rate (Gitingest/Firecrawl).  
 - **REFRAG KPIs**: TTFT speedup vs baseline, input-token reduction factor, KV cache memory delta, accuracy parity (exact-match/F1/judge), expansion rate (% tokens bypassing compression), cache hit for precomputed embeddings.  
+- **AgentOps KPIs**: multi-agent scalability (quality/latency vs agent-count), trajectory metrics (tool-call precision/recall, single-tool use), final-response pass rate (autorater/criteria-based), and HITL close-the-loop effectiveness.
 - **PO KPIs**: policy stability (variance), sample efficiency (improvement vs training data), reasoning accuracy (pass@K uplift).
 
 ---
@@ -297,6 +303,7 @@ locally, fall back to cloud APIs while respecting REFRAG routing rules.
 - **Claim Verifier MVP** (CoVe + abstain).  
 - **Evidence Store MVP**.  
 **Exit**: End-to-end build-and-ship demo finishes within SLA; evaluator-weighted routing improves success/latency.
+- **AgentOps foundations**: add trajectory/final-response evaluators and HITL gate; dashboard tiles for tool-call precision/recall and success criteria.
 
 ---
 
@@ -360,6 +367,11 @@ locally, fall back to cloud APIs while respecting REFRAG routing rules.
 - Observability: TTFT, KV delta, accuracy parity dashboards; A/B harness vs baseline RAG.  
 **Exit**: ≥10× TTFT improvement on long-doc RAG with accuracy parity; production flag on local models, cloud bypass intact.
 
+### Phase H.2 — Agentic RAG Productionization
+- Implement multi-agent retrieval loop (query expansion, multi-step decomposition, adaptive source selection).
+- Add **validator agents** that cross-check retrieved evidence pre-synthesis; wire to Claim Verifier & Evidence Store.
+- A/B vs baseline RAG on complex multi-perspective tasks; wire observability (accuracy uplift, explainability, retries).
+**Exit**: Accuracy & explainability uplift on complex knowledge tasks with stable latency; full traces & citations.
 ---
 
 ### Phase I (Weeks 56–64): RL & Evolutionary Optimization
@@ -425,6 +437,9 @@ ___
 - `refrag/controller/*` (compression policy, expansion heuristics/RL, router hook)  
 - `refrag/inference-hooks/*` (vLLM/TRT-LLM embedding injection, mixed-input API)
 - `refrag/ab_harness/*` (baseline vs REFRAG, metrics exporters)
+- `agentops/*` (capability/trajectory/final-response evaluators, HITL gate, autorater prompts, metrics exporters)
+- `contracts/*` (schemas for task contracts, negotiation/feedback iteration model, subcontract rules; Planner/Policy integration)
+- `agentic_rag/*` (iterative retrieval agents, validator agents, orchestration glue to Evidence Store/Verifier)
 - `po_policies/*` (PVPO, DCPO, GRPO-RoC, ARPO, TreePO, MixGRPO, DuPO implementations, tests, benchmarks).
 - `integrations/interop/finllm-apps/*` (optional import/runner for selected flows; mapping to Plan.json; policy-gated execution; trace adapters).
 - `integrations/udr/*` (Nebius UDR adapter: request schema, result ingestion to Evidence Store, Studio action to launch/monitor UDR jobs; marked experimental)
@@ -446,6 +461,8 @@ _All new modules must ship with tests, docs, and coverage; merges blocked if any
 - **Agent swarms** — AutoAgent clustered multi-agent runs.  
 - **Codebase Q&A with guarantees** — ingest a GitHub repo via Gitingest → ask questions with citations to specific files/lines; verifier blocks answers without evidence.  
 - **Whole-report reasoning at speed** — REFRAG lets local models read entire docs/logs with accuracy parity and dramatically lower latency/cost.  
+- **Complex, evolving knowledge tasks** — Agentic RAG refines queries, decomposes steps, and validates evidence before answering, increasing accuracy and explainability.
+- **High-stakes delivery** — Contract-adhering agents use precise deliverables/specs, negotiation, and subcontracts to achieve production-grade outcomes.
 - **Stable expansion** — PVPO/DCPO keeps REFRAG compression accurate under long-context stress.  
 - **Reasoning calibration** — GRPO-RoC improves correctness in deep reasoning tasks.  
 - **Planner pruning** — TreePO reduces branching explosion.  
@@ -465,6 +482,8 @@ _All new modules must ship with tests, docs, and coverage; merges blocked if any
 - **Supply-chain** → Lockfiles, signature verification, SBOM (optional).  
 - **Hallucinations** → Retrieval-first, verifier with abstention, citation enforcement, red-team tests, uncertainty calibration.  
 - **REFRAG compatibility** → Works only on self-hosted open-weight models; router enforces bypass for closed APIs. Fallback to baseline RAG if expansion policy uncertainty high or KPIs regress.  
+- **Agentic RAG complexity** → add circuit-breakers on retrieval loops; cap retries and enforce verifier coverage; fall back to baseline RAG if quality/latency regress.
+- **Contract underspecification** → require contract schemas (deliverables/specs), negotiation loop, and evaluator checks before execution; block if ambiguity persists.
 - **PO stability** → DCPO clipping, variance checks, MixGRPO/DuPO exploration balance, rollback if instability detected.  
 - **Runtime divergence** (Agent Squad / others) → adapter conformance tests, SLO monitoring, trace parity.
 - **UDR prototype quality** → the UDR repo is research-grade; restrict to non-production mode, sandbox network access, and require evaluator+verifier passes before outputs are surfaced.

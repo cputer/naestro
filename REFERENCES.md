@@ -19,6 +19,7 @@
 - **Firecrawl (Web Crawl & Extract)** — [mendableai/firecrawl](https://github.com/mendableai/firecrawl)  
 - **Gitingest (Repo → Digest)** — [kurtosis-tech/gitingest](https://github.com/kurtosis-tech/gitingest)  
 - **Tensorlake (Metadata-RAG)** — [tensorlakeai/tensorlake](https://github.com/tensorlakeai/tensorlake)  
+- **Agentic RAG (overview & patterns)** — (internal) *Agents Companion, Feb 2025 PDF*
 
 ## Multi-Agent Runtimes
 - **AgentScope** — [agentscope/agentscope](https://github.com/agentscope/agentscope)  
@@ -66,6 +67,11 @@
 ## Agent Learning & Evolution
 - **Agent Lightning (Offline RL for Agents)** — [huggingface.co/papers/2409.00422](https://huggingface.co/papers/2409.00422)
 - **AlphaEvolve (Evolutionary Optimization)** — [arXiv:2409.00567](https://arxiv.org/abs/2409.00567)
+
+## AgentOps & Contracts
+- **Agent evaluation (trajectory, final response, HITL) & multi-agent scalability** — (internal) *Agents Companion, Feb 2025 PDF*
+- **Contract-adhering agents (contracts, negotiation, subcontracts, lifecycle)** — (internal) *Agents Companion, Feb 2025 PDF*
+
 
 ## Research Orchestration
 - **Nebius UDR (Universal Deep Research)** — https://github.com/demianarc/nebiusaistudiodeepresearch
