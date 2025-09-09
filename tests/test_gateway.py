@@ -2,6 +2,7 @@ import asyncio
 import contextlib
 import json
 import statistics
+import sys
 
 import httpx
 import pytest
@@ -31,8 +32,6 @@ def test_orchestrate(monkeypatch):
     class DummyAsyncClient:
         def __init__(self, *args, **kwargs):
             pass
-        def __init__(self, *args, **kwargs):
-            pass
 
         async def __aenter__(self):
             return self
@@ -58,8 +57,6 @@ def test_orchestrate_connection_error(monkeypatch):
     class DummyAsyncClient:
         def __init__(self, *args, **kwargs):
             pass
-        def __init__(self, *args, **kwargs):
-            pass
 
         async def __aenter__(self):
             return self
@@ -68,15 +65,14 @@ def test_orchestrate_connection_error(monkeypatch):
             pass
 
         async def post(self, url, json):
-            raise httpx.RequestError(
-                "boom", request=httpx.Request("POST", url)
-            )
+            raise httpx.RequestError("boom", request=httpx.Request("POST", url))
 
     monkeypatch.setattr(httpx, "AsyncClient", DummyAsyncClient)
     client = TestClient(app)
     resp = client.post("/orchestrate", json={"task": "demo"})
     assert resp.status_code == 502
     assert resp.json() == {"error": "orchestrator unreachable"}
+
 
 def test_orchestrate_missing_body():
     client = TestClient(app)
@@ -98,6 +94,18 @@ def test_system_metrics():
     assert set(data.keys()) == {"cpu_percent", "memory_mb"}
 
 
+def test_system_metrics_psutil_missing(monkeypatch):
+    class MissingPsutil:
+        def __getattr__(self, name):
+            raise ImportError("psutil not installed")
+
+    monkeypatch.setitem(sys.modules, "psutil", MissingPsutil())
+    client = TestClient(app)
+    resp = client.get("/api/metrics/system")
+    assert resp.status_code == 200
+    assert resp.json() == {"cpu_percent": 0.0, "memory_mb": 0.0}
+
+
 def test_kpi_metrics(monkeypatch):
     class DummyResponse:
         def raise_for_status(self):
@@ -109,6 +117,7 @@ def test_kpi_metrics(monkeypatch):
     class DummyAsyncClient:
         def __init__(self, *args, **kwargs):
             pass
+
         async def __aenter__(self):
             return self
 
@@ -180,6 +189,7 @@ def test_telemetry_streams(monkeypatch):
     class DummyAsyncClient:
         def __init__(self, *args, **kwargs):
             pass
+
         async def __aenter__(self):
             return self
 
