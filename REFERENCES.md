@@ -48,8 +48,11 @@
 - **DuPO (Dual Preference Optimization)** — [arXiv:2409.00345](https://arxiv.org/abs/2409.00345)  
 
 ## Agent Learning & Evolution
-- **Agent Lightning (Offline RL for Agents)** — [huggingface.co/papers/2409.00422](https://huggingface.co/papers/2409.00422)  
-- **AlphaEvolve (Evolutionary Optimization)** — [arXiv:2409.00567](https://arxiv.org/abs/2409.00567)  
+- **Agent Lightning (Offline RL for Agents)** — [huggingface.co/papers/2409.00422](https://huggingface.co/papers/2409.00422)
+- **AlphaEvolve (Evolutionary Optimization)** — [arXiv:2409.00567](https://arxiv.org/abs/2409.00567)
+
+## Research Orchestration
+- **Nebius UDR (Universal Deep Research)** — https://github.com/demianarc/nebiusaistudiodeepresearch
 
 ---
 
