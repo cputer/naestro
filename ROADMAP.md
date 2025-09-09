@@ -1,719 +1,582 @@
-# Naestro ROADMAP — Evolving Autonomous System (ASI Trajectory)
-
-**North Star**  
-Naestro evolves from a goal-driven multi-agent orchestrator into a continuously self-improving
-autonomous system that can:  
-(1) decompose open-ended goals;  
-(2) coordinate local+cloud LLMs and tools;  
-(3) write, test, and ship production-quality code;  
-(4) operate safely with strong observability and policy gates;  
-(5) self-improve via guarded self-edits validated by rigorous evaluations.
+Naestro ROADMAP — Evolving Autonomous System (ASI Trajectory)
 
 ---
 
-## 0) Current Status (Baseline)
+# North Star
 
-- **Local-first model set (DGX Spark single node):**  
-  Llama-3.1-70B (FP8 TRT-LLM) as Judge/Planner;  
-  DeepSeek-32B as Proposer/Synth;  
-  Qwen-32B-AWQ as Critic/Code.  
-  Cloud spillover for long-context/specialty tasks (GPT-4/5-class, Claude 3.7+, Gemini-2.5+,
-  Mistral, Grok, OpenELM via vLLM).
+Naestro evolves from a goal-driven multi-agent orchestrator into a continuously self-improving autonomous system that can:
 
-- **Studio (Web UI):**  
-  Real-time runs (WS/SSE), dark theme, metrics (workflows, consensus, latency, KV cache hit, cost),
-  run details and traces;  
-  **n8n Export** and **Nango SaaS Panel**.
-
-- **Guardrails:**  
-  Thermal/VRAM caps;  
-  step-level re-route on OOM/timeouts;  
-  retry/backoff;  
-  consent prompts for sensitive actions.
-
-- **SDLC quality:**  
-  PR linting (commitlint), Release Please, Codecov with per-flag coverage, Node 22 standardization,
-  deterministic UI+Python tests.
+1. decompose open-ended goals;
+2. coordinate local+cloud LLMs and tools;
+3. write, test, and ship production-quality code;
+4. operate safely with strong observability and policy gates;
+5. self-improve via guarded self-edits validated by rigorous evaluations.
 
 ---
 
-## 1) Target Properties (what “evolving ASI” means here)
+# Technical Foundation
 
-1. **General goal execution** — Turn natural-language objectives into executable plans (DAGs) with
-   budgets, SLAs, and success criteria.
-2. **Model+tool orchestration** — Choose the right LLM(s)/tool(s) per step using live telemetry +
-   historical win-rates.
-3. **Formalized self-improvement** — Periodic self-proposals (self-PRs) that increase pass-rates,
-   reduce latency/cost, and expand safe capability coverage.
-4. **Safety-first autonomy** — Hard capability boundaries, consent layers, and provable rollback;
-   humans remain in control of scopes and secrets.
-5. **Observability & provenance** — Every action is explainable, replayable, and signed; drift and
-   regressions are caught early.
-6. **Hallucination-resilience** — The system actively prevents, detects, and corrects unsupported
-   claims via retrieval-first planning, verifiers, uncertainty/abstention, and citation-grounded
-   outputs.
-7. **Long-context acceleration** — **REFRAG compression lane** enables 16× effective context and
-   order-of-magnitude lower TTFT/cost on self-hosted models while preserving accuracy.
-8. **AgentOps maturity** — First-class support for multi-agent **Agentic RAG**,
-   trajectory/final-response/HITL evaluation, and contractor-style task specifications for
-   production robustness.
-9. **Preference-optimized policies** — Expansion, routing, and planner policies leverage advanced
-   preference optimization methods (PVPO, DCPO, GRPO-RoC, ARPO, TreePO, MixGRPO, DuPO) for
-   stability, efficiency, and reasoning accuracy.
-10. **Runtime interop** — Naestro supports pluggable runtimes (LangGraph, CrewAI, AgentScope,
-    AutoAgent, Agent Squad) with policy/trace parity.
+High-performance async Python backend (FastAPI, Uvicorn, asyncio) with Redis (cache/queues), Celery (background tasks), PostgreSQL (+pgvector), Kubernetes (Helm), OpenTelemetry + Prometheus + Grafana (observability), Sentry (errors). Policy & auth via OPA/Casbin, Keycloak, Vault. LLM integration through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
+
+---
+
+## 1) Target Properties (what “evolving ASI” means)
+
+1. **General goal execution** — NL objectives → typed plans (DAGs) with budgets, SLAs, success criteria; agentic RAG and adaptive sources.
+2. **Model+tool orchestration** — Router chooses LLM/tools using live telemetry + historical win-rates; bandit updates; federated learning for privacy.
+3. **Formalized self-improvement** — Self-PRs (prompt/router/config/test deltas) gated by evals/canary; AlphaEvolve-style optimization for hot paths.
+4. **Safety-first autonomy** — Capability bounds, consent layers, provable rollback, constitutional principles, guardrails, HITL.
+5. **Observability & provenance** — Logs, metrics, traces; signed artifacts; time-travel debugging; metacognitive narratives.
+6. **Hallucination-resilience** — Retrieval-first planning, claim verifier, abstention, CoVe; citation-grounded outputs.
+7. **Long-context acceleration** — REFRAG lane for open-weights (16× effective context, ≥10× TTFT); bypass for closed APIs.
+8. **AgentOps maturity** — Multi-agent plans, HITL evaluation, trajectory/final-response scoring, production robustness.
+9. **Preference-optimized policies** — PVPO/DCPO/GRPO-RoC/ARPO/TreePO/MixGRPO/DuPO for stable, efficient routing/reasoning.
+10. **Runtime interop** — Pluggable runtimes (LangGraph, CrewAI, AgentScope, AutoGen, Agent Squad, SuperAGI, Semantic Kernel) under unified policy/trace contracts.
+11. **Strategic autonomy & compute economics** — Tokenomics credits/budgets; marketplace for skills/agents/data; decentralized delegation.
+12. **Advanced cognitive fusion** — Neuro-symbolic (Z3/Prolog), causal AI, multimodal sensor fusion, edge/neuromorphic/quantum hooks.
+13. **No-code enablement** — n8n/Studio flows to compose agents & tools.
+14. **Human-AI partnership** — Strategic Dialogue Engine, Oversight Council, narrative explanations.
+15. **Resilience & efficiency** — Retries (Tenacity), fallback routing, Redis caching + dogpile/singleflight.
 
 ---
 
 ## 2) System Roles (logical components)
 
-- **Planner** — Compiles Goal → `Plan.json` (tasks, deps, inputs/outputs, budgets, acceptance
-  checks).
-- **Router** — Chooses model/provider per step (local vs cloud) using: win-rates, latency, context
-  length, and cost.
-- **Agents** — Role types: Researcher, Coder, Reviewer, Runner, DataOps, Evaluator, Reporter.
-  Spawned dynamically with scoped permissions.
-- **Policy Engine** — Enforces tool/network/path allowlists, data scopes, rate limits, and cost/time
-  ceilings. Produces consent prompts and audit events.
-- **Tool/Skill Registry** — Typed contracts (JSON Schema), versioned adapters
-  (MCP/HTTP/CLI/DB/Browser/PDF/Vision/ASR/TTS/SEO/Geo/n8n/Nango/Firecrawl/Gitingest), deprecation
-  paths.
-- **Memory Fabric** — Episodic (runs), semantic (facts/summaries), skill memories (reusable flows),
-  user prefs. Graph-structured (Graphiti) with retrieval policies.
-- **Evaluators** — Code/test/typing/static analysis; factuality/consistency; safety; latency/cost;
-  pass@K; metamorphic/program properties.
-- **Claim Verifier** — Tool-using checker that enforces citation-backed answers, performs
-  chain-of-verification, and can abstain or ask for retrieval when evidence is insufficient.
-- **Introspector** — Summarizes failures, extracts lessons, proposes prompt/route/tool upgrades
-  (feeds Self-PR cycle).
-- **Self-PR Bot** — Opens PRs (prompt hardening, flaky test fixes, router weights, small refactors),
-  runs canary, signs artifacts, auto-merges if green.
-- **Evidence Store** — Short-lived artifact bucket for retrieved passages, URLs, repo digests (from
-  Gitingest), and crawl chunks (from Firecrawl) used by verifiers and provenance signing.
-- **REFRAG Controller** — Orchestrates compression policy: selects chunks to compress/expand, calls
-  encoder+projection, and supplies mixed inputs (tokens + embeddings) to local decoders.
-- **AgentOps Orchestrator** — Unifies capability → trajectory → final-response evaluators, manages
-  human-in-the-loop (HITL) gates, and logs multi-agent scalability/efficiency metrics (tool-call
-  precision/recall, latency, quality vs agent-count).
-- **PO Policy Module** — Encapsulates preference optimization strategies (PVPO, DCPO, GRPO-RoC for
-  REFRAG; ARPO for tool agents; TreePO for planner branching; MixGRPO for exploration vs
-  exploitation).
-- **Runtime Adapters** — Plug-in backends: LangGraph, CrewAI, AgentScope, AutoAgent, **Agent
-  Squad**. Unified contract ensures policy gating, trace parity, and conformance with Evaluators.
+- **Planner** — Goal → `Plan.json` (tasks/deps/budgets/acceptance); TreePO branching; neuro-symbolic checks; Strategic Dialogue.
+- **Router** — Provider/model selection (win-rates, latency, ctx, cost); tokenomics priority; federated peer hints; AnyLLM.
+- **Agents** — Researcher/Coder/Reviewer/Runner/DataOps/Evaluator/Reporter/Auditor with scoped permissions & self-healing.
+- **Policy Engine** — OPA/Casbin rules for tools/net/paths/data/rate/cost/time; consent prompts; immutable audit.
+- **Tool/Skill Registry** — Typed contracts (JSON Schema), adapters (MCP/HTTP/CLI/DB/Browser/PDF/Vision/ASR/TTS/SEO/Geo/**n8n/Nango/Firecrawl/Gitingest**).
+- **Memory Fabric** — Episodic/semantic/skills; vector+graph (Qdrant/Weaviate/Graph store); retrieval policies; decision narratives.
+- **Evaluators** — Code/static/factuality/safety/latency/cost; trajectory evaluators; AI Safety Index gates.
+- **Claim Verifier** — Chain-of-verification, citations, abstention, uncertainty calibration.
+- **Introspector** — Failure mining; lessons; prompt/route/tool upgrades; AlphaEvolve proposals; metacog narratives.
+- **Self-PR Bot** — Opens PRs; canary; sign/merge with green; escalates constitutional deltas.
+- **Evidence Store** — Short-lived artifacts (crawl chunks, repo digests, passages) + provenance.
+- **REFRAG Controller** — Compression/expansion policy; encoder+projection; vLLM/TRT-LLM hooks.
+- **AgentOps Orchestrator** — Capability→trajectory→final evaluators; HITL gates; multi-agent metrics.
+- **PO Policy Module** — Preference optimization suite (PVPO/DCPO/…); stability/effectiveness monitors.
+- **Runtime Adapters** — LangGraph/CrewAI/AgentScope/AutoGen/Agent Squad/Semantic Kernel/SuperAGI with policy/trace parity.
+- **Tokenomics Engine** — Credits/budgets; marketplace transactions.
+- **Fusion Controller** — Multimodal stream fusion; neuro-symbolic solvers; causal graphs.
+- **Federation Hub** — Cross-instance delegation; Flower-based updates without data sharing.
+- **Debugger Module** — Time-travel, branching sims, CoT/ToT graphs.
+- **Oversight Council Module** — Governance UI, voting, escalations.
+- **Strategic Dialogue Engine** — Interactive co-planning.
+- **Observability Core** — OTel spans, Prom metrics, Langfuse traces, Sentry errors.
+- **Task Queue & Cache** — Celery + Redis; dogpile.singleflight; TTL caches.
+- **Guardrails Service** — NeMo/Guardrails AI validation/filter/correction.
 
 ---
 
-## 3) Mermaid: Orchestrator Map
+## 3) Orchestrator Map (Mermaid)
 
 ```mermaid
 flowchart TB
-    subgraph Studio["Studio (Web UI)"]
-      UI[Runs/Traces/Metrics]
-      Consent[Consent Banners]
-      Panels[Nango SaaS Panel & n8n Export]
-    end
+  %% ==== Studio (UI) ====
+  subgraph Studio["Studio (Web UI)"]
+    UI[Runs / Traces / Metrics]
+    Consent[Consent Banners]
+    Panels[n8n / Nango Panel]
+    Debug[Time-Travel Debugger]
+    Dialogue[Strategic Dialogue]
+    Governance[Oversight Council]
+  end
 
-    subgraph Core["Naestro Core"]
-      Planner
-      Router
-      Policy[Policy Engine]
-      Registry[Tool/Skill Registry]
-      Memory[Graphiti Memory Fabric]
-      Evaluators
-      Verifier[Claim Verifier & CoVe]
-      Introspector
-      SelfPR[Self-PR Bot]
-      Evidence[Evidence Store]
-      REFRAGC[REFRAG Controller]
-      PO[PO Policy Module]
-    end
+  %% ==== Core ====
+  subgraph Core["Naestro Core"]
+    Planner[Planner]
+    Router[Router]
+    Policy[[Policy Engine (OPA/Casbin)]]
+    Registry[Tool/Skill Registry]
+    Memory[Memory Fabric]
+    Evaluators[Evaluators]
+    Verifier[Claim Verifier (CoVe/Abstain)]
+    Introspector[Introspector]
+    SelfPR[Self-PR Bot]
+    Evidence[Evidence Store]
+    REFRAGC[REFRAG Controller]
+    PO[PO Policy Module]
+    Tokenomics[Tokenomics Engine]
+    Fusion[Fusion Controller]
+    Federation[Federation Hub]
+    Oversight[Oversight Council Module]
+    Strategic[Strategic Dialogue Engine]
+    Agents[Agents (Researcher/Coder/Reviewer/Runner/...)]
+    Observability[Observability Core]
+    QueueCache[Celery + Redis Cache]
+    Guardrails[Guardrails Service]
+    Debugger[Debugger Module]
+  end
 
-    subgraph Engines["Serving Engines"]
-      VLLM[vLLM / SGLang]
-      TRTLLM[TensorRT-LLM]
-      Triton[Triton Inference Server]
-      REFRAGE[REFRAG Encoder+Projection]
-    end
+  %% ==== Engines (Serving) ====
+  subgraph Engines["Serving Engines"]
+    vLLM[vLLM / SGLang]
+    TRT[TensorRT-LLM]
+    Triton[Triton Inference Server]
+    REFRAGE[REFRAG Encoder + Projection]
+    Z3[Z3 / Prolog Solvers]
+  end
 
-    subgraph ModelsLocal["Local Models (DGX Spark)"]
-      Llama[Llama-3.1-70B FP8]
-      DeepSeek[DeepSeek-32B]
-      Qwen[Qwen-32B-AWQ]
-      GPTOSS[GPT-OSS 20B/120B]
-    end
+  %% ==== Models (Local) ====
+  subgraph Local["Local Models"]
+    Llama[Llama-4]
+    DeepSeek[DeepSeek-V3.1]
+    Qwen[Qwen-32B-AWQ]
+    Falcon[Falcon-2 MM]
+    GPTOSS[GPT-OSS 20B/120B]
+  end
 
-    subgraph Cloud["Cloud Pool"]
-      OpenAI[GPT-4/5 class]
-      Claude[Claude 3.7+]
-      Gemini[Gemini-2.5+]
-      Mistral[Mistral/Grok/OpenELM]
-      LFM2[LFM2 multi-language]
-    end
+  %% ==== Cloud Pool ====
+  subgraph Cloud["Cloud Pool"]
+    OpenAI[GPT-5 class]
+    Claude[Claude 4]
+    Gemini[Gemini 3]
+    Mistral[Mistral / Grok 4 / OpenELM]
+    OSeries[o3 / o4 / o5]
+  end
 
-    subgraph Integrations["Integrations"]
-      MCP[MCP Client/Server]
-      Parlant[Parlant + VibeVoice (ASR/TTS)]
-      DIA[DIA TTS (multi-speaker)]
-      n8n[n8n Flow Export]
-      Nango[Nango SaaS API Hub]
-      ART[ART Prompt-Ops]
-      Tensorlake[Tensorlake Metadata-RAG]
-      OmniNova[OmniNova]
-      Symphony[Symphony]
-      OCA[Open Computer Agent (Browser/UI)]
-      LMCache[LMCache/NIXL KV-Transfer]
-      AgentScope[AgentScope Runtime]
-      GraphRAG[GraphRAG/LazyGraphRAG]
-      Firecrawl[Firecrawl (Web Crawl & Extract)]
-      Gitingest[Gitingest (Repo → Digest)]
-      AutoAgent[AutoAgent (Clustered Agents)]
-      AgentSquad[Agent Squad Runtime]
-    end
+  %% ==== Integrations ====
+  subgraph Integrations["Integrations"]
+    MCP[MCP Client/Server]
+    Parlant[Parlant + VibeVoice (ASR/TTS)]
+    DIA[DIA TTS (multi-speaker)]
+    n8n[n8n Flow Export]
+    Nango[Nango SaaS Hub]
+    ART[ART Prompt-Ops]
+    Tensorlake[Tensorlake Metadata-RAG]
+    OmniNova[OmniNova]
+    Symphony[Symphony]
+    OCA[Open Computer Agent (Browser/UI)]
+    LMCache[LMCache / NIXL KV-Transfer]
+    AgentScope[AgentScope Runtime]
+    GraphRAG[GraphRAG / LazyGraphRAG]
+    Firecrawl[Firecrawl (Web Crawl & Extract)]
+    Gitingest[Gitingest (Repo → Digest)]
+    AutoAgent[AutoAgent (Clustered Agents)]
+    AgentSquad[Agent Squad Runtime]
+    SuperAGI[SuperAGI Runtime]
+    SemKernel[Semantic Kernel]
+  end
 
-    Studio --> |WS/SSE| Core
-    Panels --> Registry
+  %% ==== Flows ====
+  Studio -->|WS/SSE| Core
+  Dialogue --> Planner
+  Governance --> Oversight
+  Oversight --> Policy
+  Planner --> Router
+  Policy --> Router
+  Registry --> Agents
+  Agents --> Engines
+  Agents --> Memory
+  Evaluators --> Verifier
+  Verifier --> Evidence
+  Introspector --> SelfPR
+  SelfPR --> Studio
+  Memory --> REFRAGC
+  REFRAGC --> REFRAGE --> Engines
+  PO --> Planner
+  PO --> Router
+  PO --> REFRAGC
+  Tokenomics --> Policy
+  Fusion --> Agents
+  Federation --> Router
+  Observability --> Studio
+  Guardrails --> Router
+  Debugger --> Studio
+  QueueCache --> Agents
 
-    Planner --> Router
-    Router --> |selects| Engines
-    Policy --> |gates| Router
-    Registry --> Agents
-    Agents --> Engines
-    Agents --> Memory
-    Engines --> ModelsLocal
-    Engines --> Cloud
+  Engines --> Local
+  Engines --> Cloud
 
-    Evaluators --> Verifier
-    Verifier --> Evidence
-    Evaluators --> Introspector
-    Introspector --> SelfPR
-    SelfPR --> |PRs| Studio
-
-    ART --> Evaluators
-    Tensorlake --> Memory
-    MCP --> Registry
-    n8n --> Registry
-    Nango --> Registry
-    Parlant --> Registry
-    DIA --> Registry
-    OCA --> Registry
-    LMCache --> Engines
-    AgentScope --> Core
-    GraphRAG --> Memory
-    Firecrawl --> Evidence
-    Gitingest --> Evidence
-    AutoAgent --> Core
-    AgentSquad --> Core
-
-    Memory --> REFRAGC
-    REFRAGC --> REFRAGE
-    REFRAGE --> Engines
-    PO --> Router
-    PO --> Planner
-    PO --> REFRAGC
+  %% ==== Integration Wiring ====
+  MCP --> Registry
+  Parlant --> Registry
+  DIA --> Registry
+  n8n --> Panels
+  Nango --> Panels
+  ART --> Evaluators
+  Tensorlake --> Memory
+  OCA --> Agents
+  LMCache --> Engines
+  AgentScope --> Core
+  GraphRAG --> Memory
+  Firecrawl --> Evidence
+  Gitingest --> Evidence
+  AutoAgent --> Core
+  AgentSquad --> Core
+  SuperAGI --> Core
+  SemKernel --> Core
 ```
 
 ---
 
 ## 4) Self-Rewrite Loop (guarded autonomy)
 
-1. **Collect**: Surface failures (dropped runs, OOM, policy denials), slow traces (P95 spikes),
-   evaluator misses, flaky tests.
-2. **Propose**: Agents generate _minimal_ diffs (prompt deltas, router weights, tool config, tests)
-   → PRs.
-3. **Validate**:
-   - Unit + property + metamorphic tests (100% coverage).
-   - Golden prompts via prompt-ops (ART integration).
-   - Offline dataset replays; synthetic task suites (coding, agentic, PDF/LaTeX, SEO/Geo, browse).
-   - Hallucination red-team suite: contradiction sets, unsupported-claim traps, source-omission
-     tests; require citation coverage for knowledge answers.
-4. **Canary**: Shadow traffic; watch SLOs (success, latency, cost, safety incidents). Automatic
-   rollback if any breach.
-5. **Merge**: Provenance sign, release notes, version bump.
-6. **Learn**: Update router priors from win-rates; store counter-examples in memory for future
-   planning.
+1. **Collect**: dropped runs, OOM, policy denials, P95 spikes, evaluator misses, flaky tests; cost flags; federated failure sharing.
+2. **Propose**: minimal diffs (prompt/router/config/tests) → PRs; AlphaEvolve evo-optimization for hot paths.
+3. **Validate**: unit/property/metamorphic; golden prompts; offline replays; synthetic suites; hallucination red-team; neuro-symbolic checks; constitutional audits; causal validations.
+4. **Canary**: shadow traffic; SLO watch (success/latency/cost/safety); auto-rollback on breach; proofs for merges.
+5. **Merge**: sign artifacts, release notes, version bump; council ratification for flagged PRs.
+6. **Learn**: update router priors; store counter-examples; offline RL on traces; federated updates.
 
-**Non-goals**: unrestricted self-modification, unsupervised network/file access, or secret
-exfiltration.
+**Non-goals**: unrestricted self-modification, unsupervised network/files, secret exfiltration, constitutional bypass.
 
 ---
 
 ## 5) Safety & Capability Governance
 
-- **Modes**:
-  - `Guide` (suggest),
-  - `Copilot` (confirm),
-  - `Auto` (approved scopes only).
-
-- **Boundaries**:
-  - **Secrets**: lease-scoped vault; never to client; redaction in traces.
-  - **Filesystem & network**: path/domain allowlists; sandboxed exec; rate limits.
-  - **Data**: PII classifiers; off-prem toggle; export redaction.
-
-- **Kill switches**: Pause runs; revoke tokens; quarantine models/tools.
-
-- **Compliance**: Comprehensive audit logs (immutable), purpose/consent receipts.
-
-- **Output truthfulness gates**: For knowledge/claims tasks, force retrieval
-  (Firecrawl/Gitingest/GraphRAG), require inline citations, enable abstain-on-uncertainty, and block
-  delivery if verification fails.
+- **Modes**: Guide (suggest), Copilot (confirm), Auto (approved scopes). Federated (privacy). Dialogue (co-planning).
+- **Boundaries**: Vault-managed secrets; path/domain allowlists; sandboxed exec; FastAPI-Limiter+Redis; PII classifiers; off-prem toggle; export redaction.
+- **AuthN/Z**: Keycloak (OIDC/SSO), OPA/Casbin RBAC/ABAC.
+- **Kill switches**: pause runs; revoke tokens; quarantine models/tools.
+- **Compliance**: immutable audit logs; consent receipts; Safety Index alignment; council audits.
+- **Truthfulness gates**: retrieval-first, inline citations, abstain-on-uncertainty, post-validation with NeMo Guardrails.
+- **Formal proofs**: TLA+/Coq for Policy Engine & Self-PR merge gate.
 
 ---
 
-## 6) Orchestration & Models
+## 6) Phased Delivery Plan
 
-### Architecture Note (2025 LLM Families)
-
-**Versioning Policy.** Router selects the most recent stable release per model family (e.g.,
-DeepSeek‑V3 → V3.1, Llama‑3.2 → Llama‑4). Older versions stay in the registry for reproducibility
-but are deprioritized. If a family is missing locally, fall back to cloud APIs while respecting
-REFRAG routing rules. **Agentic RAG integration.** Router supports **Agentic RAG** flows where
-retrieval is iteratively refined by autonomous agents (query expansion, multi-step retrieval,
-adaptive source selection) and cross-checked by evaluator agents before synthesis, improving
-accuracy and explainability for complex domains.
-
-- **Local (DGX Spark)**
-  - Llama-3.1-70B FP8 TRT-LLM: Judge/Planner (batching, KV cache).
-  - DeepSeek-32B: Proposer/Synth (fast code/reasoning).
-  - Qwen-32B-AWQ: Critic/Refactor (low VRAM).
-  - GPT-OSS 20B/120B: open GPT-level local-first options.
-  - **REFRAG Compression Lane (local only):** lightweight encoder + projection that compresses
-    retrieved chunks into dense embeddings consumed by local decoders; RL/heuristic expansion
-    preserves critical spans; requires vLLM/TRT-LLM hook for mixed inputs.
-  - **PO Policy Layer:** preference optimization methods integrated (PVPO, DCPO, GRPO-RoC; ARPO,
-    TreePO, MixGRPO, DuPO).
-
-- **Cloud**
-  - GPT-4/5-class (general), Claude 3.7+ (long reasoning), Gemini-2.5+ (long-context/multimodal),
-    Mistral/Grok/OpenELM.
-  - LFM2 (multi-language) for high-quality translation and multilingual workflows.
-  - **Note:** REFRAG path not applied to closed API models; router will bypass.
-
-- **Routing policy**
-  - Prefer local; spill to cloud on long context, specialty tools, or latency SLO breaches.
-  - Bandit-style updates from evaluators’ win-rates.
-  - **Reasoning budget knobs** (think/on/off; effort levels) normalized across providers.
-  - **REFRAG routing rule**: if model ∈ {vLLM/TRT-LLM local} and context_len > threshold → use
-    REFRAG lane; else baseline RAG.
+### Phase A (Weeks 1–6): Foundational Backend, Planning & Policies
+**Goal:** Core API, planner, router, policies.  
+**Deliverables:**
+- `schemas/plan.schema.json`
+- Planner (goal → `Plan.json`)
+- Router v1 (heuristics)
+- Policy engine (OPA/Casbin rules)
+- AnyLLM integration  
+**Exit Criteria:**
+- API container deployed
+- CI green, >90% coverage
+- Goals decomposed → routed to provider
+- API key auth working  
+**SLOs:** P95 ≤ 2.5s on baseline; cost logged; no secrets in logs.
 
 ---
 
-## 7) Advanced Capabilities (to integrate)
-
-- **Voice**: Parlant + Whisper/Zonos, **VibeVoice** (long-form/emotional TTS), **DIA TTS
-  (multi-speaker one-pass dialogue)**, multilingual ASR, streaming TTS, barge-in, voice memory.
-- **Vision/PDF**: OCR tables → structured JSON; formula/LaTeX extraction; chart/table synthesis.
-- **SEO/Geo**: Crawler/SERP parsers, sitemap audits, NER/geocoding, local ranking diffing;
-  content/robots PRs.
-- **Prompt/Data-Ops**: ART prompt regression tracking, dataset curation, result drift detection.
-- **Workflow Runtimes**: Interop with **LangGraph/CrewAI/AgentScope/AutoAgent/Agent Squad** as
-  optional backends for complex tool flows (still governed by Naestro policy/router).
-- **Interop Examples**: **finllm-apps** — cross-framework playground
-  (LangChain/LangGraph/CrewAI/AutogenAI/n8n/Make) showcasing real financial agent apps; useful for
-  validating Naestro runtime adapters and policy/trace parity.
-- **Edge resources catalog (reference-only)**: **Awesome-Nano-Banana-images** — curated list of
-  SBC/device OS images; _not a production dependency_.
-- **Unified API brokers**: Single-key providers for broad API/tool coverage (RapidAPI-style).
-- **n8n Integration**: Export Naestro workflows to n8n YAML, enabling low-code automation (email
-  agents, Telegram bots, Reddit pipelines).
-- **Web Ingestion**: **Firecrawl** for crawl→extract→chunk→index pipelines with robots.txt
-  compliance and selector-based extraction.
-- **Knowledge**: **GraphRAG/LazyGraphRAG** modes for graph-aware retrieval.
-- **RAG Quality**: **Tensorlake-style metadata augmentation** (page type/table vs text/section tags)
-  for cheaper, faster, more accurate retrieval.
-- **Scaling**: **vLLM** (paged/prefix/speculative) + **TensorRT-LLM**; **LMCache/NIXL** KV transfer;
-  multi-node disaggregated prefill/decode.
-- **Repo Ingestion**: **Gitingest** to turn any Git repo (or `github.com → gitingest.com` URL swap)
-  into a prompt-friendly **repository digest** (code + docs), feeding **Evidence Store** for coding
-  agents.
-- **Hallucination-Resistant Generation (HRG)**: Retrieval-first planning, **self-consistency**,
-  **chain-of-verification (CoVe)**, **calibrated uncertainty**, **abstention**, **structured
-  outputs** with JSON Schema, and **tool-use preference** for factual queries.
-- **REFRAG Long-Context Acceleration**: compression of retrieved context (k=8–32), KV/cache savings,
-  RL/heuristic expansion of critical spans; metrics wired to Observability.
-- **Agentic RAG**: Multi-agent retrieval that expands/refines queries, decomposes multi-step
-  questions, selects sources adaptively, and validates/repairs before generation; crucial for
-  complex, evolving knowledge domains.
-- **Contract-adhering Agents (“Contractors”)**: Schema-driven task contracts with
-  deliverables/specs, negotiation/clarification loops, and subcontract rules; promotes production
-  reliability for high-stakes tasks.
-- **Research Orchestration (Nebius UDR prototype)**: FastAPI backend + Next.js frontend configurable
-  strategies for deep research; integrates via OpenAI-compatible Nebius API and Tavily search
-  (experimental; non-production).
-- **PO-Optimized Policies**: stability, efficiency, accuracy gains across reasoning, planning,
-  routing, expansion.
+### Phase B (Weeks 6–12): Observability, Resilience & Multi-Agent Foundations
+**Goal:** Monitoring, retries, basic agents.  
+**Deliverables:**
+- OpenTelemetry + Prometheus + Grafana dashboards
+- Tenacity retries + fallback logic
+- Memory slice (Qdrant/Weaviate)
+- Claim Verifier MVP (citations/abstain)  
+**Exit Criteria:**
+- Traces in Jaeger/Tempo
+- Metrics (latency, tokens, costs) visible
+- Survives provider 429/5xx
+- Executes simple multi-agent plan
 
 ---
 
-## 8) Observability & Metrics
-
-- **Traces**: model, tokens, TTFT/ITL latency, cost, context, policy hits, memory I/O, tool effects.
-- **Dashboards**: success & consensus rates, router win-rates, KV hit %, cloud spill %, anomaly
-  flags, thermo/VRAM.
-- **Benchmarks**: project-specific regression suites; public benchmarks proxied via adapters;
-  trendlines and SLA alerts (**SWE-bench Verified**, **LiveBench**).
-- **OpenTelemetry GenAI** semantic conventions as first-class.
-- **Truthfulness KPIs**: hallucination rate (unsupported-claim%), abstention%, citation coverage%,
-  verifier pass rate, evidence freshness, and repo-digest usage rate (Gitingest/Firecrawl).
-- **REFRAG KPIs**: TTFT speedup vs baseline, input-token reduction factor, KV cache memory delta,
-  accuracy parity (exact-match/F1/judge), expansion rate (% tokens bypassing compression), cache hit
-  for precomputed embeddings.
-- **AgentOps KPIs**: multi-agent scalability (quality/latency vs agent-count), trajectory metrics
-  (tool-call precision/recall, single-tool use), final-response pass rate
-  (autorater/criteria-based), and HITL close-the-loop effectiveness.
-- **PO KPIs**: policy stability (variance), sample efficiency (improvement vs training data),
-  reasoning accuracy (pass@K uplift).
-
----
-
-## 9) Phased Delivery Plan
-
-### Phase A (Weeks 1–6): Autonomous Planning & Policies
-
-- `schemas/plan.schema.json` (typed contract).
-- `orchestrator/planner.py` (goal→plan compiler, re-planning).
-- `policy/engine` (YAML rules, consent UI), deny/allow telemetry.
-- Router v1 (heuristics: latency/cost/context).  
-  **Exit**: Complex multi-step tasks run with approvals; green CI; 100% coverage on new code.
-
----
-
-### Phase B (Weeks 6–12): Multi-Agent Programs & Evaluators
-
-- Dynamic role spawning/budgets; rate limiting.
-- Evaluators: code/tests/static, factuality, safety; pass@K harness.
-- Memory slices per role; episode linking in Graphiti.
-- **Claim Verifier MVP** (CoVe + abstain).
-- **Evidence Store MVP**.  
-  **Exit**: End-to-end build-and-ship demo finishes within SLA; evaluator-weighted routing improves
-  success/latency.
-- **AgentOps foundations**: add trajectory/final-response evaluators and HITL gate; dashboard tiles
-  for tool-call precision/recall and success criteria.
-
----
-
-### Phase C (Weeks 12–20): Self-PRs & Canary Rollouts
-
-- Self-PR bot (prompt/router/config/test deltas), provenance signing.
-- Canary+rollback scripts; changelog synthesis.
-- Prompt/data-ops (golden suites; regression dashboards via ART).
-- **Hallucination red-team tests** wired to canary gates.  
-  **Exit**: Weekly self-PRs auto-merge ≥90% without regressions; clear rollback proofs.
+### Phase C (Weeks 12–20): Caching, Self-PRs & Canary Rollouts
+**Goal:** Efficiency + self-improvement loop.  
+**Deliverables:**
+- Redis cache, in-flight dedup (dogpile/singleflight)
+- Celery background tasks (analytics/logging)
+- Self-PR bot (prompt/router/test PRs)
+- Canary + rollback, golden prompt/data suites  
+**Exit Criteria:**
+- 90% latency reduction on repeat queries
+- Auto-PR merged without regressions
+- Canary A/B visible in Grafana
 
 ---
 
 ### Phase D (Weeks 20–28): Multimodal & Domain Skills
-
-- Voice I/O (Parlant + VibeVoice + DIA).
-- PDF/LaTeX→tables; vision extraction.
-- SEO/Geo skills; browser tools & safe browsing policies.
-- Cross-device sessions; artifact sharing.  
-  **Exit**: Voice-driven plan edits; PDF→CSV/Charts works; SEO audits produce actionable PRs.
-
----
-
-### Phase E (Ongoing): Adaptive Router & Skill Induction
-
-- Bandit router updates from evaluator win-rates.
-- Distill frequent plans into typed, reusable “skills”.
-- Public “skill market” with safety metadata.  
-  **Exit**: Faster convergence on plans; fewer tokens per success; richer toolchain with guardrails.
+**Goal:** Expand into voice/vision/web.  
+**Deliverables:**
+- ASR/TTS (Parlant/VibeVoice/DIA)
+- PDF/OCR (PyMuPDF/Tesseract)
+- Playwright browser agent
+- Fusion Controller (multimodal I/O)  
+**Exit Criteria:**
+- Voice roundtrip working
+- PDF → structured JSON
+- Browser agent completes form
 
 ---
 
-### Phase F (Weeks 28–36): External Automation & APIs
-
-- n8n flow exports, low-code pipelines (Telegram, Reddit, Email).
-- Unified API brokers integration for single-key access to thousands of APIs.
-- **Nango integration** (Studio panel, MCP bridge, autogen nodes).
-- ART-driven prompt regression tracking.  
-  **Exit**: Contributors compose automation via n8n; regression suites harden prompts/tools; SaaS
-  automation in Studio.
-
----
-
-### Phase G (Weeks 36–44): Knowledge & Metadata RAG
-
-- Tensorlake metadata-augmented embeddings for context filtering.
-- Fine-grained classification (page-level, domain-specific).
-- **Firecrawl** ingestion jobs and pipelines.
-- **Gitingest** repo-digest adapter + Studio “Ingest Repo” action.
-- **Evidence Store** wiring.  
-  **Exit**: RAG answers become cheaper, faster, more accurate.
+### Phase E (Weeks 28–36): Adaptive Router & Skill Induction
+**Goal:** Dynamic routing, reusable skills.  
+**Deliverables:**
+- Bandit router (Thompson sampling)
+- Introspector: detect reusable subplans
+- Skill registry (typed, versioned)  
+**Exit Criteria:**
+- Router converges to cheaper/better models
+- ≥5 skills encapsulated as registry items
 
 ---
 
-### Phase H (Weeks 44–52): Scaling & Performance
-
-- vLLM multi-GPU/multi-node serving (paged attention, prefix caching, speculative decoding).
-- LMCache/NIXL connectors for KV transfer and disaggregated P/D pipelines.
-- Auto-tuning of latency vs throughput tradeoffs.  
-  **Exit**: Near-linear scaling across nodes with auto-optimized SLOs.
-
----
-
-### Phase H.1 (Weeks 52–56): REFRAG Long-Context Acceleration
-
-- Implement **REFRAG Compression Lane** for local models: encoder+projection, mixed-input decode
-  hook (tokens + embeddings).
-- Retriever: store raw chunks + precomputed embeddings; cache keys `(doc_id, chunk_idx, hash)`.
-- Expansion policy: heuristic → RL policy; feature flag + routing rule (local-only).
-- Observability: TTFT, KV delta, accuracy parity dashboards; A/B harness vs baseline RAG.  
-  **Exit**: ≥10× TTFT improvement on long-doc RAG with accuracy parity; production flag on local
-  models, cloud bypass intact.
-
-### Phase H.2 — Agentic RAG Productionization
-
-- Implement multi-agent retrieval loop (query expansion, multi-step decomposition, adaptive source
-  selection).
-- Add **validator agents** that cross-check retrieved evidence pre-synthesis; wire to Claim Verifier
-  & Evidence Store.
-- A/B vs baseline RAG on complex multi-perspective tasks; wire observability (accuracy uplift,
-  explainability, retries). **Exit**: Accuracy & explainability uplift on complex knowledge tasks
-  with stable latency; full traces & citations.
+### Phase F (Weeks 36–44): External Automation & Enterprise Auth
+**Goal:** SaaS automation + enterprise-ready auth.  
+**Deliverables:**
+- n8n/Nango adapters
+- Keycloak SSO (OAuth2/OIDC)
+- Service/tenant accounts  
+**Exit Criteria:**
+- Export Naestro plan to n8n YAML
+- SaaS auth handshake works
+- Users log in via SSO
 
 ---
 
-### Phase I (Weeks 56–64): RL & Evolutionary Optimization
-
-- **Agent Lightning** offline RL on trace logs (reward events: success, token/ms savings, safety
-  penalties).
-- **Evolver** in introspector for perf (GPU kernels, data transforms) with Pareto selection.
-- **PO Policy Training:**
-  - PVPO/DCPO for REFRAG stability.
-  - GRPO-RoC for reasoning calibration.
-  - ARPO for agent routing preferences.
-  - TreePO for planner branching.
-  - MixGRPO/DuPO for exploration balance.  
-    **Exit**: ↑pass@1/↑pass@K, ↓p95 latency/cost, zero safety regressions, stable policy
-    improvements.
+### Phase G (Weeks 44–52): Advanced RAG & Ingestion
+**Goal:** Metadata RAG + automated ingestion.  
+**Deliverables:**
+- Metadata-based retrieval (Tensorlake-style)
+- Firecrawl (web crawl/extract)
+- Gitingest (repo digests)  
+**Exit Criteria:**
+- Faster, more accurate RAG vs baseline
+- URL/repo ingestion → Q&A with citations
 
 ---
 
-### Phase J (Weeks 64–72): Interop & Enterprise Backends
-
-- MCP/Bedrock backend; Agentic Web handshake.
-- **Agent Squad runtime adapter (TS+Py)** with Studio panel.
-- SuperAGI/AgentScope runtime (opt-in).
-- Full audits, feature flags, domain allowlists, quotas.
-- **Nebius UDR integration (optional)**: adapter for invoking UDR research runs as a Naestro task
-  (policy/trace parity; experimental). **Exit**: Enterprise-ready flows with policy compliance and
-  green SLOs.
-
----
-
-### Phase K (Weeks 72–80): Clustered Swarms
-
-- **AutoAgent** runtime adapter (clustered multi-agent execution).
-- **Agent Squad** runtime orchestration (multi-agent, routing, context maintenance).
-- Patterns: planner–worker, verifier, debate, MoA ensembles.
-- (Optional) **UDR-backed research squads**: orchestrate UDR research agents under Naestro’s Policy
-  Engine for long-horizon investigations. **Exit**: Scalable agent swarms with fault-tolerant
-  coordination and trace parity.
+### Phase H (Weeks 52–60): Scaling & Long Context
+**Goal:** Horizontal scale + REFRAG lane.  
+**Deliverables:**
+- vLLM/TRT multi-node with LMCache KV-transfer
+- Helm charts (K8s deployment)
+- REFRAG compression lane A/B harness  
+**Exit Criteria:**
+- Near-linear throughput scaling
+- P95 stable under load
+- ≥10× TTFT speedup on long-context with accuracy parity
 
 ---
 
-## 10) Engineering Quality Gates (always-on)
-
-- **Coverage**: Per-area (UI/Server/Python) 100% with branch coverage (exclusions only for
-  bootstrap).
-- **Static checks**: TS strict/mypy, ESLint, Semgrep/Bandit, supply-chain scan, IaC lint (if infra).
-- **Tests**: Unit + property + metamorphic; MSW/network stubs; golden prompt suites.
-- **Repro**: Pinned versions; snapshots for plans & prompts; deterministic seeds.
-- **Truthfulness CI**: fail PR if hallucination red-team suite regresses; require citation coverage
-  and verifier pass for knowledge tests.
-- **REFRAG CI**: synthetic long-context suite (exact-answer sets); block merges if TTFT
-  regression >X% at target compression (k=16) or accuracy delta >Y%.
-- **PO CI**: policy stability tests (variance thresholds), sample efficiency checks, accuracy
-  regression gates.
+### Phase I (Weeks 60–68): Agentic RAG
+**Goal:** Multi-agent retrieval & verification.  
+**Deliverables:**
+- Researcher/Validator agents
+- Multi-hop query expansion + evidence synth  
+**Exit Criteria:**
+- Complex multi-source Qs solved
+- Full trace in Studio UI
 
 ---
 
-## 11) File/Module Backlog (next PRs)
+## 7) Observability Schema (OTel + Prometheus)
 
-- `schemas/plan.schema.json`
-- `orchestrator/planner.py` + tests
-- `router/policy.yaml` + `policy/engine.ts` + Studio consent banners
-- `registry/tools.json` + adapters
-  (MCP/HTTP/CLI/DB/Browser/PDF/ASR/TTS/SEO/Geo/n8n/Nango/Firecrawl/DIA/Gitingest)
-- `integrations/graphiti/*` writers/retrievers
-- `evaluators/*` harness (code/factuality/safety/latency/cost)
-- `self_pr/bot.ts` + `.github/workflows/canary.yml` + rollback
-- `voice/*` (ASR/TTS, streaming UI), `vision/*` (OCR/table/latex)
-- `studio/*` (Plan preview, policy notices, memory timeline, evaluator panels)
-- `integrations/lmcache/*` (KV transfer), `engines/vllm|trtllm|sglang/*`
-- `runtimes/{langgraph,crewai,agentscope,autoagent,superagi,agent-squad}/*` adapters
-- `verifier/*` (claim-checker, abstention, CoVe prompts, calibration)
-- `evidence/*` (Firecrawl/Gitingest/GraphRAG artifact store + provenance signing)
-- `refrag/encoder/*` (lightweight encoder + projection, training scripts)
-- `refrag/controller/*` (compression policy, expansion heuristics/RL, router hook)
-- `refrag/inference-hooks/*` (vLLM/TRT-LLM embedding injection, mixed-input API)
-- `refrag/ab_harness/*` (baseline vs REFRAG, metrics exporters)
-- `agentops/*` (capability/trajectory/final-response evaluators, HITL gate, autorater prompts,
-  metrics exporters)
-- `contracts/*` (schemas for task contracts, negotiation/feedback iteration model, subcontract
-  rules; Planner/Policy integration)
-- `agentic_rag/*` (iterative retrieval agents, validator agents, orchestration glue to Evidence
-  Store/Verifier)
-- `po_policies/*` (PVPO, DCPO, GRPO-RoC, ARPO, TreePO, MixGRPO, DuPO implementations, tests,
-  benchmarks).
-- `integrations/interop/finllm-apps/*` (optional import/runner for selected flows; mapping to
-  Plan.json; policy-gated execution; trace adapters).
-- `integrations/udr/*` (Nebius UDR adapter: request schema, result ingestion to Evidence Store,
-  Studio action to launch/monitor UDR jobs; marked experimental)
+Every LLM span must include:
+- `llm.provider`, `llm.model`
+- `llm.input_tokens`, `llm.output_tokens`
+- `llm.cost_usd`, `llm.latency_ms`
+- `llm.retry_count`, `llm.fallback_provider`
+- `llm.cache_hit`, `llm.verifier_pass`
+- `llm.citation_count`
+- `run.id`, `plan.step`, `agent.role`
 
-_All new modules must ship with tests, docs, and coverage; merges blocked if any scope <100%._
+**Prometheus exemplars:** allow direct trace drilldowns in Grafana.
 
 ---
 
-## 12) Example Use-Cases Unlocked
+## 8) Caching & Dedup (MVP specifics)
 
-- **End-to-end repo creation** from a spec (code, tests, CI, container, deploy, docs).
-- **PDF data extraction** (financial/maths) to tables/charts with sanity checks.
-- **SEO/Geo audits** — crawl, analyze, propose changes, open PRs.
-- **Voice-driven sprints** — stand-ups, issue updates, PR summaries, plan edits (now multi-speaker
-  DIA for agent debates).
-- **n8n Pipelines** — Reddit→Claude→Telegram, email responders, content reposters.
-- **Metadata-RAG** — bank statements, contracts, logs filtered by page type.
-- **SaaS automations** — HubSpot→Slack→GitHub via Nango in one click.
-- **Full-site ingestion** — Firecrawl crawl/extract to vector/graph stores.
-- **Agent swarms** — AutoAgent clustered multi-agent runs.
-- **Codebase Q&A with guarantees** — ingest a GitHub repo via Gitingest → ask questions with
-  citations to specific files/lines; verifier blocks answers without evidence.
-- **Whole-report reasoning at speed** — REFRAG lets local models read entire docs/logs with accuracy
-  parity and dramatically lower latency/cost.
-- **Complex, evolving knowledge tasks** — Agentic RAG refines queries, decomposes steps, and
-  validates evidence before answering, increasing accuracy and explainability.
-- **High-stakes delivery** — Contract-adhering agents use precise deliverables/specs, negotiation,
-  and subcontracts to achieve production-grade outcomes.
-- **Stable expansion** — PVPO/DCPO keeps REFRAG compression accurate under long-context stress.
-- **Reasoning calibration** — GRPO-RoC improves correctness in deep reasoning tasks.
-- **Planner pruning** — TreePO reduces branching explosion.
-- **Exploration balance** — MixGRPO/DuPO enhances adaptive search.
-- **Agent Squad integration** — multi-agent orchestration with intelligent routing and context
-  maintenance, running under Naestro policy/trace parity.
-- **Cross-framework financial agents** — run/reference flows from **finllm-apps** to validate
-  LangChain/LangGraph/CrewAI/AutogenAI/n8n/Make interop under Naestro’s Router + Policy Engine.
-- **Nebius UDR research runs** — configurable deep-research strategies (OpenAI-compatible Nebius
-  API + Tavily) with findings archived in the Evidence Store and cited by the Claim Verifier
-  (experimental).
+- **Redis cache**: key = hash(model + normalized_prompt + params); TTL; only deterministic (temp=0).
+- **In-flight dedup**: asyncio registry + dogpile lock.
+- **Background tasks**: non-critical ops via Celery (analytics, log export).
+- **Fallback rules**: only cache when safe; mark uncertain results.
 
 ---
 
-## 13) Risks & Mitigations
-
-- **Model drift / regression** → Golden suites, canary + rollback, evaluator gating.
-- **Cost spikes** → Local-first, budgets, adaptive routing, KV cache, batch.
-- **Data/secret exposure** → Vault leases, redaction, path/domain allowlists.
-- **Over-autonomy** → Mode gating, consent prompts, kill switches, strict policies.
-- **Supply-chain** → Lockfiles, signature verification, SBOM (optional).
-- **Hallucinations** → Retrieval-first, verifier with abstention, citation enforcement, red-team
-  tests, uncertainty calibration.
-- **REFRAG compatibility** → Works only on self-hosted open-weight models; router enforces bypass
-  for closed APIs. Fallback to baseline RAG if expansion policy uncertainty high or KPIs regress.
-- **Agentic RAG complexity** → add circuit-breakers on retrieval loops; cap retries and enforce
-  verifier coverage; fall back to baseline RAG if quality/latency regress.
-- **Contract underspecification** → require contract schemas (deliverables/specs), negotiation loop,
-  and evaluator checks before execution; block if ambiguity persists.
-- **PO stability** → DCPO clipping, variance checks, MixGRPO/DuPO exploration balance, rollback if
-  instability detected.
-- **Runtime divergence** (Agent Squad / others) → adapter conformance tests, SLO monitoring, trace
-  parity.
-- **UDR prototype quality** → the UDR repo is research-grade; restrict to non-production mode,
-  sandbox network access, and require evaluator+verifier passes before outputs are surfaced.
+## Phase J (Weeks 68–76): Enterprise Interop & Advanced Runtimes
+**Goal:** Support enterprise ecosystems + modern runtimes.  
+**Deliverables:**
+- MCP adapter for AWS Bedrock
+- Runtime adapters: Agent Squad, SuperAGI, Semantic Kernel, ADK  
+**Exit Criteria:**
+- Complex workflow runs on Agent Squad under Naestro’s policies
+- Secure delegation via Agentic Web protocol
 
 ---
 
-## 14) New Integrations (Q3–Q4 2025)
-
-**14.1 Agent Lightning — RL Fine-Tuning for Agents**  
-_Goal._ Auto-improve agent quality & cost via offline RL on Naestro traces.  
-_Scope._ Reward events (success, token/ms savings, safety penalties); shadow policies; canary.  
-_Exit._ ↑pass@K / ↓p95 latency&cost; no safety regressions.
-
-**14.2 AlphaEvolve-style Evolvers — Performance-guided Codegen**  
-_Goal._ Evo-optimization of hot paths (GPU kernels, parsers).  
-_Scope._ `introspector/evolver` + microbench evaluators; Pareto (speed/correctness/stability).  
-_Exit._ ≥10–15% speedup with 100% correctness.
-
-**14.3 AWS Bedrock AgentCore + MCP**  
-_Goal._ Optional enterprise backend for tools/memory/identity with audit.  
-_Scope._ MCP adapters; Plan→MCP tools; policy mapping.  
-_Exit._ Audit-complete reference flow with feature flags.
-
-**14.4 Agentic Web — Safe Interop with External Agents**  
-_Goal._ Safe interaction with external agents/services.  
-_Scope._ Registry, handshakes, scopes, quotas, domain allowlists; full traces in Studio.  
-_Exit._ Cross-agent tasks without policy/budget violations.
-
-**14.5 SuperAGI / AgentScope Runtime (Optional)**  
-_Goal._ Pluggable runtime alternatives to LangGraph/CrewAI.  
-_Scope._ Flow adapters; Plan.json mapping; parity tests.  
-_Exit._ Equivalent traces/SLO; opt-in profile.
-
-**14.6 Agent Squad Runtime (Optional)**  
-_Goal._ Multi-agent orchestration with intelligent routing and context maintenance.  
-_Scope._ TS+Py adapters; Studio runtime panel; parity/conformance tests vs LangGraph/AgentScope;
-policy/trace parity.  
-_Exit._ Optional runtime with green SLOs, adapter conformance, Studio trace integration.
+## Phase K (Weeks 76–84): Clustered Swarms & Self-Healing
+**Goal:** Fault-tolerant agent swarms.  
+**Deliverables:**
+- AutoAgent runtime adapter
+- Swarm patterns (debate, planner–worker)
+- Health checks, auto-respawn, re-routing  
+**Exit Criteria:**
+- 100-agent swarm completes large task despite 10% failures
+- Self-healing visible in Studio traces
 
 ---
 
-## 15) Roadmap Phases (Addenda)
-
-**Phase I — RL & Evolutionary Optimization (reinforced)**  
-Agent Lightning offline RL; Evolver with microbench suite; PO policy training.  
-_Acceptance:_ ↑pass@K & ↓p95 latency/cost; 0 safety regressions; stable PO metrics.
-
-**Phase J — Interop & Enterprise Backends (reinforced)**  
-MCP/Bedrock; Agentic Web; SuperAGI/AgentScope/Agent Squad runtimes.  
-_Acceptance:_ full audits; policy compliance; green SLOs; adapter parity.
-
-**Phase K — Clustered Swarms (reinforced)**  
-AutoAgent runtime; Agent Squad orchestration; MoA/consensus templates; resilience tests.  
-_Acceptance:_ fault-tolerant swarms with reproducible traces, policy/trace parity.
+## Phase L (Weeks 84–92): Neuro-Symbolic & Sensor Fusion
+**Goal:** Formal reasoning + multimodal real-time.  
+**Deliverables:**
+- Z3/Prolog solver tools
+- Fusion Controller: real-time multimodal streams (video/audio)  
+**Exit Criteria:**
+- Sudoku/logistics solved with 100% accuracy via solver
+- Live video → real-time description by agent
 
 ---
 
-## 16) Appendices
+## Phase M (Weeks 92–100): Federation, Tokenomics & Marketplace
+**Goal:** Decentralization + credits + ecosystem.  
+**Deliverables:**
+- Flower federated learning (router optimization)
+- Tokenomics Engine (credits per action, quotas, budget dashboards)
+- Marketplace prototype for agents/tools/skills  
+**Exit Criteria:**
+- Two Naestro instances improve routing collaboratively (no data sharing)
+- Credits deducted for every agent action
+- User rents marketplace agent successfully
 
-**A. Local Models (DGX Spark)**
+---
 
-- Llama-3.1-70B FP8 TRT-LLM — Judge/Planner
-- DeepSeek-32B — Proposer/Synth
-- Qwen-32B-AWQ — Critic/Refactor
-- GPT-OSS — open 20B/120B-class
-- **REFRAG components** — encoder+projection weights; controller; inference hooks (vLLM/TRT-LLM)
-  with mixed-input support
-- **PO Policy implementations** — PVPO, DCPO, GRPO-RoC, ARPO, TreePO, MixGRPO, DuPO
+## Phase N (Weeks 100–108): Constitutional AI & Provable Safety
+**Goal:** Safety & ethical guarantees.  
+**Deliverables:**
+- `constitution.yaml` (principles)
+- Evaluator + Policy Engine run compliance checks
+- TLA+/Coq proofs for Policy Engine & Self-PR merge  
+**Exit Criteria:**
+- Violating plan blocked by Policy Engine, reason logged
+- CI includes formal verification step; merges blocked on failure
 
-**B. Cloud Pool**
+---
 
-- GPT-4/5-class, Claude 3.7+, Gemini-2.5+, Mistral, Grok, OpenELM, LFM2 (multi-language:
-  EN/RU/ES/JP/etc.)
-- **Note:** REFRAG bypass (closed APIs).
+## Phase O (Weeks 108–116): Developer Experience & Debugging
+**Goal:** Advanced debugging & visualization.  
+**Deliverables:**
+- Time-travel debugger (rewind, branch)
+- Interactive CoT/ToT graphs in Studio  
+**Exit Criteria:**
+- Operator rewinds failing run, modifies state, resumes successfully
+- Developer bug resolution time reduced >50%
 
-**C. Key Integrations**
+---
 
-- Graphiti (memory graphs)
-- LangGraph/CrewAI/AgentScope/AutoAgent/**Agent Squad** (runtimes)
-- ART (prompt regression)
-- Parlant + VibeVoice + DIA (voice)
-- MCP (tool bus)
-- OmniNova (planner/critic)
-- Symphony (decentralized)
-- OCA (UI automation)
-- Unified API brokers
-- n8n (low-code pipelines)
-- Nango (SaaS hub)
-- Firecrawl (web ingestion)
-- Tensorlake (metadata RAG)
-- GPT-OSS (open models)
-- vLLM/LMCache (scaling stack)
-- GraphRAG/LazyGraphRAG
-- Gitingest (repo → digest for grounded code Q&A)
-- **REFRAG** (local long-context compression lane)
-- **PO Policy Layer** (preference optimization integration)
-- **Nebius UDR (Universal Deep Research)** — experimental research orchestrator (FastAPI/Next.js)
-  targeting Nebius AI Studio via OpenAI-compatible API; optional adapter in `integrations/udr/*`
-- **Awesome-Nano-Banana-images** — external curated resource list (reference-only) relevant to
-  prospective edge/embedded experimentation.
+## Phase P (Weeks 116–124): Causal, Neuromorphic & Quantum
+**Goal:** Experiment with frontier paradigms.  
+**Deliverables:**
+- Causal inference (DoWhy) in Introspector
+- Hooks for neuromorphic (Intel Loihi) & quantum (D-Wave) inference  
+**Exit Criteria:**
+- Introspector distinguishes cause vs correlation in failure analysis
+- Demo run completes on neuromorphic/quantum backend
+
+---
+
+### Key Enhancements in Phases J–P
+- **Swarms:** resilient, large-scale, explainable multi-agent collaboration.
+- **Formal logic:** provable solvers for deterministic tasks.
+- **Federation & Tokenomics:** towards a decentralized ecosystem.
+- **Governance:** constitutional AI + proofs → highest safety tier.
+- **DX:** deep debugging tools for operators.
+- **Research Track:** early neuromorphic/quantum hooks gated by feature flags.
+
+---
+
+## Phase Q (Weeks 124–132): No-Code & Hyperautomation
+**Goal:** Empower non-technical users + automate full business processes.  
+**Deliverables:**
+- Studio no-code builder (drag & drop → `Plan.json`)
+- Adapters for SAP, Salesforce, long-running workflows  
+**Exit Criteria:**
+- User builds agent (e.g., “read email → summarize”) via UI
+- Full onboarding workflow automated end-to-end
+
+---
+
+## Phase R (Weeks 132–140): Edge, Robotics & Custom Hardware
+**Goal:** Push Naestro beyond data centers.  
+**Deliverables:**
+- Lightweight agent on Jetson Thor
+- Robotics sim with DeepMind Genie 3
+- Inference adapters for custom AI chips (Broadcom, OpenAI-designed)  
+**Exit Criteria:**
+- Robot completes navigation task in sim
+- Latency cut via chip acceleration
+
+---
+
+## Phase S (Weeks 140–148): Pathways to AGI/ASI
+**Goal:** Early signs of durable general intelligence.  
+**Deliverables:**
+- Self-improving “researcher” agents (scientific discovery)
+- Long-running meta-agents monitoring/improving Naestro  
+**Exit Criteria:**
+- Research agent discovers novel algorithmic improvement
+- System shows multi-week goal-directed behavior
+
+---
+
+## Phase T (Weeks 148–156): Governance & Oversight Integration
+**Goal:** Mature human oversight layer.  
+**Deliverables:**
+- Studio module for council voting/audits
+- Auditor Agent (impact reports)  
+**Exit Criteria:**
+- Major self-PR ratified via council UI before merge
+- Auditor report integrated into governance flow
+
+---
+
+## Phase U (Weeks 156–164): Deep Explainability & Introspection
+**Goal:** Move from transparency → understanding.  
+**Deliverables:**
+- Metacognitive narratives (“I chose X because…”)
+- Causal failure graphs in debugger  
+**Exit Criteria:**
+- Every run has narrative explanation attached
+- Visual causal graph for last 5 production failures
+
+---
+
+## Phase V (Weeks 164–172): Marketplace Ecosystem Launch
+**Goal:** Vibrant third-party ecosystem.  
+**Deliverables:**
+- Public registry for agents/tools/skills
+- Tokenomics-based transactions & payouts  
+**Exit Criteria:**
+- ≥10 third-party agents available
+- First successful credit-based trade executed
+
+---
+
+## Phase W (Weeks 172–180): Full Human-AI Partnership
+**Goal:** Seamless co-planning and collaboration.  
+**Deliverables:**
+- Strategic Dialogue Engine (interactive planning UI)
+- “Co-Pilot” default mode for complex workflows  
+**Exit Criteria:**
+- Human + Naestro co-create a multi-month plan in one session
+- Significant boost in user satisfaction metrics
+
+---
+
+## Always-On Engineering Quality Gates
+
+- **Coverage:** 100% branch coverage (excl. bootstrap).
+- **Static checks:** mypy, ESLint, Semgrep/Bandit, IaC lint.
+- **Tests:** Unit, property, metamorphic, golden prompt suites.
+- **Truthfulness CI:** fail on citation/CoVe regression.
+- **REFRAG CI:** block merges on latency/accuracy regressions.
+- **Policy CI:** stability & efficiency thresholds enforced.
+- **Safety CI:** constitutional checks, Coq/TLA+ proofs.
+- **Tokenomics CI:** budget overrun sims.
+
+---
+
+## Example Use Cases (Unlocked across roadmap)
+
+- Repo creation from spec (code+tests+CI+deploy).
+- PDF → tables/charts with sanity checks.
+- SEO/Geo audits + auto-PRs.
+- Voice-driven sprints (multi-speaker agent debates).
+- SaaS automations (HubSpot→Slack→GitHub).
+- Repo ingestion → Q&A with citation-guarantees.
+- REFRAG-accelerated whole-report reasoning.
+- Federated task delegation between orgs.
+- Marketplace rentals of expert agents.
+- Strategic dialogues for corporate planning.
+
+---
+````
