@@ -2,7 +2,6 @@
 
 ## [0.2.5](https://github.com/cputer/naestro/compare/v0.2.4...v0.2.5) (2025-09-06)
 
-
 ### Features
 
 * **ui:** add jest-dom alias for vitest ([1d0b5b5](https://github.com/cputer/naestro/commit/1d0b5b5ab69f7b2ad9b87cca7cefa654fe33181c))
@@ -11,7 +10,6 @@
 * **ui:** configure vitest globals and jest-dom alias ([5bf9b76](https://github.com/cputer/naestro/commit/5bf9b76b0edc3f31d7c0f0f212e498f69e49e869))
 
 ## [0.2.4](https://github.com/cputer/naestro/compare/v0.2.3...v0.2.4) (2025-09-03)
-
 
 ### Features
 
@@ -22,7 +20,6 @@
 
 ## [0.2.3](https://github.com/cputer/naestro/compare/v0.2.2...v0.2.3) (2025-09-03)
 
-
 ### Bug Fixes
 
 * **ci:** remove root ESLint deps to resolve npm ci conflict ([2b9a26a](https://github.com/cputer/naestro/commit/2b9a26aedb2755e6a425dad019a42515874cb750))
@@ -30,13 +27,11 @@
 
 ## [0.2.2](https://github.com/cputer/naestro/compare/v0.2.1...v0.2.2) (2025-09-02)
 
-
 ### Features
 
 * report and upload UI test coverage ([628000f](https://github.com/cputer/naestro/commit/628000f306c25b46c631a839ab5a97178bf2ef27))
 * **ui:** add material-ui and emotion ([51e8cf4](https://github.com/cputer/naestro/commit/51e8cf4d9418f5c6bfcdb6ae30b8018379161ed1))
 * **ui:** add material-ui dependencies ([a0e2729](https://github.com/cputer/naestro/commit/a0e27291326c236aa4ce051892cc6f3837bd7dc6))
-
 
 ### Bug Fixes
 
@@ -44,7 +39,6 @@
 * **ui:** ensure vitest runs in CI mode ([a95ab30](https://github.com/cputer/naestro/commit/a95ab30a03f757fe855ca1a0298fad01aea04b84))
 
 ## [0.2.1](https://github.com/cputer/naestro/compare/v0.2.0...v0.2.1) (2025-09-02)
-
 
 ### Features
 
@@ -62,7 +56,6 @@
 * **ui:** integrate monaco editor component ([455c4b7](https://github.com/cputer/naestro/commit/455c4b7dd8127596c3a15ba937ab0a17c84528c6))
 * **ui:** use multi-stage nginx build ([4d3e325](https://github.com/cputer/naestro/commit/4d3e325725d80a9f174d3f68480691b4fa9ed553))
 * **ui:** use multi-stage nginx build ([e908300](https://github.com/cputer/naestro/commit/e908300ae668387fc886ebc8035553582aa89d4e))
-
 
 ### Bug Fixes
 

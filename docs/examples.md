@@ -3,12 +3,12 @@
 This repository includes small demonstrations of third-party libraries.
 
 ## Setup
+
 Install dependencies with pinned versions and run examples from the repository root:
 
 ```bash
 pip install -r requirements.lock
 ```
-
 
 ## SymPy Quadratic Solver
 
@@ -27,5 +27,6 @@ python -m src.examples.scipy_demo
 ```
 
 ## Troubleshooting
+
 - Run examples with `python -m` to ensure module imports resolve correctly.
 - If `ModuleNotFoundError` occurs, reinstall the pinned requirements.
