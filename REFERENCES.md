@@ -45,6 +45,9 @@
 - **Open Computer Agent (Browser/UI automation)** — [open-computer-agent](https://github.com/Open-Computer-Agent)
 - **FinLLM-Apps (cross-framework examples)** — https://github.com/tinztwins/finllm-apps
 
+## Awesome Lists & Catalogs
+- **Awesome-Nano-Banana-images** — https://github.com/PicoTrex/Awesome-Nano-Banana-images
+
 ## Voice / Multimodal
 - **Parlant** — [parlant-ai](https://github.com/parlant-ai)  
 - **VibeVoice** — [huggingface.co/VibeVoice](https://huggingface.co/models?search=vibevoice)  
