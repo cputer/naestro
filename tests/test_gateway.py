@@ -1,6 +1,7 @@
 import asyncio
 import contextlib
 import json
+import statistics
 
 import httpx
 import pytest
@@ -124,6 +125,47 @@ def test_kpi_metrics(monkeypatch):
     data = resp.json()
     assert resp.status_code == 200
     assert set(data.keys()) == {"latency_p95_ms", "throughput_rps"}
+
+
+def test_kpi_metrics_quantile(monkeypatch):
+    from src.gateway import main as gw
+
+    class DummyResponse:
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {"ok": True}
+
+    class DummyAsyncClient:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            pass
+
+        async def post(self, url, json):
+            return DummyResponse()
+
+    gw.REQUEST_LATENCIES[:] = []
+    gw.REQUEST_COUNT = 0
+    monkeypatch.setattr(httpx, "AsyncClient", DummyAsyncClient)
+
+    client = TestClient(app)
+    client.post("/orchestrate", json={"task": "demo"})
+    client.post("/orchestrate", json={"task": "demo"})
+
+    gw.REQUEST_LATENCIES[:] = [100.0, 1000.0]
+    gw.REQUEST_COUNT = 2
+
+    resp = client.get("/api/metrics/kpis")
+    data = resp.json()
+    expected = statistics.quantiles([100.0, 1000.0], n=100, method="inclusive")[94]
+    assert resp.status_code == 200
+    assert data["latency_p95_ms"] == pytest.approx(expected)
 
 
 @pytest.mark.slow
