@@ -23,13 +23,16 @@ See also: [References](./REFERENCES.md) for external tech and source links.
 
 ## Vision
 
-Naestro is designed to evolve into a continuously improving **Autonomous System** capable of orchestrating agents, managing tools, rewriting itself safely, and solving open-ended tasks — from research and code generation to SEO, Geo analytics, and multimodal interaction.
+Naestro is designed to evolve into a continuously improving **Autonomous System** capable of
+orchestrating agents, managing tools, rewriting itself safely, and solving open-ended tasks — from
+research and code generation to SEO, Geo analytics, and multimodal interaction.
 
 📖 Read the full [Vision](./VISION.md)
 
 ---
 
 ## Documentation
+
 - [Whitepaper](./WHITEPAPER.md)
 - [Architecture](./ARCHITECTURE.md)
 - [Single-node deployment](docs/DEPLOY_SINGLE_NODE.md)
@@ -42,35 +45,45 @@ Naestro is designed to evolve into a continuously improving **Autonomous System*
 - [No-Replit deployment](docs/NO_REPLIT_DEPLOY.md)
 
 ### Scale-out from single node
-Naestro runs great on a single DGX Spark desktop. When you’re ready to expand across multiple desktops (“cells”), see [Multi-node deployment](docs/DEPLOY_MULTI_NODE.md). Cells register with the router; the scheduler places steps by VRAM headroom, temperature, and queue pressure—local-first with cloud spillover only when needed.
+
+Naestro runs great on a single DGX Spark desktop. When you’re ready to expand across multiple
+desktops (“cells”), see [Multi-node deployment](docs/DEPLOY_MULTI_NODE.md). Cells register with the
+router; the scheduler places steps by VRAM headroom, temperature, and queue pressure—local-first
+with cloud spillover only when needed.
 
 ### Naestro Studio (local UI)
+
 First-party dashboard (React + Vite + Tailwind + shadcn/ui) served by Naestro Core on the DGX.  
-Real-time Live Runs, model metrics, GPU health, KV cache hit-rate, cloud spillover %, and incidents.  
-See [Studio ↔ Core API contract](docs/UI_API_CONTRACT.md) and [Single-node deployment](docs/DEPLOY_SINGLE_NODE.md).
+Real-time Live Runs, model metrics, GPU health, KV cache hit-rate, cloud spillover %, and
+incidents.  
+See [Studio ↔ Core API contract](docs/UI_API_CONTRACT.md) and
+[Single-node deployment](docs/DEPLOY_SINGLE_NODE.md).
 
 To configure the WebSocket base URL during build, run:
 
     VITE_SOCKET_BASE_URL=https://naestro.example.com npm run build
 
 ### VS Code Extension (Qoder-style)
-A lightweight extension that talks to Naestro Core (/api/runs, /ws/live) to refactor code, explain errors, and generate tests **without leaving the IDE**.  
+
+A lightweight extension that talks to Naestro Core (/api/runs, /ws/live) to refactor code, explain
+errors, and generate tests **without leaving the IDE**.  
 Spec and scaffolding guidance in [VS Code Extension](docs/VS_CODE_EXTENSION.md).
 
 ---
 
 ## ✨ Features
 
-- **Agentic Orchestration** — multi-phase workflows you can trace and audit.  
-- **Multi-Model Routing** — cost/latency-aware routes across NIM, vLLM, and a small model tier.  
-- **RAG on Postgres + pgvector** — BM25 + cosine + feedback reranker.  
-- **Secure Sandbox** — Docker-executed verification with seccomp + no-network.  
-- **PII Calibration** — Shannon entropy thresholds with a 550-item dataset.  
-- **Observability First** — OTEL traces, Prometheus metrics, Grafana dashboards.  
+- **Agentic Orchestration** — multi-phase workflows you can trace and audit.
+- **Multi-Model Routing** — cost/latency-aware routes across NIM, vLLM, and a small model tier.
+- **RAG on Postgres + pgvector** — BM25 + cosine + feedback reranker.
+- **Secure Sandbox** — Docker-executed verification with seccomp + no-network.
+- **PII Calibration** — Shannon entropy thresholds with a 550-item dataset.
+- **Observability First** — OTEL traces, Prometheus metrics, Grafana dashboards.
 - **CI/CD** — GitHub Actions with healthchecks and hooks for shadow/canary logic.
 - **Interactive Web UI** — Vite-powered React dashboard with Monaco editor.
 - **SymPy & SciPy Demos** — quadratic solving and sine integration.
-- **Firecrawl Web Ingestion** — crawl sites with policy controls, evaluate coverage, extract headings, and embed pages ([docs](docs/integrations/firecrawl.md)).
+- **Firecrawl Web Ingestion** — crawl sites with policy controls, evaluate coverage, extract
+  headings, and embed pages ([docs](docs/integrations/firecrawl.md)).
 
 See the [User Manual](docs/USER_MANUAL.md) for a complete guide.
 
@@ -78,9 +91,11 @@ See the [User Manual](docs/USER_MANUAL.md) for a complete guide.
 
 ## 🚀 Usage Scenarios
 
-- **RAG-based question answering** — retrieve documents and synthesize answers through LangGraph-style workflows.  
-- **Multi-model routing** — pick between NIM, vLLM, and small LLMs based on cost or latency targets.  
-- **Sandbox verification** — execute snippets inside a seccomp-restricted Docker container with no network access.  
+- **RAG-based question answering** — retrieve documents and synthesize answers through
+  LangGraph-style workflows.
+- **Multi-model routing** — pick between NIM, vLLM, and small LLMs based on cost or latency targets.
+- **Sandbox verification** — execute snippets inside a seccomp-restricted Docker container with no
+  network access.
 
 ---
 
@@ -107,7 +122,7 @@ Install SciPy for numeric demos:
 
     pip install scipy
 
-If enabling the inference profile (NIM/SLM from nvcr.io/*), authenticate first:
+If enabling the inference profile (NIM/SLM from nvcr.io/\*), authenticate first:
 
     docker login nvcr.io
     # Use your NVIDIA NGC API key/token
@@ -205,10 +220,10 @@ MIT — see [License](LICENSE).
 
 ## Compatibility Matrix
 
-| Component          | Version | Compatible With                  |
-|--------------------|---------|----------------------------------|
-| Core Orchestrator  | v1.4.x  | Studio v0.9+, Providers v0.6+   |
-| Studio (UI)        | v0.9.x  | Core v1.4+, Graphiti v0.3+      |
-| Providers schema   | v0.6+   | Core v1.4+                      |
+| Component         | Version | Compatible With               |
+| ----------------- | ------- | ----------------------------- |
+| Core Orchestrator | v1.4.x  | Studio v0.9+, Providers v0.6+ |
+| Studio (UI)       | v0.9.x  | Core v1.4+, Graphiti v0.3+    |
+| Providers schema  | v0.6+   | Core v1.4+                    |
 
 > Automated updates via Dependabot.
