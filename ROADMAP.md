@@ -216,11 +216,18 @@ ___
 
 ## 6) Orchestration & Models
 
-- **Local (DGX Spark)**  
-  - Llama-3.1-70B FP8 TRT-LLM: Judge/Planner (batching, KV cache).  
-  - DeepSeek-32B: Proposer/Synth (fast code/reasoning).  
-  - Qwen-32B-AWQ: Critic/Refactor (low VRAM).  
-  - GPT-OSS 20B/120B: open GPT-level local-first options.  
+### Architecture Note (2025 LLM Families)
+
+**Versioning Policy.** Router selects the most recent stable release per model
+family (e.g., DeepSeek‑V3 → V3.1, Llama‑3.2 → Llama‑4). Older versions stay in
+the registry for reproducibility but are deprioritized. If a family is missing
+locally, fall back to cloud APIs while respecting REFRAG routing rules.
+
+- **Local (DGX Spark)**
+  - Llama-3.1-70B FP8 TRT-LLM: Judge/Planner (batching, KV cache).
+  - DeepSeek-32B: Proposer/Synth (fast code/reasoning).
+  - Qwen-32B-AWQ: Critic/Refactor (low VRAM).
+  - GPT-OSS 20B/120B: open GPT-level local-first options.
   - **REFRAG Compression Lane (local only):** lightweight encoder + projection that compresses retrieved chunks into dense embeddings consumed by local decoders; RL/heuristic expansion preserves critical spans; requires vLLM/TRT-LLM hook for mixed inputs.  
   - **PO Policy Layer:** preference optimization methods integrated (PVPO, DCPO, GRPO-RoC; ARPO, TreePO, MixGRPO, DuPO).  
 
