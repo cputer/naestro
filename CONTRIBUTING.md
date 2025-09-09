@@ -4,6 +4,7 @@
 - Breaking changes: open an **RFC** issue before implementation.
 - Add/update tests or validation scripts for logic changes.
 - Keep `providers.yaml` schema-valid (`npm run validate:providers`).
+- The canonical roadmap lives in `ROADMAP.md`; update it when changes affect project direction.
 
 ## Prerequisites
 
