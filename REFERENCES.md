@@ -41,8 +41,9 @@
 - **Nango (SaaS API Hub)** — [nangohq/nango](https://github.com/NangoHQ/nango)  
 - **MCP (Model Context Protocol)** — [modelcontextprotocol](https://github.com/modelcontextprotocol)  
 - **OmniNova** — [omninova-ai](https://github.com/topics/omninova-ai) *(community repos, no single canonical yet)*  
-- **Symphony (Decentralized orchestration)** — [symfonic-ai](https://github.com/symfonic-ai) *(early stage)*  
-- **Open Computer Agent (Browser/UI automation)** — [open-computer-agent](https://github.com/Open-Computer-Agent)  
+- **Symphony (Decentralized orchestration)** — [symfonic-ai](https://github.com/symfonic-ai) *(early stage)*
+- **Open Computer Agent (Browser/UI automation)** — [open-computer-agent](https://github.com/Open-Computer-Agent)
+- **FinLLM-Apps (cross-framework examples)** — https://github.com/tinztwins/finllm-apps
 
 ## Voice / Multimodal
 - **Parlant** — [parlant-ai](https://github.com/parlant-ai)  
