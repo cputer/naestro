@@ -252,6 +252,7 @@ locally, fall back to cloud APIs while respecting REFRAG routing rules.
 - **Prompt/Data-Ops**: ART prompt regression tracking, dataset curation, result drift detection.
 - **Workflow Runtimes**: Interop with **LangGraph/CrewAI/AgentScope/AutoAgent/Agent Squad** as optional backends for complex tool flows (still governed by Naestro policy/router).
 - **Interop Examples**: **finllm-apps** — cross-framework playground (LangChain/LangGraph/CrewAI/AutogenAI/n8n/Make) showcasing real financial agent apps; useful for validating Naestro runtime adapters and policy/trace parity.
+- **Edge resources catalog (reference-only)**: **Awesome-Nano-Banana-images** — curated list of SBC/device OS images; *not a production dependency*.
 - **Unified API brokers**: Single-key providers for broad API/tool coverage (RapidAPI-style).
 - **n8n Integration**: Export Naestro workflows to n8n YAML, enabling low-code automation (email agents, Telegram bots, Reddit pipelines).  
 - **Web Ingestion**: **Firecrawl** for crawl→extract→chunk→index pipelines with robots.txt compliance and selector-based extraction.  
@@ -555,3 +556,4 @@ AutoAgent runtime; Agent Squad orchestration; MoA/consensus templates; resilienc
 - **REFRAG** (local long-context compression lane)
 - **PO Policy Layer** (preference optimization integration)
 - **Nebius UDR (Universal Deep Research)** — experimental research orchestrator (FastAPI/Next.js) targeting Nebius AI Studio via OpenAI-compatible API; optional adapter in `integrations/udr/*`
+- **Awesome-Nano-Banana-images** — external curated resource list (reference-only) relevant to prospective edge/embedded experimentation.
