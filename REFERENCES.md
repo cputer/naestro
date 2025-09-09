@@ -1,5 +1,17 @@
 # Naestro Roadmap — Master Tech Reference List
 
+## LLM Architectures
+
+- **DeepSeek-V3 / R1** — [deepseek-ai/DeepSeek-V3](https://github.com/deepseek-ai/DeepSeek-V3)
+- **OLMo 2** — [allenai/OLMo](https://github.com/allenai/OLMo)
+- **Gemma 3** — [ai.google/discover/gemma](https://ai.google/discover/gemma/)
+- **Mistral Small 3.1** — [mistral.ai/news/mistral-small](https://mistral.ai/news/mistral-small/)
+- **Llama 4** — [ai.meta.com/llama](https://ai.meta.com/llama/)
+- **Qwen3 (dense + MoE)** — [QwenLM/Qwen](https://github.com/QwenLM/Qwen)
+- **SmolLM3** — [huggingface.co/blog/smollm](https://huggingface.co/blog/smollm)
+- **Kimi 2** — [moonshot.cn](https://moonshot.cn/)
+- **GPT-OSS** — [gpt-oss](https://github.com/gpt-oss)
+
 ## Retrieval & RAG
 - **REFRAG (Long-context acceleration)** — [arXiv:2509.01092](https://arxiv.org/abs/2509.01092)  
 - **GraphRAG** — [microsoft/graphrag](https://github.com/microsoft/graphrag)  
