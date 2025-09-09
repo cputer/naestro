@@ -40,6 +40,29 @@ def test_run(orch_module, monkeypatch):
     assert data["model_url"] == "http://slm"
 
 
+def test_run_memory_error_reroutes(orch_module, monkeypatch):
+    monkeypatch.setenv("SLM_BASE_URL", "http://slm")
+    app = orch_module.app
+    workflow_app = orch_module.workflow_app
+
+    def raise_mem(_state):
+        raise MemoryError
+
+    monkeypatch.setattr(workflow_app, "invoke", raise_mem)
+    called = {"flag": False}
+
+    def fake_oom_guard():
+        called["flag"] = True
+        return True
+
+    monkeypatch.setattr(orch_module, "oom_guard", fake_oom_guard)
+    client = TestClient(app)
+    resp = client.post("/run", json={"input": "hello"})
+    assert resp.status_code == 500
+    assert resp.json()["detail"] == "Rerouted to cloud due to OOM"
+    assert called["flag"]
+
+
 def test_run_no_model_endpoints(orch_module, monkeypatch):
     monkeypatch.delenv("SLM_BASE_URL", raising=False)
     monkeypatch.delenv("VLLM_BASE_URL", raising=False)
