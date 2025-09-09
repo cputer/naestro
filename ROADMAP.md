@@ -248,11 +248,12 @@ ___
 - **n8n Integration**: Export Naestro workflows to n8n YAML, enabling low-code automation (email agents, Telegram bots, Reddit pipelines).  
 - **Web Ingestion**: **Firecrawl** for crawl→extract→chunk→index pipelines with robots.txt compliance and selector-based extraction.  
 - **Knowledge**: **GraphRAG/LazyGraphRAG** modes for graph-aware retrieval.  
-- **RAG Quality**: **Tensorlake-style metadata augmentation** (page type/table vs text/section tags) for cheaper, faster, more accurate retrieval.  
-- **Scaling**: **vLLM** (paged/prefix/speculative) + **TensorRT-LLM**; **LMCache/NIXL** KV transfer; multi-node disaggregated prefill/decode.  
-- **Repo Ingestion**: **Gitingest** to turn any Git repo (or `github.com → gitingest.com` URL swap) into a prompt-friendly **repository digest** (code + docs), feeding **Evidence Store** for coding agents.  
-- **Hallucination-Resistant Generation (HRG)**: Retrieval-first planning, **self-consistency**, **chain-of-verification (CoVe)**, **calibrated uncertainty**, **abstention**, **structured outputs** with JSON Schema, and **tool-use preference** for factual queries.  
-- **REFRAG Long-Context Acceleration**: compression of retrieved context (k=8–32), KV/cache savings, RL/heuristic expansion of critical spans; metrics wired to Observability.  
+- **RAG Quality**: **Tensorlake-style metadata augmentation** (page type/table vs text/section tags) for cheaper, faster, more accurate retrieval.
+- **Scaling**: **vLLM** (paged/prefix/speculative) + **TensorRT-LLM**; **LMCache/NIXL** KV transfer; multi-node disaggregated prefill/decode.
+- **Repo Ingestion**: **Gitingest** to turn any Git repo (or `github.com → gitingest.com` URL swap) into a prompt-friendly **repository digest** (code + docs), feeding **Evidence Store** for coding agents.
+- **Hallucination-Resistant Generation (HRG)**: Retrieval-first planning, **self-consistency**, **chain-of-verification (CoVe)**, **calibrated uncertainty**, **abstention**, **structured outputs** with JSON Schema, and **tool-use preference** for factual queries.
+- **REFRAG Long-Context Acceleration**: compression of retrieved context (k=8–32), KV/cache savings, RL/heuristic expansion of critical spans; metrics wired to Observability.
+- **Research Orchestration (Nebius UDR prototype)**: FastAPI backend + Next.js frontend configurable strategies for deep research; integrates via OpenAI-compatible Nebius API and Tavily search (experimental; non-production).
 - **PO-Optimized Policies**: stability, efficiency, accuracy gains across reasoning, planning, routing, expansion.
 
 ---
@@ -366,18 +367,20 @@ ___
 ---
 
 ### Phase J (Weeks 64–72): Interop & Enterprise Backends
-- MCP/Bedrock backend; Agentic Web handshake.  
-- **Agent Squad runtime adapter (TS+Py)** with Studio panel.  
-- SuperAGI/AgentScope runtime (opt-in).  
-- Full audits, feature flags, domain allowlists, quotas.  
+- MCP/Bedrock backend; Agentic Web handshake.
+- **Agent Squad runtime adapter (TS+Py)** with Studio panel.
+- SuperAGI/AgentScope runtime (opt-in).
+- Full audits, feature flags, domain allowlists, quotas.
+- **Nebius UDR integration (optional)**: adapter for invoking UDR research runs as a Naestro task (policy/trace parity; experimental).
 **Exit**: Enterprise-ready flows with policy compliance and green SLOs.
 
 ---
 
 ### Phase K (Weeks 72–80): Clustered Swarms
-- **AutoAgent** runtime adapter (clustered multi-agent execution).  
-- **Agent Squad** runtime orchestration (multi-agent, routing, context maintenance).  
-- Patterns: planner–worker, verifier, debate, MoA ensembles.  
+- **AutoAgent** runtime adapter (clustered multi-agent execution).
+- **Agent Squad** runtime orchestration (multi-agent, routing, context maintenance).
+- Patterns: planner–worker, verifier, debate, MoA ensembles.
+- (Optional) **UDR-backed research squads**: orchestrate UDR research agents under Naestro’s Policy Engine for long-horizon investigations.
 **Exit**: Scalable agent swarms with fault-tolerant coordination and trace parity.
 
 ___
@@ -412,8 +415,9 @@ ___
 - `refrag/encoder/*` (lightweight encoder + projection, training scripts)  
 - `refrag/controller/*` (compression policy, expansion heuristics/RL, router hook)  
 - `refrag/inference-hooks/*` (vLLM/TRT-LLM embedding injection, mixed-input API)  
-- `refrag/ab_harness/*` (baseline vs REFRAG, metrics exporters)  
-- `po_policies/*` (PVPO, DCPO, GRPO-RoC, ARPO, TreePO, MixGRPO, DuPO implementations, tests, benchmarks).  
+- `refrag/ab_harness/*` (baseline vs REFRAG, metrics exporters)
+- `po_policies/*` (PVPO, DCPO, GRPO-RoC, ARPO, TreePO, MixGRPO, DuPO implementations, tests, benchmarks).
+- `integrations/udr/*` (Nebius UDR adapter: request schema, result ingestion to Evidence Store, Studio action to launch/monitor UDR jobs; marked experimental)
 
 _All new modules must ship with tests, docs, and coverage; merges blocked if any scope <100%._
 
@@ -437,6 +441,7 @@ _All new modules must ship with tests, docs, and coverage; merges blocked if any
 - **Planner pruning** — TreePO reduces branching explosion.  
 - **Exploration balance** — MixGRPO/DuPO enhances adaptive search.  
 - **Agent Squad integration** — multi-agent orchestration with intelligent routing and context maintenance, running under Naestro policy/trace parity.
+- **Nebius UDR research runs** — configurable deep-research strategies (OpenAI-compatible Nebius API + Tavily) with findings archived in the Evidence Store and cited by the Claim Verifier (experimental).
 
 ---
 
@@ -451,6 +456,7 @@ _All new modules must ship with tests, docs, and coverage; merges blocked if any
 - **REFRAG compatibility** → Works only on self-hosted open-weight models; router enforces bypass for closed APIs. Fallback to baseline RAG if expansion policy uncertainty high or KPIs regress.  
 - **PO stability** → DCPO clipping, variance checks, MixGRPO/DuPO exploration balance, rollback if instability detected.  
 - **Runtime divergence** (Agent Squad / others) → adapter conformance tests, SLO monitoring, trace parity.
+- **UDR prototype quality** → the UDR repo is research-grade; restrict to non-production mode, sandbox network access, and require evaluator+verifier passes before outputs are surfaced.
 
 ---
 
@@ -535,6 +541,7 @@ AutoAgent runtime; Agent Squad orchestration; MoA/consensus templates; resilienc
 - GPT-OSS (open models)  
 - vLLM/LMCache (scaling stack)  
 - GraphRAG/LazyGraphRAG  
-- Gitingest (repo → digest for grounded code Q&A)  
-- **REFRAG** (local long-context compression lane)  
+- Gitingest (repo → digest for grounded code Q&A)
+- **REFRAG** (local long-context compression lane)
 - **PO Policy Layer** (preference optimization integration)
+- **Nebius UDR (Universal Deep Research)** — experimental research orchestrator (FastAPI/Next.js) targeting Nebius AI Studio via OpenAI-compatible API; optional adapter in `integrations/udr/*`
