@@ -6,6 +6,8 @@ updates:
   - package-ecosystem: "npm"
     directory: "/ui"
     schedule: { interval: "weekly" }
+    ignore:
+      - dependency-name: "@vitejs/plugin-react"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule: { interval: "weekly" }
