@@ -1,6 +1,5 @@
 # Naestro ROADMAP — Evolving Autonomous System (ASI Trajectory)
 
----
 
 # North Star
 
