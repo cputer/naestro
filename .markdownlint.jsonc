@@ -1,0 +1,21 @@
+{
+  // Enable all rules by default
+  "default": true,
+
+  // Relax specific rules
+  "MD007": false,
+  "MD013": false,
+  "MD024": false,
+  "MD029": false,
+  "MD033": false,
+  "MD041": false,
+  "MD046": false,
+
+  // Enforce spacing and URL rules
+  "MD012": true,
+  "MD022": true,
+  "MD026": true,
+  "MD031": true,
+  "MD032": true,
+  "MD034": true
+}
