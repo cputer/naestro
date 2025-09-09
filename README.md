@@ -17,7 +17,7 @@ Naestro is an AI Orchestrator for multi-model collaboration.
 ➡️ See the [Roadmap](./ROADMAP.md)  
 🌌 Explore the [Vision](./VISION.md)
 
-See also: [REFERENCES.md](./REFERENCES.md) for external tech and source links.
+See also: [References](./REFERENCES.md) for external tech and source links.
 
 ---
 
