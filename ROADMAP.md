@@ -1,5 +1,4 @@
-Naestro ROADMAP — Evolving Autonomous System (ASI Trajectory)
-(Quad-bounded window • Part 1/4)
+# Naestro ROADMAP — Evolving Autonomous System (ASI Trajectory)
 
 ---
 
