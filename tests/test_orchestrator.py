@@ -63,6 +63,22 @@ def test_run_memory_error_reroutes(orch_module, monkeypatch):
     assert called["flag"]
 
 
+def test_run_invoke_error(orch_module, monkeypatch):
+    monkeypatch.setenv("SLM_BASE_URL", "http://slm")
+    app = orch_module.app
+    workflow_app = orch_module.workflow_app
+
+    def raise_runtime(_state):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(workflow_app, "invoke", raise_runtime)
+
+    client = TestClient(app)
+    resp = client.post("/run", json={"input": "hello"})
+    assert resp.status_code == 500
+    assert resp.json()["detail"] == "boom"
+
+
 def test_run_no_model_endpoints(orch_module, monkeypatch):
     monkeypatch.delenv("SLM_BASE_URL", raising=False)
     monkeypatch.delenv("VLLM_BASE_URL", raising=False)
