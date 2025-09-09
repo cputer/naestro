@@ -249,9 +249,10 @@ locally, fall back to cloud APIs while respecting REFRAG routing rules.
 - **Voice**: Parlant + Whisper/Zonos, **VibeVoice** (long-form/emotional TTS), **DIA TTS (multi-speaker one-pass dialogue)**, multilingual ASR, streaming TTS, barge-in, voice memory.  
 - **Vision/PDF**: OCR tables → structured JSON; formula/LaTeX extraction; chart/table synthesis.  
 - **SEO/Geo**: Crawler/SERP parsers, sitemap audits, NER/geocoding, local ranking diffing; content/robots PRs.  
-- **Prompt/Data-Ops**: ART prompt regression tracking, dataset curation, result drift detection.  
-- **Workflow Runtimes**: Interop with **LangGraph/CrewAI/AgentScope/AutoAgent/Agent Squad** as optional backends for complex tool flows (still governed by Naestro policy/router).  
-- **Unified API brokers**: Single-key providers for broad API/tool coverage (RapidAPI-style).  
+- **Prompt/Data-Ops**: ART prompt regression tracking, dataset curation, result drift detection.
+- **Workflow Runtimes**: Interop with **LangGraph/CrewAI/AgentScope/AutoAgent/Agent Squad** as optional backends for complex tool flows (still governed by Naestro policy/router).
+- **Interop Examples**: **finllm-apps** — cross-framework playground (LangChain/LangGraph/CrewAI/AutogenAI/n8n/Make) showcasing real financial agent apps; useful for validating Naestro runtime adapters and policy/trace parity.
+- **Unified API brokers**: Single-key providers for broad API/tool coverage (RapidAPI-style).
 - **n8n Integration**: Export Naestro workflows to n8n YAML, enabling low-code automation (email agents, Telegram bots, Reddit pipelines).  
 - **Web Ingestion**: **Firecrawl** for crawl→extract→chunk→index pipelines with robots.txt compliance and selector-based extraction.  
 - **Knowledge**: **GraphRAG/LazyGraphRAG** modes for graph-aware retrieval.  
@@ -421,9 +422,10 @@ ___
 - `evidence/*` (Firecrawl/Gitingest/GraphRAG artifact store + provenance signing)  
 - `refrag/encoder/*` (lightweight encoder + projection, training scripts)  
 - `refrag/controller/*` (compression policy, expansion heuristics/RL, router hook)  
-- `refrag/inference-hooks/*` (vLLM/TRT-LLM embedding injection, mixed-input API)  
+- `refrag/inference-hooks/*` (vLLM/TRT-LLM embedding injection, mixed-input API)
 - `refrag/ab_harness/*` (baseline vs REFRAG, metrics exporters)
 - `po_policies/*` (PVPO, DCPO, GRPO-RoC, ARPO, TreePO, MixGRPO, DuPO implementations, tests, benchmarks).
+- `integrations/interop/finllm-apps/*` (optional import/runner for selected flows; mapping to Plan.json; policy-gated execution; trace adapters).
 - `integrations/udr/*` (Nebius UDR adapter: request schema, result ingestion to Evidence Store, Studio action to launch/monitor UDR jobs; marked experimental)
 
 _All new modules must ship with tests, docs, and coverage; merges blocked if any scope <100%._
@@ -446,8 +448,9 @@ _All new modules must ship with tests, docs, and coverage; merges blocked if any
 - **Stable expansion** — PVPO/DCPO keeps REFRAG compression accurate under long-context stress.  
 - **Reasoning calibration** — GRPO-RoC improves correctness in deep reasoning tasks.  
 - **Planner pruning** — TreePO reduces branching explosion.  
-- **Exploration balance** — MixGRPO/DuPO enhances adaptive search.  
+- **Exploration balance** — MixGRPO/DuPO enhances adaptive search.
 - **Agent Squad integration** — multi-agent orchestration with intelligent routing and context maintenance, running under Naestro policy/trace parity.
+- **Cross-framework financial agents** — run/reference flows from **finllm-apps** to validate LangChain/LangGraph/CrewAI/AutogenAI/n8n/Make interop under Naestro’s Router + Policy Engine.
 - **Nebius UDR research runs** — configurable deep-research strategies (OpenAI-compatible Nebius API + Tavily) with findings archived in the Evidence Store and cited by the Claim Verifier (experimental).
 
 ---
