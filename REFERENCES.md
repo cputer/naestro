@@ -1,112 +1,86 @@
-# Naestro Roadmap — Master Tech Reference List
+# REFERENCES
 
-## LLM Architectures
-
-- **DeepSeek-V3 / R1** — [deepseek-ai/DeepSeek-V3](https://github.com/deepseek-ai/DeepSeek-V3)
-- **OLMo 2** — [allenai/OLMo](https://github.com/allenai/OLMo)
-- **Gemma 3** — [ai.google/discover/gemma](https://ai.google/discover/gemma/)
-- **Mistral Small 3.1** — [mistral.ai/news/mistral-small](https://mistral.ai/news/mistral-small/)
-- **Llama 4** — [ai.meta.com/llama](https://ai.meta.com/llama/)
-- **Qwen3 (dense + MoE)** — [QwenLM/Qwen](https://github.com/QwenLM/Qwen)
-- **SmolLM3** — [huggingface.co/blog/smollm](https://huggingface.co/blog/smollm)
-- **Kimi 2** — [moonshot.cn](https://moonshot.cn/)
-- **GPT-OSS** — [gpt-oss](https://github.com/gpt-oss)
-
-## Retrieval & RAG
-
-- **REFRAG (Long-context acceleration)** — [arXiv:2509.01092](https://arxiv.org/abs/2509.01092)
-- **GraphRAG** — [microsoft/graphrag](https://github.com/microsoft/graphrag)
-- **LazyGraphRAG** (variant) —
-  [microsoft/graphrag (lazy mode branch)](https://github.com/microsoft/graphrag)
-- **Firecrawl (Web Crawl & Extract)** —
-  [mendableai/firecrawl](https://github.com/mendableai/firecrawl)
-- **Gitingest (Repo → Digest)** —
-  [kurtosis-tech/gitingest](https://github.com/kurtosis-tech/gitingest)
-- **Tensorlake (Metadata-RAG)** —
-  [tensorlakeai/tensorlake](https://github.com/tensorlakeai/tensorlake)
-- **Agentic RAG (overview & patterns)** — (internal) _Agents Companion, Feb 2025 PDF_
-
-## Multi-Agent Runtimes
-
-- **AgentScope** — [agentscope/agentscope](https://github.com/agentscope/agentscope)
-- **AutoAgent** — [OpenBMB/AutoAgent](https://github.com/OpenBMB/AutoAgent)
-- **Agent Squad (AWS Labs)** — [awslabs/agent-squad](https://github.com/awslabs/agent-squad)
-- **SuperAGI** — [TransformerOptimus/SuperAGI](https://github.com/TransformerOptimus/SuperAGI)
-- **LangGraph** — [langchain-ai/langgraph](https://github.com/langchain-ai/langgraph)
-- **CrewAI** — [joaomdmoura/crewAI](https://github.com/joaomdmoura/crewAI)
-
-## Scaling & Serving
-
-- **vLLM** — [vllm-project/vllm](https://github.com/vllm-project/vllm)
-- **SGLang** — [mlc-ai/sglang](https://github.com/mlc-ai/sglang)
-- **TensorRT-LLM** — [NVIDIA/TensorRT-LLM](https://github.com/NVIDIA/TensorRT-LLM)
-- **Triton Inference Server** —
-  [triton-inference-server/server](https://github.com/triton-inference-server/server)
-- **LMCache** — [LMCache/LMCache](https://github.com/LMCache/LMCache)
-- **NIXL** (KV transfer) — [nixl-ai/nixl](https://github.com/nixl-ai/nixl)
-
-## Orchestration / Integration
-
-- **n8n (low-code pipelines)** — [n8n-io/n8n](https://github.com/n8n-io/n8n)
-- **Nango (SaaS API Hub)** — [nangohq/nango](https://github.com/NangoHQ/nango)
-- **MCP (Model Context Protocol)** — [modelcontextprotocol](https://github.com/modelcontextprotocol)
-- **OmniNova** — [omninova-ai](https://github.com/topics/omninova-ai) _(community repos, no single
-  canonical yet)_
-- **Symphony (Decentralized orchestration)** — [symfonic-ai](https://github.com/symfonic-ai) _(early
-  stage)_
-- **Open Computer Agent (Browser/UI automation)** —
-  [open-computer-agent](https://github.com/Open-Computer-Agent)
-- **FinLLM-Apps (cross-framework examples)** — <https://github.com/tinztwins/finllm-apps>
-
-## Awesome Lists & Catalogs
-
-- **Awesome-Nano-Banana-images** — <https://github.com/PicoTrex/Awesome-Nano-Banana-images>
-
-## Voice / Multimodal
-
-- **Parlant** — [parlant-ai](https://github.com/parlant-ai)
-- **VibeVoice** — [huggingface.co/VibeVoice](https://huggingface.co/models?search=vibevoice)
-- **DIA TTS** (Dialogue TTS) —
-  [huggingface.co/DIA-TTS](https://huggingface.co/models?search=DIA-TTS)
-- **Whisper** (ASR) — [openai/whisper](https://github.com/openai/whisper)
-
-## Preference Optimization (PO) Methods
-
-- **PVPO (Proximal Vanilla Preference Optimization)** —
-  [arXiv:2402.01888](https://arxiv.org/abs/2402.01888)
-- **DCPO (Direct Contrastive Preference Optimization)** —
-  [arXiv:2405.19327](https://arxiv.org/abs/2405.19327)
-- **GRPO-RoC (Group Relative Policy Optimization with Ranking-of-Candidates)** —
-  [arXiv:2406.18587](https://arxiv.org/abs/2406.18587)
-- **ARPO (Agent Reward Preference Optimization)** —
-  [arXiv:2407.03237](https://arxiv.org/abs/2407.03237)
-- **TreePO (Tree-based Preference Optimization)** —
-  [arXiv:2408.15685](https://arxiv.org/abs/2408.15685)
-- **MixGRPO (Mixture-of-GRPO)** — [arXiv:2408.06750](https://arxiv.org/abs/2408.06750)
-- **DuPO (Dual Preference Optimization)** — [arXiv:2409.00345](https://arxiv.org/abs/2409.00345)
-
-## Agent Learning & Evolution
-
-- **Agent Lightning (Offline RL for Agents)** —
-  [huggingface.co/papers/2409.00422](https://huggingface.co/papers/2409.00422)
-- **AlphaEvolve (Evolutionary Optimization)** — [arXiv:2409.00567](https://arxiv.org/abs/2409.00567)
-
-## AgentOps & Contracts
-
-- **Agent evaluation (trajectory, final response, HITL) & multi-agent scalability** — (internal)
-  _Agents Companion, Feb 2025 PDF_
-- **Contract-adhering agents (contracts, negotiation, subcontracts, lifecycle)** — (internal)
-  _Agents Companion, Feb 2025 PDF_
-
-## Research Orchestration
-
-- **Nebius UDR (Universal Deep Research)** —
-  <https://github.com/demianarc/nebiusaistudiodeepresearch>
+This file centralizes all links to external resources referenced in the Naestro roadmap and related docs. Keep it authoritative and in sync with `docs/Naestro_ROADMAP.md`.
 
 ---
 
-# Usage
+## Retrieval & RAG
+- **REFRAG (Long-context acceleration)** — https://arxiv.org/abs/2509.01092
+- **GraphRAG** — https://github.com/microsoft/graphrag
+- **LazyGraphRAG** — https://github.com/microsoft/graphrag
+- **Firecrawl (crawl → extract → chunk → index)** — https://github.com/mendableai/firecrawl
+- **Gitingest (repo → digest)** — https://github.com/kurtosis-tech/gitingest
+- **Tensorlake (metadata-augmented RAG)** — https://github.com/tensorlakeai/tensorlake
+- **Agentic RAG (patterns/overview)** — *(internal)* Agents Companion (Feb 2025)
 
-This list is intended as the **canonical reference index** for all external tech integrated into the
-Naestro roadmap.  
-Whenever a new component is added in future phases, append its GitHub/arXiv/HF link here.
+## Scaling / Serving / Optimization
+- **vLLM** — https://github.com/vllm-project/vllm
+- **TensorRT-LLM** — https://github.com/NVIDIA/TensorRT-LLM
+- **TensorRT Model Optimizer (NVIDIA)** — https://github.com/NVIDIA/TensorRT-Model-Optimizer
+- **LMCache** — https://github.com/SafeAILab/LMCache
+- **Nixl (KV / cache transfer)** — https://github.com/nixl-ai/nixl
+- **NVIDIA DGX Spark (Marketplace)** — https://marketplace.nvidia.com/en-us/developer/dgx-spark/
+- **NVIDIA DGX Spark Datasheet (PDF)** — https://nvdam.widen.net/s/tlzm8smqjx/workstation-datasheet-dgx-spark-gtc25-spring-nvidia-us-3716899-web
+
+## Agent Runtimes / Frameworks & Interop
+- **LangGraph** — https://github.com/langchain-ai/langgraph
+- **CrewAI** — https://github.com/joaomdmoura/crewai
+- **AgentScope** — https://github.com/modelscope/agentscope
+- **AutoGen** — https://github.com/microsoft/autogen
+- **SuperAGI** — https://github.com/TransformerOptimus/SuperAGI
+- **AutoAgent (clustered swarms)** — https://github.com/SylphAI-Inc/AutoAgent
+- **Agent Squad (AWS Labs)** — https://github.com/awslabs/agent-squad
+- **Open Computer Agent (OCA)** — https://github.com/oc-agent/oc-agent
+- **OmniNova** — https://github.com/omninova-ai/omninova
+- **Symphony** — https://github.com/symphony-llm/symphony
+- **ART Prompt-Ops** — https://github.com/promptslab/ART
+- **finllm-apps (cross-framework finance agents)** — https://github.com/tinztwins/finllm-apps
+- **Nebius UDR (Universal Deep Research prototype)** — https://github.com/demianarc/nebiusaistudiodeepresearch
+- **Awesome-Nano-Banana-images (edge/device OS images; reference-only)** — https://github.com/PicoTrex/Awesome-Nano-Banana-images
+
+## Voice / Speech
+- **Parlant** — https://github.com/parlant-io
+- **VibeVoice** — https://github.com/vibevoice
+- **DIA TTS** — https://github.com/diattss
+- **Qwen3-ASR (Multilingual ASR)**  
+  - Blog — https://qwen.ai/blog?id=41e4c0  
+  - Hugging Face Demo — https://huggingface.co/spaces/Qwen/Qwen3-ASR  
+  - ModelScope Studio — https://modelscope.cn/studios/Qwen/Qwen3-ASR  
+  - API (Bailian) — https://bailian.console.alibabacloud.com/?tab=doc#/doc/  
+  - Main site — https://qwen.ai/  
+  - Model card — https://huggingface.co/Qwen/Qwen3-ASR
+
+## Safety / Policy / AuthN/Z
+- **NeMo Guardrails** — https://github.com/NVIDIA/NeMo-Guardrails
+- **Guardrails AI** — https://github.com/shreyar/guardrails
+- **OPA (Open Policy Agent)** — https://github.com/open-policy-agent/opa
+- **Casbin** — https://github.com/casbin/casbin
+- **Keycloak** — https://www.keycloak.org/
+
+## Agent Learning / RL / Evolution
+- **Agent Lightning** — https://huggingface.co/papers/2409.00422
+- **AlphaEvolve (performance-guided codegen)** — https://arxiv.org/abs/2409.00567
+- **Reinforcement Learning for ML Engineering Agents** — https://arxiv.org/abs/2509.01684
+
+## Preference Optimization (PO) — policies we reference
+- **PVPO** — https://arxiv.org/abs/2406.02800  
+- **DCPO** — https://arxiv.org/abs/2406.09275  
+- **GRPO-RoC** — https://arxiv.org/abs/2407.01599  
+- **ARPO** — https://arxiv.org/abs/2407.06580  
+- **TreePO** — https://arxiv.org/abs/2407.04012  
+- **MixGRPO** — https://arxiv.org/abs/2407.11000  
+- **DuPO** — https://arxiv.org/abs/2408.01999  
+> If your team prefers different canonical papers for these, replace links in a follow-up commit and update `po_policies/README.md`.
+
+## Federation / Causality
+- **Flower (federated learning)** — https://github.com/adap/flower
+- **DoWhy (causal inference)** — https://github.com/py-why/dowhy
+
+## Model Architecture Overviews
+- **Sebastian Raschka — The Big LLM Architecture Comparison (2025)** — https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison
+
+---
+
+Maintenance:
+- Keep this list in sync with `docs/Naestro_ROADMAP.md` sections **Integrations**, **Advanced Capabilities**, **Phases**, and **Appendices**.
+- CI link-check ensures URLs stay alive; see `.github/workflows/reference-link-check.yml`.
