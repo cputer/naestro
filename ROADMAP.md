@@ -53,7 +53,8 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
 15. **Resilience & efficiency** — Retries (Tenacity), fallback routing, Redis caching +
     dogpile/singleflight.
 16. **SLM-first efficiency** — Router defaults to small language models for lower cost and latency,
-    escalating to larger models only when needed.
+    escalating to larger models only when needed. Router may consult resources like SmolHub for up-to-date benchmarks on SLM performance/cost tradeoffs.
+
 
 ---
 
@@ -295,7 +296,6 @@ constitutional bypass.
 ### Local
 
 - **Default SLM workers:** SmolLM3 3B, Qwen2.5 3B/7B, Phi-3-mini.
-- Router escalates to larger models only when needed. Router may consult resources like SmolHub for up-to-date benchmarks on SLM performance/cost tradeoffs.
 
 ---
 
