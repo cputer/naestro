@@ -76,8 +76,14 @@ inference:
       auth_env: GOOGLE_API_KEY
       roles: [long_context]
 
+    - id: baidu_ernie_x1_1
+      provider: baidu
+      model: ernie-x1.1
+      auth_env: BAIDU_API_KEY
+      roles: [reasoning, verification]
+
 routing:
-  policy: local_first_with_cloud_spill
+  policy: local_first_with_cloud_spill  # Cloud Pool includes ERNIE X1.1 (Baidu Qianfan) for reasoning/verification, subject to API access, latency, and cost
   defaults:
     judge: llama70b_judge_dgx_a
     proposer: deepseek32b_dgx_a
