@@ -1,0 +1,31 @@
+name: Reference Link Check
+on:
+  pull_request:
+    paths:
+      - "docs/**/*.md"
+      - "REFERENCES.md"
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  linkcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install markdown-link-check
+        run: npm i -g markdown-link-check@3
+      - name: Check links in docs
+        run: |
+          set -euo pipefail
+          files="$(git ls-files 'docs/**/*.md' 'REFERENCES.md')"
+          echo "$files" | tr ' ' '\n' | while read -r f; do
+            echo "🔗 Checking $f"
+            markdown-link-check -q -c .mlc.config.json "$f"
+          done
+      - name: Upload summary
+        if: always()
+        run: echo "Link check completed" >> $GITHUB_STEP_SUMMARY
