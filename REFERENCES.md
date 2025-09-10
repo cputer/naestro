@@ -14,6 +14,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **NVIDIA — Small Language Models for Agentic AI (2025)** —
   https://www.vectrix.ai/blog-post/understanding-large-and-small-language-models-key-differences-and-applications
 - **SmolLM3** — https://huggingface.co/HuggingFaceTB/SmolLM-3B
+- **SmolHub (SLM Benchmark/Directory)** — https://www.smolhub.com/smolhub
 - **Phi-3-mini** — https://huggingface.co/microsoft/phi-3-mini-4k-instruct
 - **Qwen2.5** — https://huggingface.co/Qwen
 
