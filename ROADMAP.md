@@ -36,6 +36,7 @@ High-performance async Python backend (FastAPI, Uvicorn, asyncio) with Redis (ca
 13. **No-code enablement** — n8n/Studio flows to compose agents & tools.
 14. **Human-AI partnership** — Strategic Dialogue Engine, Oversight Council, narrative explanations.
 15. **Resilience & efficiency** — Retries (Tenacity), fallback routing, Redis caching + dogpile/singleflight.
+16. **SLM-first efficiency** — Router defaults to small language models for lower cost and latency, escalating to larger models only when needed.
 
 ---
 
@@ -119,6 +120,7 @@ flowchart TB
 
   %% ==== Models (Local) ====
   subgraph Local["Local Models"]
+    SLMs[SmolLM3 / Phi-3-mini / Qwen2.5]
     Llama[Llama-4]
     DeepSeek[DeepSeek-V3.1]
     Qwen[Qwen-32B-AWQ]
@@ -177,6 +179,9 @@ flowchart TB
   PO --> Planner
   PO --> Router
   PO --> REFRAGC
+  Router -->|default| SLMs
+  Router -->|escalate| Local
+  Router -->|escalate| Cloud
   Tokenomics --> Policy
   Fusion --> Agents
   Federation --> Router
@@ -235,7 +240,15 @@ flowchart TB
 
 ---
 
-## 6) Phased Delivery Plan
+## 6) Orchestration & Models
+
+### Local
+- **Default SLM workers:** SmolLM3 3B, Qwen2.5 3B/7B, Phi-3-mini.
+- Router escalates to larger models only when needed.
+
+---
+
+## 7) Phased Delivery Plan
 
 ### Phase A (Weeks 1–6): Foundational Backend, Planning & Policies
 **Goal:** Core API, planner, router, policies.  
@@ -358,7 +371,7 @@ flowchart TB
 
 ---
 
-## 7) Observability Schema (OTel + Prometheus)
+## 8) Observability & Metrics (OTel + Prometheus)
 
 Every LLM span must include:
 - `llm.provider`, `llm.model`
@@ -371,9 +384,11 @@ Every LLM span must include:
 
 **Prometheus exemplars:** allow direct trace drilldowns in Grafana.
 
+- **SLM Utilization KPI** — track SLM vs LLM usage and cost savings.
+
 ---
 
-## 8) Caching & Dedup (MVP specifics)
+## 9) Caching & Dedup (MVP specifics)
 
 - **Redis cache**: key = hash(model + normalized_prompt + params); TTL; only deterministic (temp=0).
 - **In-flight dedup**: asyncio registry + dogpile lock.

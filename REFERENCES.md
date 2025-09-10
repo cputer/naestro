@@ -4,11 +4,15 @@ This file centralizes all links to external resources referenced in the Naestro 
 
 ---
 
-## Models
+## Models / Architectures
 - **ERNIE X1.1 (Wave Summit 2025 release)**
   - Main site — https://ernie.baidu.com
   - Press / benchmarks — https://x.com/i/broadcasts/1
   - YouTube Launch — https://youtube.com/live/1ZHqwkg9-
+- **NVIDIA — Small Language Models for Agentic AI (2025)** — https://www.vectrix.ai/blog-post/understanding-large-and-small-language-models-key-differences-and-applications
+- **SmolLM3** — https://huggingface.co/HuggingFaceTB/SmolLM-3B
+- **Phi-3-mini** — https://huggingface.co/microsoft/phi-3-mini-4k-instruct
+- **Qwen2.5** — https://huggingface.co/Qwen
 
 ## Retrieval & RAG
 - **REFRAG (Long-context acceleration)** — https://arxiv.org/abs/2509.01092
