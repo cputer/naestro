@@ -295,7 +295,7 @@ constitutional bypass.
 ### Local
 
 - **Default SLM workers:** SmolLM3 3B, Qwen2.5 3B/7B, Phi-3-mini.
-- Router escalates to larger models only when needed.
+- Router escalates to larger models only when needed. Router may consult resources like SmolHub for up-to-date benchmarks on SLM performance/cost tradeoffs.
 
 ---
 
