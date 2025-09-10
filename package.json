@@ -5,7 +5,8 @@
     "md:lint": "markdownlint-cli2 \"**/*.md\"",
     "md:fix": "markdownlint-cli2 --fix \"**/*.md\"",
     "md:fmt": "prettier --write \"**/*.md\"",
-    "md:check": "prettier --check \"**/*.md\" && markdownlint-cli2 \"**/*.md\""
+    "md:check": "prettier --check \"**/*.md\" && markdownlint-cli2 \"**/*.md\"",
+    "test": "pytest"
   },
   "devDependencies": {
     "markdownlint-cli2": "^0.15.0",
