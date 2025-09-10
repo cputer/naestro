@@ -43,7 +43,7 @@ def test_websocket_endpoint_iteration(monkeypatch):
     monkeypatch.setattr(asyncio, "sleep", fast_sleep)
 
     async def run():
-        await gw.websocket_endpoint(DummyWebSocket())
+        await asyncio.wait_for(gw.websocket_endpoint(DummyWebSocket()), timeout=0.1)
 
     asyncio.run(run())
     assert len(events) == 2
@@ -56,11 +56,11 @@ def test_sse_event_generator(monkeypatch):
     monkeypatch.setattr(asyncio, "sleep", fast_sleep)
 
     async def run():
-        resp = await gw.sse_endpoint()
+        resp = await asyncio.wait_for(gw.sse_endpoint(), timeout=0.1)
         gen = resp.body_iterator
-        first = await gen.__anext__()
+        first = await asyncio.wait_for(gen.__anext__(), timeout=0.1)
         assert first.startswith("data: ")
-        second = await gen.__anext__()
+        second = await asyncio.wait_for(gen.__anext__(), timeout=0.1)
         assert second.startswith("data: ")
         await gen.aclose()
 

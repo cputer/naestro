@@ -232,7 +232,7 @@ async def test_websocket_endpoint_disconnect(monkeypatch):
             DummyWebSocket.closed = True
 
     ws = DummyWebSocket()
-    await websocket_endpoint(ws)
+    await asyncio.wait_for(websocket_endpoint(ws), timeout=0.1)
     assert getattr(DummyWebSocket, "closed", False)
 
 
@@ -249,15 +249,14 @@ async def test_sse_endpoint_cancel(monkeypatch):
 
     monkeypatch.setattr(asyncio, "sleep", never_sleep)
 
-    resp = await sse_endpoint()
+    resp = await asyncio.wait_for(sse_endpoint(), timeout=0.1)
     gen = resp.body_iterator
-
-    await gen.__anext__()  # prime generator
+    await asyncio.wait_for(gen.__anext__(), timeout=0.1)  # prime generator
 
     task = asyncio.create_task(gen.__anext__())
     await real_sleep(0)
     task.cancel()
     with contextlib.suppress(asyncio.CancelledError, StopAsyncIteration):
-        await task
+        await asyncio.wait_for(task, timeout=0.1)
     assert not isinstance(task.exception(), asyncio.CancelledError)
     await gen.aclose()
