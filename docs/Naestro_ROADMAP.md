@@ -1,5 +1,17 @@
 # Naestro Roadmap
 
+## 6) Orchestration & Models
+
+### Cloud
+- **GPT-5**
+- **Gemini-2.5 Pro**
+- **Claude**
+- **Grok**
+- **ERNIE X1.1 (Baidu API, Qianfan)** — agent-tuned reasoning model with strong factuality and instruction following; performs on par with GPT-5/Gemini-2.5 Pro.
+
+#### Routing policy
+- ERNIE X1.1 is selectable under the Cloud Pool for reasoning/verification tasks, subject to API access, latency, and cost.
+
 ## 7) Advanced Capabilities (to integrate)
 
 **(Added)** - **Hallucination-Resistant Generation (HRG)**: Retrieval-first planning, **self-consistency**, **chain-of-verification (CoVe)**, **calibrated uncertainty**, **abstention**, **structured outputs** with JSON Schema, and **tool-use preference** for factual queries.  

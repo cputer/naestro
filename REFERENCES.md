@@ -4,6 +4,12 @@ This file centralizes all links to external resources referenced in the Naestro 
 
 ---
 
+## Models
+- **ERNIE X1.1 (Wave Summit 2025 release)**
+  - Main site — https://ernie.baidu.com
+  - Press / benchmarks — https://x.com/i/broadcasts/1
+  - YouTube Launch — https://youtube.com/live/1ZHqwkg9-
+
 ## Retrieval & RAG
 - **REFRAG (Long-context acceleration)** — https://arxiv.org/abs/2509.01092
 - **GraphRAG** — https://github.com/microsoft/graphrag
