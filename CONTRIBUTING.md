@@ -22,6 +22,14 @@ npm run dev
 The dev server runs on <http://localhost:5173>. Set `VITE_SOCKET_BASE_URL` if your backend isn't at
 `http://localhost:4000`.
 
+## Run the server tests locally
+
+```bash
+npm test -C server
+```
+
+Runs the server's Vitest test suite.
+
 ### Pre-commit Hooks
 
 We enforce ESLint/Prettier and other checks via [pre-commit](https://pre-commit.com/).
