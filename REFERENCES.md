@@ -79,6 +79,9 @@ This file centralizes all links to external resources referenced in the Naestro 
 ## Model Architecture Overviews
 - **Sebastian Raschka — The Big LLM Architecture Comparison (2025)** — https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison
 
+## Code Generation / Scientific Software
+- **An AI system to help scientists write expert-level empirical software** — https://arxiv.org/abs/2509.06503
+
 ---
 
 Maintenance:
