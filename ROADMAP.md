@@ -279,7 +279,8 @@ constitutional bypass.
 - **AuthN/Z**: Keycloak (OIDC/SSO), OPA/Casbin RBAC/ABAC.
 - **Kill switches**: pause runs; revoke tokens; quarantine models/tools.
 - **Compliance**: immutable audit logs; consent receipts; Safety Index alignment; council audits.
-- MCP write actions require explicit scopes, dry-run preview when available, and rollback metadata; actions are blocked if provenance or consent is missing.
+- MCP write actions require explicit scopes, dry-run preview when available, and rollback metadata;
+  actions are blocked if provenance or consent is missing.
 - **Truthfulness gates**: retrieval-first, inline citations, abstain-on-uncertainty, post-validation
   with NeMo Guardrails.
 - **Formal proofs**: TLA+/Coq for Policy Engine & Self-PR merge gate.
@@ -422,12 +423,13 @@ constitutional bypass.
 - n8n/Nango adapters
 - Keycloak SSO (OAuth2/OIDC)
 - Service/tenant accounts
-- MCP write-action connectors (Jira/GitHub/Slack/Zapier) with Policy Engine gates and Studio consent prompts
-  **Exit Criteria:**
+- MCP write-action connectors (Jira/GitHub/Slack/Zapier) with Policy Engine gates and Studio consent
+  prompts **Exit Criteria:**
 - Export Naestro plan to n8n YAML
 - SaaS auth handshake works
 - Users log in via SSO
-- An MCP-only demo flow (e.g., “parse PR → open Jira → notify Slack”) completes with audit trail, consent receipt, and reversible actions
+- An MCP-only demo flow (e.g., “parse PR → open Jira → notify Slack”) completes with audit trail,
+  consent receipt, and reversible actions
 
 ---
 
@@ -488,7 +490,8 @@ Every LLM span must include:
 **Prometheus exemplars:** allow direct trace drilldowns in Grafana.
 
 - **SLM Utilization KPI** — track SLM vs LLM usage and cost savings.
-- MCP Action KPIs — success rate, mean time to apply (MTTA), rollback rate, and policy-blocked action rate; link each action to a trace span with tool, scope, and target resource.
+- MCP Action KPIs — success rate, mean time to apply (MTTA), rollback rate, and policy-blocked
+  action rate; link each action to a trace span with tool, scope, and target resource.
 
 ---
 
