@@ -174,7 +174,7 @@ flowchart TB
 
   %% ==== Integrations ====
   subgraph Integrations["Integrations"]
-    MCP[MCP Client/Server]
+    MCP[MCP Client/Server (read + write)]
     Parlant[Parlant + VibeVoice (ASR/TTS)]
     DIA[DIA TTS (multi-speaker)]
     n8n[n8n Flow Export]
@@ -230,6 +230,7 @@ flowchart TB
 
   %% ==== Integration Wiring ====
   MCP --> Registry
+  Agents --> MCP
   Parlant --> Registry
   DIA --> Registry
   n8n --> Panels
