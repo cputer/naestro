@@ -420,11 +420,13 @@ constitutional bypass.
 
 - n8n/Nango adapters
 - Keycloak SSO (OAuth2/OIDC)
-- Service/tenant accounts  
+- Service/tenant accounts
+- MCP write-action connectors (Jira/GitHub/Slack/Zapier) with Policy Engine gates and Studio consent prompts
   **Exit Criteria:**
 - Export Naestro plan to n8n YAML
 - SaaS auth handshake works
 - Users log in via SSO
+- An MCP-only demo flow (e.g., “parse PR → open Jira → notify Slack”) completes with audit trail, consent receipt, and reversible actions
 
 ---
 
