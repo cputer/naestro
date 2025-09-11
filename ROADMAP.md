@@ -1,5 +1,7 @@
 # Naestro ROADMAP — Evolving Autonomous System (ASI Trajectory)
 
+References for external resources are centralized in [REFERENCES.md](REFERENCES.md).
+
 # North Star
 
 Naestro evolves from a goal-driven multi-agent orchestrator into a continuously self-improving
