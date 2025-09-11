@@ -53,8 +53,8 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
 15. **Resilience & efficiency** — Retries (Tenacity), fallback routing, Redis caching +
     dogpile/singleflight.
 16. **SLM-first efficiency** — Router defaults to small language models for lower cost and latency,
-    escalating to larger models only when needed. Router may consult resources like SmolHub for up-to-date benchmarks on SLM performance/cost tradeoffs.
-
+    escalating to larger models only when needed. Router may consult resources like SmolHub for
+    up-to-date benchmarks on SLM performance/cost tradeoffs.
 
 ---
 
@@ -70,6 +70,12 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
   immutable audit.
 - **Tool/Skill Registry** — Typed contracts (JSON Schema), adapters
   (MCP/HTTP/CLI/DB/Browser/PDF/Vision/ASR/TTS/SEO/Geo/**n8n/Nango/Firecrawl/Gitingest**).
+
+  MCP is a first-class integration target for both read (fetch/search) and write (actions)
+  connectors. Naestro can directly compose MCP tools for workflows like Jira updates, GitHub/CI
+  operations, Slack/Email, or Zapier/n8n automations—while enforcing Policy Engine gates
+  (rate/role/domain allowlists), consent prompts, and full trace/provenance.
+
 - **Memory Fabric** — Episodic/semantic/skills; vector+graph (Qdrant/Weaviate/Graph store);
   retrieval policies; decision narratives.
 - **Evaluators** — Code/static/factuality/safety/latency/cost; trajectory evaluators; AI Safety
