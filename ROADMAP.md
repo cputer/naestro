@@ -488,6 +488,7 @@ Every LLM span must include:
 **Prometheus exemplars:** allow direct trace drilldowns in Grafana.
 
 - **SLM Utilization KPI** — track SLM vs LLM usage and cost savings.
+- MCP Action KPIs — success rate, mean time to apply (MTTA), rollback rate, and policy-blocked action rate; link each action to a trace span with tool, scope, and target resource.
 
 ---
 
