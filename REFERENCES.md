@@ -102,6 +102,13 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **Flower (federated learning)** — https://github.com/adap/flower
 - **DoWhy (causal inference)** — https://github.com/py-why/dowhy
 
+## Tooling / Connectors / Protocols
+
+- **Model Context Protocol (MCP)** — https://modelcontextprotocol.io/
+- **OpenAI: MCP tool support in ChatGPT (2025)** — https://openai.com/
+- **Zapier Platform** — https://platform.zapier.com/
+- **Jira Cloud Platform** — https://developer.atlassian.com/cloud/jira/platform/
+
 ## Model Architecture Overviews
 
 - **Sebastian Raschka — The Big LLM Architecture Comparison (2025)** —
