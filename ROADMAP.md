@@ -279,6 +279,7 @@ constitutional bypass.
 - **AuthN/Z**: Keycloak (OIDC/SSO), OPA/Casbin RBAC/ABAC.
 - **Kill switches**: pause runs; revoke tokens; quarantine models/tools.
 - **Compliance**: immutable audit logs; consent receipts; Safety Index alignment; council audits.
+- MCP write actions require explicit scopes, dry-run preview when available, and rollback metadata; actions are blocked if provenance or consent is missing.
 - **Truthfulness gates**: retrieval-first, inline citations, abstain-on-uncertainty, post-validation
   with NeMo Guardrails.
 - **Formal proofs**: TLA+/Coq for Policy Engine & Self-PR merge gate.
