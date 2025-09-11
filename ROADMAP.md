@@ -2,7 +2,7 @@
 
 References for external resources are centralized in [REFERENCES.md](REFERENCES.md).
 
-# North Star
+## North Star
 
 Naestro evolves from a goal-driven multi-agent orchestrator into a continuously self-improving
 autonomous system that can:
@@ -15,7 +15,7 @@ autonomous system that can:
 
 ---
 
-# Technical Foundation
+## Technical Foundation
 
 High-performance async Python backend (FastAPI, Uvicorn, asyncio) with Redis (cache/queues), Celery
 (background tasks), PostgreSQL (+pgvector), Kubernetes (Helm), OpenTelemetry + Prometheus + Grafana

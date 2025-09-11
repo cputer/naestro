@@ -61,7 +61,7 @@ source .env
 echo $ORCH_URL  # expect: http://localhost:8081
 ```
 
-**Troubleshooting**
+### Troubleshooting
 
 - Missing variables lead to 400/500 errors during orchestration.
 - If `echo $ORCH_URL` prints nothing, run `source .env` in the current shell.
@@ -120,7 +120,7 @@ monitoring or visualization.
    }
    ```
 
-**Troubleshooting**
+### Troubleshooting
 
 - `Connection refused`: verify both services are up.
 - `500` errors: ensure at least one model endpoint is configured via `SLM_BASE_URL`, `NIM_BASE_URL`,
@@ -180,7 +180,7 @@ The UI runs on `http://localhost:3000` and communicates with the gateway.
    psql "$PG_DSN" -c "SELECT COUNT(*) FROM chunks;"  # expect: 1
    ```
 
-**Troubleshooting**
+### Troubleshooting
 
 - `ERROR:  could not open extension control file "vector.control"`: install the pgvector extension.
 - Connection issues: ensure `PG_DSN` matches your database host and credentials.
