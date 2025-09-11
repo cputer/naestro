@@ -2,10 +2,10 @@
   "name": "naestro",
   "private": true,
   "scripts": {
-    "md:lint": "markdownlint-cli2 \"**/*.md\"",
+    "md:lint": "markdownlint-cli2 \"**/*.md\" \"#**/node_modules\"",
     "md:fix": "markdownlint-cli2 --fix \"**/*.md\"",
     "md:fmt": "prettier --write \"**/*.md\"",
-    "md:check": "prettier --check \"**/*.md\" && markdownlint-cli2 \"**/*.md\"",
+    "md:check": "prettier --check \"**/*.md\" && markdownlint-cli2 \"**/*.md\" \"#**/node_modules\"",
     "test": "pytest"
   },
   "devDependencies": {
