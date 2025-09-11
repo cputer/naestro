@@ -70,11 +70,12 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
   immutable audit.
 - **Tool/Skill Registry** — Typed contracts (JSON Schema), adapters
   (MCP/HTTP/CLI/DB/Browser/PDF/Vision/ASR/TTS/SEO/Geo/**n8n/Nango/Firecrawl/Gitingest**).
-
-  MCP is a first-class integration target for both read (fetch/search) and write (actions)
-  connectors. Naestro can directly compose MCP tools for workflows like Jira updates, GitHub/CI
-  operations, Slack/Email, or Zapier/n8n automations—while enforcing Policy Engine gates
-  (rate/role/domain allowlists), consent prompts, and full trace/provenance.
+  - MCP is a first-class integration target for both read (fetch/search) and write (actions)
+    connectors. Naestro can directly compose MCP tools for workflows like Jira updates, GitHub/CI
+    operations, Slack/Email, or Zapier/n8n automations—while enforcing Policy Engine gates
+    (rate/role/domain allowlists), consent prompts, and full trace/provenance.
+    - Supports read/fetch and write/actions (e.g., Jira ticket updates, GitHub ops, Slack/Zapier
+      flows); composable in multi-tool chains with policy & audit.
 
 - **Memory Fabric** — Episodic/semantic/skills; vector+graph (Qdrant/Weaviate/Graph store);
   retrieval policies; decision narratives.
