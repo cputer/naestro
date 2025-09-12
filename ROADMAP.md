@@ -32,6 +32,8 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
    win-rates; bandit updates; federated learning for privacy.
 3. **Formalized self-improvement** — Self-PRs (prompt/router/config/test deltas) gated by
    evals/canary; AlphaEvolve-style optimization for hot paths.
+   > Backed by recent research (AlphaXiv 2509.02359v1) showing how autonomous agents can decompose
+   > tasks, reuse artifacts, and self-improve toward becoming autonomous software engineers.
 4. **Safety-first autonomy** — Capability bounds, consent layers, provable rollback, constitutional
    principles, guardrails, HITL.
 5. **Observability & provenance** — Logs, metrics, traces; signed artifacts; time-travel debugging;
@@ -734,6 +736,8 @@ Every LLM span must include:
 - Scientific / Empirical software assistance — multi-agent workflows that help scientists author,
   instrument, and validate empirical codebases, including automatic experiment setup, metric
   logging, and result sanity checks.
+- Autonomous software engineering: Naestro orchestrates coder/reviewer/runner agents in line with
+  recent research (AlphaXiv 2509.02359v1), reducing developer effort on large engineering tasks.
 - Federated task delegation between orgs.
 - Marketplace rentals of expert agents.
 - Strategic dialogues for corporate planning.

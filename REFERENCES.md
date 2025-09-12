@@ -120,6 +120,12 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **An AI system to help scientists write expert-level empirical software** —
   <https://arxiv.org/abs/2509.06503>
 
+## Autonomous Software Engineering / Research Foundations
+
+- **Foundations for Artificial Autonomous Software Engineers** —
+  <https://www.alphaxiv.org/abs/2509.02359v1>
+  - PDF — <https://papers-pdfs.assets.alphaxiv.org/2509.02359v1.pdf>
+
 ---
 
 Maintenance:
