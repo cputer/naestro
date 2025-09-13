@@ -59,6 +59,7 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
 16. **SLM-first efficiency** — Router defaults to small language models for lower cost and latency,
     escalating to larger models only when needed. Router may consult resources like SmolHub for
     up-to-date benchmarks on SLM performance/cost tradeoffs.
+17. **Ultra-sparse MoE scaling** — Qwen3-Next-80B-A3B uses an ultra-sparse MoE (~3B active params per token; extreme low activation ratio), delivering order-of-magnitude efficiency gains over Qwen3-32B at 32K+ context [Qwen3-Next Blog][Qwen3-Next].
 
 ---
 
@@ -74,8 +75,7 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
   immutable audit.
 - **Tool/Skill Registry** — Typed contracts (JSON Schema), adapters
   (MCP/HTTP/CLI/DB/Browser/PDF/Vision/ASR/TTS/SEO/Geo/**n8n/Nango/Firecrawl/Gitingest**).
-  - MCP is a first-class integration target for both read (fetch/search) and write (actions)
-    connectors. Naestro can directly compose MCP tools for workflows like Jira updates, GitHub/CI
+  - MCP is a first-class integration target for both read (fetch/search) and write (actions) connectors [MCP-DevMode]. Naestro can directly compose MCP tools for workflows like Jira updates, GitHub/CI
     operations, Slack/Email, or Zapier/n8n automations—while enforcing Policy Engine gates
     (rate/role/domain allowlists), consent prompts, and full trace/provenance.
     - Supports read/fetch and write/actions (e.g., Jira ticket updates, GitHub ops, Slack/Zapier
@@ -299,8 +299,9 @@ constitutional bypass.
 - **Gemini-2.5 Pro**
 - **Claude**
 - **Grok**
+- **Qwen3-Next-80B-A3B** — Ultra-sparse MoE (~3B active params per token; extreme low activation ratio). Order-of-magnitude efficiency gains (internal benchmarks show much lower cost/latency than Qwen3-32B, especially at 32K+ context) [Qwen3-Next Blog][Qwen3-Next]
 - **ERNIE X1.1 (Baidu API, Qianfan)** — agent-tuned reasoning model with strong factuality and
-  instruction following; performs on par with GPT-5/Gemini-2.5 Pro.
+  instruction following; performs on par with GPT-5/Gemini-2.5 Pro [Reuters][ERNIE-Reuters] [PRNewswire][ERNIE-PRN].
 
 #### Routing policy
 
@@ -743,3 +744,8 @@ Every LLM span must include:
 - Strategic dialogues for corporate planning.
 
 ---
+
+[Qwen3-Next]: REFERENCES.md#models--architectures
+[ERNIE-Reuters]: REFERENCES.md#models--architectures
+[ERNIE-PRN]: REFERENCES.md#models--architectures
+[MCP-DevMode]: REFERENCES.md#tooling--connectors--protocols
