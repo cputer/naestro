@@ -9,8 +9,8 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 
 - **ERNIE X1.1 (Wave Summit 2025 release)**
   - Main site — <https://ernie.baidu.com>
-  - Press / benchmarks — <https://x.com/i/broadcasts/1>
-  - YouTube Launch — <https://youtube.com/live/1ZHqwkg9->
+  - Press — Reuters — <https://www.reuters.com/technology/artificial-intelligence/chinas-baidu-launches-two-new-ai-models-industry-competition-heats-up-2025-03-16/>
+  - Press — PRNewswire — <https://www.prnewswire.com/news-releases/baidu-unveils-reasoning-model-ernie-x1-1-with-upgrades-in-key-capabilities-302551170.html>
 
 - **NVIDIA — Small Language Models for Agentic AI (2025)** —
   <https://www.vectrix.ai/blog-post/understanding-large-and-small-language-models-key-differences-and-applications>
@@ -18,6 +18,10 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **SmolHub (SLM Benchmark/Directory)** — <https://www.smolhub.com/smolhub>
 - **Phi-3-mini** — <https://huggingface.co/microsoft/phi-3-mini-4k-instruct>
 - **Qwen2.5** — <https://huggingface.co/Qwen>
+- **Qwen3-Next (A3B series)**
+  - Blog — <https://qwen.ai/blog?from=research.latest-advancements-list&id=4074cca80393150c248e508aa62983f9cb7d27cd>
+  - vLLM support — <https://blog.vllm.ai/2025/09/11/qwen3-next.html>
+  - NVIDIA Model Card — <https://build.nvidia.com/qwen/qwen3-next-80b-a3b-thinking/modelcard>
 
 ## Retrieval & RAG
 
@@ -34,8 +38,8 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **vLLM** — <https://github.com/vllm-project/vllm>
 - **TensorRT-LLM** — <https://github.com/NVIDIA/TensorRT-LLM>
 - **TensorRT Model Optimizer (NVIDIA)** — <https://github.com/NVIDIA/TensorRT-Model-Optimizer>
-- **LMCache** — <https://github.com/SafeAILab/LMCache>
-- **Nixl (KV / cache transfer)** — <https://github.com/nixl-ai/nixl>
+- **LMCache** — <https://github.com/LMCache/LMCache>
+- **NIXL (KV / cache transfer)** — <https://github.com/ai-dynamo/nixl>
 - **NVIDIA DGX Spark (Marketplace)** — <https://marketplace.nvidia.com/en-us/developer/dgx-spark/>
 - **NVIDIA DGX Spark Datasheet (PDF)** —
   <https://nvdam.widen.net/s/tlzm8smqjx/workstation-datasheet-dgx-spark-gtc25-spring-nvidia-us-3716899-web>
@@ -49,6 +53,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **SuperAGI** — <https://github.com/TransformerOptimus/SuperAGI>
 - **AutoAgent (clustered swarms)** — <https://github.com/SylphAI-Inc/AutoAgent>
 - **Agent Squad (AWS Labs)** — <https://github.com/awslabs/agent-squad>
+  - Docs — <https://awslabs.github.io/agent-squad/>
 - **Open Computer Agent (OCA)** — <https://github.com/oc-agent/oc-agent>
 - **OmniNova** — <https://github.com/omninova-ai/omninova>
 - **Symphony** — <https://github.com/symphony-llm/symphony>
@@ -65,7 +70,9 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **VibeVoice** — <https://github.com/vibevoice>
 - **DIA TTS** — <https://github.com/diattss>
 - **Qwen3-ASR (Multilingual ASR)**
-  - Blog — <https://qwen.ai/blog?id=41e4c0>
+  - Blog — <https://qwen.ai/blog?id=41e4c0f2a632d9ec23a7c51a47f0f16f>
+  - Announcement Tweet — <https://x.com/Alibaba_Qwen/status/1965068737297707261>
+  - Coverage — <https://www.marktechpost.com/2025/09/09/alibaba-qwen-team-releases-qwen3-asr-a-new-speech-recognition-model-built-upon-qwen3-omni-achieving-robust-speech-recogition-performance/>
   - Hugging Face Demo — <https://huggingface.co/spaces/Qwen/Qwen3-ASR>
   - ModelScope Studio — <https://modelscope.cn/studios/Qwen/Qwen3-ASR>
   - API (Bailian) — <https://bailian.console.alibabacloud.com/?tab=doc#/doc/>
@@ -106,7 +113,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 ## Tooling / Connectors / Protocols
 
 - **Model Context Protocol (MCP)** — <https://modelcontextprotocol.io/>
-- **OpenAI: MCP tool support in ChatGPT (2025)** — <https://openai.com/>
+- **OpenAI adds powerful but dangerous support for MCP in ChatGPT Dev Mode (VentureBeat)** — <https://venturebeat.com/dev/openai-adds-powerful-but-dangerous-support-for-mcp-in-chatgpt-dev-mode>
 - **Zapier Platform** — <https://platform.zapier.com/>
 - **Jira Cloud Platform** — <https://developer.atlassian.com/cloud/jira/platform/>
 
