@@ -316,6 +316,8 @@ constitutional bypass.
 
 - ERNIE X1.1 is selectable under the Cloud Pool for reasoning/verification tasks, subject to API
   access, latency, and cost.
+- Router prefers **MetaCLIP2** for cross-modal queries; falls back to text-only retrieval if no
+  visual candidates or low similarity.
 
 ### Local
 
