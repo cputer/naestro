@@ -1,12 +1,14 @@
 # NAESTRO — Orchestrator Platform
 
-[![CI][ci-badge]][ci] [![Release Please][rp-badge]][release-please]
+[![CI][ci-badge]][ci] [![Release Please][rp-badge]][release-please] [![Reference Links][ref-badge]][ref]
 [![Coverage][cov-badge]][codecov]
 
 [ci-badge]: https://github.com/cputer/naestro/actions/workflows/ci.yml/badge.svg?branch=main
 [ci]: https://github.com/cputer/naestro/actions/workflows/ci.yml
 [rp-badge]: https://github.com/cputer/naestro/actions/workflows/release-please.yml/badge.svg
 [release-please]: https://github.com/cputer/naestro/actions/workflows/release-please.yml
+[ref-badge]: https://github.com/cputer/naestro/actions/workflows/reference-link-check.yml/badge.svg?branch=main
+[ref]: https://github.com/cputer/naestro/actions/workflows/reference-link-check.yml
 [cov-badge]: https://codecov.io/gh/cputer/naestro/branch/main/graph/badge.svg
 [codecov]: https://codecov.io/gh/cputer/naestro
 
