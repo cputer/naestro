@@ -750,6 +750,15 @@ Every LLM span must include:
 
 ---
 
+## 11) File/Module Backlog
+
+- `integrations/vision/metaclip2/*` (encoder service, batching, health checks)
+- `evidence/vision/*` (image region store, thumbnails, mask/box metadata)
+- `evaluators/vision_grounding/*` (IoU, similarity thresholds, tests)
+- `studio/components/vision-citation/*` (UI overlay for boxes/masks)
+
+---
+
 ## Example Use Cases (Unlocked across roadmap)
 
 - Repo creation from spec (code+tests+CI+deploy).
