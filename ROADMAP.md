@@ -92,7 +92,7 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
 - **Evidence Store** — Short-lived artifacts (crawl chunks, repo digests, passages) + provenance.
 - **REFRAG Controller** — Compression/expansion policy; encoder+projection; vLLM/TRT-LLM hooks.
 - **AgentOps Orchestrator** — Capability→trajectory→final evaluators; HITL gates; multi-agent
-  metrics.
+  metrics. Selects optimal chunking strategy dynamically.
 - **PO Policy Module** — Preference optimization suite (PVPO/DCPO/…); stability/effectiveness
   monitors.
 - **Runtime Adapters** — LangGraph/CrewAI/AgentScope/AutoGen/Agent Squad/Semantic Kernel/SuperAGI
@@ -316,6 +316,10 @@ constitutional bypass.
 
 ## 7) Advanced Capabilities (to integrate)
 
+- **RAG Quality:** …
+  - **Post-chunking**: embed whole docs first, split at query-time only on retrieved docs; cache chunks for faster reuse; enables query-specific segmentation.
+  - **Adaptive & Agentic Chunking**: agents dynamically choose between fixed-size, semantic, recursive, hierarchical, or LLM-based splits depending on query, context length, and accuracy needs.
+  - **Hybrid Pre + Post strategy**: hot paths keep pre-chunks for speed; cold/complex queries use post-chunking for accuracy.
 - **Hallucination-Resistant Generation (HRG):** Retrieval-first planning, self-consistency,
   chain-of-verification (CoVe), calibrated uncertainty, abstention, structured outputs with JSON
   Schema, and tool-use preference for factual queries.
@@ -501,6 +505,7 @@ Every LLM span must include:
 - **SLM Utilization KPI** — track SLM vs LLM usage and cost savings.
 - MCP Action KPIs — success rate, mean time to apply (MTTA), rollback rate, and policy-blocked
   action rate; link each action to a trace span with tool, scope, and target resource.
+- Chunking metrics — track chunking strategy usage (pre vs post vs adaptive), retrieval latency, and accuracy uplift.
 
 ---
 
