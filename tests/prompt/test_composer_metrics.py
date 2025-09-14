@@ -1,4 +1,4 @@
-from src.prompt.composer import add_collab_headers, choose_answer
+from src.prompt.composer import add_collab_headers, choose_answer, answer_stream, add_pref_clamp
 from src.telemetry import metrics
 
 
@@ -26,3 +26,15 @@ def test_choose_answer_fallback(monkeypatch):
     )
     prefs = {"answer_strategy": "unknown", "confidence_threshold": 0.0}
     assert choose_answer(responses, prefs) == "A"
+
+
+def test_answer_stream_yields_final_answer():
+    responses = [{"content": "A", "confidence": 0.5}]
+    stream = answer_stream(responses, {})
+    assert list(stream) == ["A"]
+
+
+def test_add_pref_clamp_records_metric():
+    metrics.pref_clamps.reset()
+    add_pref_clamp({"mode": "solo"})
+    assert metrics.pref_clamps.get() == 1
