@@ -737,12 +737,16 @@ Every LLM span must include:
 - Federated task delegation between orgs.
 - Marketplace rentals of expert agents.
 - Strategic dialogues for corporate planning.
-- **Cross-modal incident triage** — search logs + screenshots ("error dialog about OAuth on staging") with visual box citation.
-- **Docs & diagrams** — retrieve architecture diagram segments that support a claim and cite the exact region.
+- **Cross-modal incident triage** — search logs + screenshots ("error dialog about OAuth on
+  staging") with visual box citation.
+- **Docs & diagrams** — retrieve architecture diagram segments that support a claim and cite the
+  exact region.
 
 ## 13) Risks & Mitigations
 
-- **Visual hallucinations / weak grounding** → require region-level evidence with IoU≥τ and cosine similarity≥σ; block delivery if evaluator fails; fall back to text-only RAG.
-- **Storage growth** → thumbnail + region-crop tiering; TTL for rarely accessed artifacts; object-store lifecycle rules.
+- **Visual hallucinations / weak grounding** → require region-level evidence with IoU≥τ and cosine
+  similarity≥σ; block delivery if evaluator fails; fall back to text-only RAG.
+- **Storage growth** → thumbnail + region-crop tiering; TTL for rarely accessed artifacts;
+  object-store lifecycle rules.
 
 ---
