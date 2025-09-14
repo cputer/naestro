@@ -1,11 +1,12 @@
 {
   "retryOn429": true,
-  "retryCount": 3,
+  "retryCount": 5,
   "timeout": "20s",
   "aliveStatusCodes": [200, 206, 301, 302, 308],
   "ignorePatterns": [
     { "pattern": "^mailto:" },
     { "pattern": "localhost(:\\d+)?" },
-    { "pattern": "bailian.console.alibabacloud.com/.+#/doc/" }
+    { "pattern": "bailian.console.alibabacloud.com/.+#/doc/" },
+    { "pattern": "^https://github.com/.+#L\\d+$" }
   ]
 }

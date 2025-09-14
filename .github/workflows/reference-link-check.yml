@@ -4,6 +4,7 @@ on:
     paths:
       - "docs/**/*.md"
       - "REFERENCES.md"
+      - "ROADMAP.md"
   workflow_dispatch: {}
 permissions:
   contents: read
@@ -16,15 +17,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install markdown-link-check
-        run: npm i -g markdown-link-check@3
-      - name: Check links in docs
+      - name: Install dependencies
+        run: npm ci
+      - name: Check links
         run: |
           set -euo pipefail
-          files="$(git ls-files 'docs/**/*.md' 'REFERENCES.md')"
+          files="$(git ls-files 'docs/**/*.md' 'REFERENCES.md' 'ROADMAP.md')"
           echo "$files" | tr ' ' '\n' | while read -r f; do
             echo "🔗 Checking $f"
-            markdown-link-check -q -c .mlc.config.json "$f"
+            npx markdown-link-check -q -c .mlc.config.json "$f"
           done
       - name: Upload summary
         if: always()
