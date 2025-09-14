@@ -520,6 +520,9 @@ Every LLM span must include:
   action rate; link each action to a trace span with tool, scope, and target resource.
 - Chunking metrics — track chunking strategy usage (pre vs post vs adaptive), retrieval latency, and
   accuracy uplift.
+- **Multimodal KPIs** — image↔text retrieval latency, top‑k recall@{1,5}, cross‑modal MRR,
+  visual-grounding pass rate (IoU≥τ), % answers with image citations, storage hit rate for cached
+  region crops.
 
 ---
 
