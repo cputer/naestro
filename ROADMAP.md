@@ -324,6 +324,10 @@ constitutional bypass.
 - **Scientific Code Pipelines:** agentic planning → code generation → experiment orchestration →
   evaluation loops tailored for empirical/scientific software; design informed by recent research on
   AI systems that help scientists write expert-level empirical software.
+- **Multimodal Search & Retrieval (MetaCLIP2)** — multilingual image↔text embeddings for cross-modal
+  search, screenshot/diagram grounding, and gallery/asset retrieval. Integrates with Evidence Store so
+  citations can reference an image region + text span. Enables hybrid RAG where visual evidence is
+  retrieved alongside text passages.
 
 ---
 
