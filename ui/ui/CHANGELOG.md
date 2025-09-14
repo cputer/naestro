@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.6](https://github.com/cputer/naestro/compare/v0.2.5...v0.2.6) (2025-09-14)
+
+
+### Features
+
+* add collaboration panel ([b437917](https://github.com/cputer/naestro/commit/b437917496d9fd6908ec9104f0f1fa4346881d16))
+* add collaboration panel ([49ffe6e](https://github.com/cputer/naestro/commit/49ffe6ef66c1138385738b057a8984d5ceb869c6))
+
 ## [0.2.5](https://github.com/cputer/naestro/compare/v0.2.4...v0.2.5) (2025-09-06)
 
 ### Features
