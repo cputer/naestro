@@ -76,10 +76,10 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
 - **Policy Engine** — OPA/Casbin rules for tools/net/paths/data/rate/cost/time; consent prompts;
   immutable audit.
 - **Tool/Skill Registry** — Typed contracts (JSON Schema), adapters
-  (MCP/HTTP/CLI/DB/Browser/PDF/Vision/ASR/TTS/SEO/Geo/**n8n/Nango/Firecrawl/Gitingest**).
+  (MCP/HTTP/CLI/DB/Browser/PDF/Vision/ASR/TTS/SEO/Geo/[n8n]/[Nango]/[Firecrawl]/[Gitingest]).
   - MCP is a first-class integration target for both read (fetch/search) and write (actions)
     connectors [MCP-DevMode]. Naestro can directly compose MCP tools for workflows like Jira
-    updates, GitHub/CI operations, Slack/Email, or Zapier/n8n automations—while enforcing Policy
+    updates, GitHub/CI operations, Slack/Email, or Zapier/[n8n] automations—while enforcing Policy
     Engine gates (rate/role/domain allowlists), consent prompts, and full trace/provenance.
     - Supports read/fetch and write/actions (e.g., Jira ticket updates, GitHub ops, Slack/Zapier
       flows); composable in multi-tool chains with policy & audit.
@@ -104,7 +104,7 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
 - **Collaboration Modes & Depth** — Per-run preferences for orchestrator collaboration with auto
   escalation, budgets, and answer strategies (see
   [docs/orchestrator_collaboration.md](docs/orchestrator_collaboration.md) for details).
-- **Runtime Adapters** — LangGraph/CrewAI/AgentScope/AutoGen/Agent Squad/Semantic Kernel/SuperAGI
+- **Runtime Adapters** — [LangGraph]/[CrewAI]/[AgentScope]/[AutoGen]/[Agent Squad]/[Semantic Kernel]/[SuperAGI]
   with policy/trace parity.
 - **Tokenomics Engine** — Credits/budgets; marketplace transactions.
 - **Fusion Controller** — Multimodal stream fusion; neuro-symbolic solvers; causal graphs.
@@ -803,3 +803,14 @@ Every LLM span must include:
 [ERNIE-Reuters]: REFERENCES.md#models--architectures
 [ERNIE-PRN]: REFERENCES.md#models--architectures
 [MCP-DevMode]: REFERENCES.md#tooling--connectors--protocols
+[n8n]: REFERENCES.md#tooling--connectors--protocols
+[Nango]: REFERENCES.md#tooling--connectors--protocols
+[Firecrawl]: REFERENCES.md#retrieval--rag
+[Gitingest]: REFERENCES.md#retrieval--rag
+[LangGraph]: REFERENCES.md#agent-runtimes--frameworks--interop
+[CrewAI]: REFERENCES.md#agent-runtimes--frameworks--interop
+[AgentScope]: REFERENCES.md#agent-runtimes--frameworks--interop
+[AutoGen]: REFERENCES.md#agent-runtimes--frameworks--interop
+[Agent Squad]: REFERENCES.md#agent-runtimes--frameworks--interop
+[Semantic Kernel]: REFERENCES.md#agent-runtimes--frameworks--interop
+[SuperAGI]: REFERENCES.md#agent-runtimes--frameworks--interop
