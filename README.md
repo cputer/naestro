@@ -14,8 +14,7 @@ secure sandboxing, and multi-model routing (NIM / vLLM / SLM).
 Naestro is an AI Orchestrator for multi-model collaboration.
 
 📖 Read the [Whitepaper](./WHITEPAPER.md)  
-➡️ See the [Roadmap](./ROADMAP.md)
-🌌 Explore the [Vision](./VISION.md)
+➡️ See the [Roadmap](./ROADMAP.md) 🌌 Explore the [Vision](./VISION.md)
 
 See also: [References](./REFERENCES.md) for external tech and source links.
 
