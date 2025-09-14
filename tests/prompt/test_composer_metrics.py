@@ -1,4 +1,11 @@
-from src.prompt.composer import add_collab_headers, choose_answer, answer_stream, add_pref_clamp
+from unittest.mock import MagicMock
+
+from src.prompt.composer import (
+    add_collab_headers,
+    add_pref_clamp,
+    answer_stream,
+    choose_answer,
+)
 from src.telemetry import metrics
 
 
@@ -10,8 +17,11 @@ def test_add_collab_headers_records_metrics():
     assert metrics.collab_prompt_depth.get("consult") == 2
 
 
-def test_choose_answer_empty_responses_returns_blank():
+def test_choose_answer_empty_responses_returns_blank(monkeypatch):
+    mock = MagicMock(return_value={})
+    monkeypatch.setattr("src.prompt.composer.clamp_prefs", mock)
     assert choose_answer([], {}) == ""
+    mock.assert_not_called()
 
 
 def test_choose_answer_unknown_strategy_aggregates():
