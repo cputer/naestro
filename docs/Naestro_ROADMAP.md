@@ -717,7 +717,7 @@ Every LLM span must include:
 
 ---
 
-## Example Use Cases (Unlocked across roadmap)
+## 12) Example Use-Cases
 
 - Repo creation from spec (code+tests+CI+deploy).
 - PDF → tables/charts with sanity checks.
@@ -737,5 +737,7 @@ Every LLM span must include:
 - Federated task delegation between orgs.
 - Marketplace rentals of expert agents.
 - Strategic dialogues for corporate planning.
+- **Cross-modal incident triage** — search logs + screenshots ("error dialog about OAuth on staging") with visual box citation.
+- **Docs & diagrams** — retrieve architecture diagram segments that support a claim and cite the exact region.
 
 ---
