@@ -93,6 +93,9 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
   metrics.
 - **PO Policy Module** — Preference optimization suite (PVPO/DCPO/…); stability/effectiveness
   monitors.
+- **Collaboration Modes & Depth** — Per-run preferences for orchestrator collaboration with auto
+  escalation, budgets, and answer strategies. See
+  [orchestrator_collaboration.md](orchestrator_collaboration.md).
 - **Runtime Adapters** — LangGraph/CrewAI/AgentScope/AutoGen/Agent Squad/Semantic Kernel/SuperAGI
   with policy/trace parity.
 - **Tokenomics Engine** — Credits/budgets; marketplace transactions.
@@ -737,12 +740,16 @@ Every LLM span must include:
 - Federated task delegation between orgs.
 - Marketplace rentals of expert agents.
 - Strategic dialogues for corporate planning.
-- **Cross-modal incident triage** — search logs + screenshots ("error dialog about OAuth on staging") with visual box citation.
-- **Docs & diagrams** — retrieve architecture diagram segments that support a claim and cite the exact region.
+- **Cross-modal incident triage** — search logs + screenshots ("error dialog about OAuth on
+  staging") with visual box citation.
+- **Docs & diagrams** — retrieve architecture diagram segments that support a claim and cite the
+  exact region.
 
 ## 13) Risks & Mitigations
 
-- **Visual hallucinations / weak grounding** → require region-level evidence with IoU≥τ and cosine similarity≥σ; block delivery if evaluator fails; fall back to text-only RAG.
-- **Storage growth** → thumbnail + region-crop tiering; TTL for rarely accessed artifacts; object-store lifecycle rules.
+- **Visual hallucinations / weak grounding** → require region-level evidence with IoU≥τ and cosine
+  similarity≥σ; block delivery if evaluator fails; fall back to text-only RAG.
+- **Storage growth** → thumbnail + region-crop tiering; TTL for rarely accessed artifacts;
+  object-store lifecycle rules.
 
 ---
