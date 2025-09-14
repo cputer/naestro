@@ -26,7 +26,7 @@ from __future__ import annotations
 from typing import Any, Dict, Iterable, List, Mapping
 
 from orchestrator.planner import clamp_prefs
-from src.telemetry.metrics import collab_prompts, collab_prompt_depth, pref_clamps
+from src.telemetry.metrics import collab_prompt_depth, collab_prompts, pref_clamps
 
 
 def _aggregate(responses: Iterable[Mapping[str, Any]]) -> str:
@@ -72,12 +72,12 @@ def choose_answer(responses: List[Mapping[str, Any]], prefs: Mapping[str, Any]) 
     answer is selected.
     """
 
+    if not responses:
+        return ""
+
     cfg = clamp_prefs(dict(prefs))
     strat = cfg["answer_strategy"]
     threshold = float(cfg["confidence_threshold"])
-
-    if not responses:
-        return ""
 
     top = responses[0]
     top_conf = float(top.get("confidence", 0.0))
@@ -99,9 +99,7 @@ def choose_answer(responses: List[Mapping[str, Any]], prefs: Mapping[str, Any]) 
     return _aggregate(responses)
 
 
-def answer_stream(
-    responses: Iterable[Mapping[str, Any]], prefs: Mapping[str, Any]
-):
+def answer_stream(responses: Iterable[Mapping[str, Any]], prefs: Mapping[str, Any]):
     """Yield a final answer for ``responses`` based on ``prefs``.
 
     The current implementation is intentionally lightweight: it yields a single
