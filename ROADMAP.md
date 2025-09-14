@@ -102,8 +102,8 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
 - **PO Policy Module** — Preference optimization suite (PVPO/DCPO/…); stability/effectiveness
   monitors.
 - **Collaboration Modes & Depth** — Per-run preferences for orchestrator collaboration with auto
-  escalation, budgets, and answer strategies. See
-  [docs/orchestrator_collaboration.md](docs/orchestrator_collaboration.md).
+  escalation, budgets, and answer strategies (see
+  [docs/orchestrator_collaboration.md](docs/orchestrator_collaboration.md) for details).
 - **Runtime Adapters** — LangGraph/CrewAI/AgentScope/AutoGen/Agent Squad/Semantic Kernel/SuperAGI
   with policy/trace parity.
 - **Tokenomics Engine** — Credits/budgets; marketplace transactions.

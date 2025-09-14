@@ -47,4 +47,5 @@ auto flag, budgets, and whether an automatic escalation occurred.
 ## References
 
 See [`ROADMAP.md`](../ROADMAP.md) for upcoming work integrating these preferences throughout the
-planner, router, prompt composer, and UI.
+planner, router, prompt composer, and UI. Related external links are listed in
+[REFERENCES.md](../REFERENCES.md).
