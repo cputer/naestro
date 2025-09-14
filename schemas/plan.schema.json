@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://naestro.ai/schemas/plan.schema.json",
+  "title": "Naestro Plan",
+  "type": "object",
+  "required": ["goal", "tasks", "inputs", "outputs", "collaboration", "cop_header"],
+  "properties": {
+    "goal": { "type": "string" },
+    "tasks": { "type": "array", "items": { "type": "object" } },
+    "inputs": { "type": "object" },
+    "outputs": { "type": "object" },
+    "collaboration": {
+      "type": "object",
+      "required": ["mode", "depth", "auto", "ask_online", "budget_usd", "p95_latency_s", "answer_strategy", "confidence_threshold"],
+      "properties": {
+        "mode": { "type": "string", "enum": ["solo", "consult", "collaborate", "consensus", "swarm"] },
+        "depth": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "auto": { "type": "boolean" },
+        "ask_online": { "type": "boolean" },
+        "budget_usd": { "type": "number", "minimum": 0 },
+        "p95_latency_s": { "type": "integer", "minimum": 0 },
+        "answer_strategy": { "type": "string", "enum": ["self_if_confident", "aggregate_always", "ask_clarify_below_threshold"] },
+        "confidence_threshold": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "cop_header": { "type": "string" }
+  },
+  "additionalProperties": true
+}
