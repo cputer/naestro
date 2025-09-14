@@ -69,6 +69,12 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **Awesome-Nano-Banana-images (edge/device OS images; reference-only)** —
   <https://github.com/PicoTrex/Awesome-Nano-Banana-images>
 
+## Vision / Multimodal
+
+- **MetaCLIP2 (multilingual vision-text embeddings)** — <https://huggingface.co/docs/transformers/main/en/model_doc/metaclip2>
+- **Transformers (integration docs)** — <https://huggingface.co/docs/transformers/index>
+- **Text↔Image search notebook (example)** — <https://github.com/huggingface/notebooks/blob/main/examples/image_similarity.ipynb>
+
 ## Voice / Speech
 
 - **Parlant** — <https://github.com/parlant-io>
