@@ -83,6 +83,7 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
     Engine gates (rate/role/domain allowlists), consent prompts, and full trace/provenance.
     - Supports read/fetch and write/actions (e.g., Jira ticket updates, GitHub ops, Slack/Zapier
       flows); composable in multi-tool chains with policy & audit.
+  - Vision embeddings: **MetaCLIP2** adapter (encode image/text queries; multilingual).
 
 - **Memory Fabric** — Episodic/semantic/skills; vector+graph (Qdrant/Weaviate/Graph store);
   retrieval policies; decision narratives.
