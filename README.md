@@ -1,7 +1,6 @@
 # NAESTRO — Orchestrator Platform
 
-[![CI][ci-badge]][ci]
-[![Release Please][rp-badge]][release-please]
+[![CI][ci-badge]][ci] [![Release Please][rp-badge]][release-please]
 [![Coverage][cov-badge]][codecov]
 
 [ci-badge]: https://github.com/cputer/naestro/actions/workflows/ci.yml/badge.svg?branch=main
@@ -46,6 +45,7 @@ research and code generation to SEO, Geo analytics, and multimodal interaction.
 - [Apple sidecars](docs/APPLE_MODELS.md)
 - [Integrations](docs/INTEGRATIONS.md)
 - [Graphiti Guide](docs/GRAPHITI.md)
+- [Orchestrator collaboration](docs/orchestrator_collaboration.md)
 - [Studio ↔ Core API contract](docs/UI_API_CONTRACT.md)
 - [VS Code Extension](docs/VS_CODE_EXTENSION.md)
 - [No-Replit deployment](docs/NO_REPLIT_DEPLOY.md)
@@ -239,4 +239,3 @@ MIT — see [License](LICENSE).
 ## Appendices / Key Integrations
 
 - **MetaCLIP2** — multilingual vision-text embeddings for cross-modal retrieval and grounding.
-
