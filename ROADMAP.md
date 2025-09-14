@@ -412,11 +412,13 @@ constitutional bypass.
 - ASR/TTS (Parlant/VibeVoice/DIA)
 - PDF/OCR (PyMuPDF/Tesseract)
 - Playwright browser agent
-- Fusion Controller (multimodal I/O)  
+- Fusion Controller (multimodal I/O)
+- **MetaCLIP2** embedding service + vector index; image region extraction (saliency or OCR blocks); Studio preview for visual citations.
   **Exit Criteria:**
 - Voice roundtrip working
 - PDF → structured JSON
 - Browser agent completes form
+- Cross-modal search demo (“find the whiteboard with graph about revenue”); answer includes **image region citation** and supporting text.
 
 ---
 
