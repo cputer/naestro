@@ -1,10 +1,11 @@
 from __future__ import annotations
-from typing import Any, Dict, List, Optional
+
 import json
-from copy import deepcopy
+from typing import Any, Dict, List, Optional
 
 try:
     import jsonschema  # type: ignore
+
     _HAS_JSONSCHEMA = True
 except Exception:
     _HAS_JSONSCHEMA = False
@@ -21,11 +22,16 @@ DEFAULT_COLLAB_PREFS: Dict[str, Any] = {
 }
 
 _ALLOWED_MODES = {"solo", "consult", "collaborate", "consensus", "swarm"}
-_ALLOWED_STRATS = {"self_if_confident", "aggregate_always", "ask_clarify_below_threshold"}
+_ALLOWED_STRATS = {
+    "self_if_confident",
+    "aggregate_always",
+    "ask_clarify_below_threshold",
+}
+
 
 def clamp_prefs(prefs: Dict[str, Any]) -> Dict[str, Any]:
-    out = deepcopy(DEFAULT_COLLAB_PREFS)
-    out.update(prefs or {})
+    prefs = prefs or {}
+    out: Dict[str, Any] = {k: prefs.get(k, v) for k, v in DEFAULT_COLLAB_PREFS.items()}
     # enums
     if out["mode"] not in _ALLOWED_MODES:
         out["mode"] = DEFAULT_COLLAB_PREFS["mode"]
@@ -46,6 +52,7 @@ def clamp_prefs(prefs: Dict[str, Any]) -> Dict[str, Any]:
     out["confidence_threshold"] = max(0.0, min(1.0, thr))
     return out
 
+
 def compose_cop_header(prefs: Dict[str, Any]) -> str:
     b = clamp_prefs(prefs)
     auto = "✓" if b["auto"] else "✗"
@@ -61,14 +68,18 @@ def compose_cop_header(prefs: Dict[str, Any]) -> str:
         f"strategy={b['answer_strategy']}(th={b['confidence_threshold']:.2f})"
     )
 
+
 def _maybe_validate(plan: Dict[str, Any]) -> None:
     if not _HAS_JSONSCHEMA:
         return
-    import pathlib, json  # local import to keep optional
+    import json  # local import to keep optional
+    import pathlib
+
     schema_path = pathlib.Path("schemas/plan.schema.json")
     if schema_path.exists():
         schema = json.loads(schema_path.read_text(encoding="utf-8"))
         jsonschema.validate(instance=plan, schema=schema)
+
 
 def compile_plan(
     goal: str,
