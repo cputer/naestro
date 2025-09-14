@@ -6,6 +6,7 @@
     "md:fix": "markdownlint-cli2 --fix \"**/*.md\"",
     "md:fmt": "prettier --write \"**/*.md\"",
     "md:check": "prettier --check \"**/*.md\" && markdownlint-cli2 \"**/*.md\" \"#**/node_modules\"",
+    "link-check": "npm run markdown-link-check",
     "markdown-link-check": "markdown-link-check REFERENCES.md ROADMAP.md",
     "test": "pytest"
   },
