@@ -87,12 +87,14 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
 - **Memory Fabric** — Episodic/semantic/skills; vector+graph (Qdrant/Weaviate/Graph store);
   retrieval policies; decision narratives.
 - **Evaluators** — Code/static/factuality/safety/latency/cost; trajectory evaluators; AI Safety
-  Index gates.
+  Index gates. Add **visual-grounding checks**: verify that a claimed fact is supported by an image
+  region (IoU threshold) and matching caption text; fail if mismatch or low similarity.
 - **Claim Verifier** — Chain-of-verification, citations, abstention, uncertainty calibration.
 - **Introspector** — Failure mining; lessons; prompt/route/tool upgrades; AlphaEvolve proposals;
   metacog narratives.
 - **Self-PR Bot** — Opens PRs; canary; sign/merge with green; escalates constitutional deltas.
-- **Evidence Store** — Short-lived artifacts (crawl chunks, repo digests, passages) + provenance.
+- **Evidence Store** — now supports **multimodal artifacts** (images/screenshots/diagrams) with
+  vector indices powered by MetaCLIP2; stores region-level boxes/masks for visual citations.
 - **REFRAG Controller** — Compression/expansion policy; encoder+projection; vLLM/TRT-LLM hooks.
 - **AgentOps Orchestrator** — Capability→trajectory→final evaluators; HITL gates; multi-agent
   metrics. Selects optimal chunking strategy dynamically.
