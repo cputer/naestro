@@ -60,7 +60,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **Agent Squad (AWS Labs)** — <https://github.com/awslabs/agent-squad>
   - Docs — <https://awslabs.github.io/agent-squad/>
 - **Open Computer Agent (OCA)** — <https://github.com/oc-agent/oc-agent>
-- **OmniNova** — <https://github.com/omninova-ai/omninova>
+- **OmniNova** — <https://github.com/Boyyey/omninova>
 - **Symphony** — <https://github.com/symphony-llm/symphony>
 - **ART Prompt-Ops** — <https://github.com/promptslab/ART>
 - **finllm-apps (cross-framework finance agents)** — <https://github.com/tinztwins/finllm-apps>
@@ -101,7 +101,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 
 ## Agent Learning / RL / Evolution
 
-- **Agent Lightning** — <https://huggingface.co/papers/2409.00422>
+- **Agent Lightning** — <https://arxiv.org/abs/2409.00422>
 - **AlphaEvolve (performance-guided codegen)** — <https://arxiv.org/abs/2409.00567>
 - **Reinforcement Learning for ML Engineering Agents** — <https://arxiv.org/abs/2509.01684>
 

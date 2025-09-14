@@ -1,0 +1,19 @@
+{
+  "retryOn429": true,
+  "retryCount": 3,
+  "timeout": "20s",
+  "aliveStatusCodes": [200, 206, 301, 302, 308],
+  "ignorePatterns": [
+    { "pattern": "^mailto:" },
+    { "pattern": "localhost(:\\d+)?" },
+    { "pattern": "bailian.console.alibabacloud.com/.+#/doc/" },
+    { "pattern": "huggingface.co/HuggingFaceTB/SmolLM-3B" },
+    { "pattern": "marketplace.nvidia.com/en-us/developer/dgx-spark/" },
+    { "pattern": "github.com/oc-agent/oc-agent" },
+    { "pattern": "github.com/symphony-llm/symphony" },
+    { "pattern": "github.com/promptslab/ART" },
+    { "pattern": "huggingface.co/spaces/Qwen/Qwen3-ASR" },
+    { "pattern": "huggingface.co/Qwen/Qwen3-ASR" },
+    { "pattern": "venturebeat.com/dev/openai-adds-powerful-but-dangerous-support-for-mcp-in-chatgpt-dev-mode" }
+  ]
+}
