@@ -101,8 +101,8 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
   metrics. Selects optimal chunking strategy dynamically.
 - **PO Policy Module** — Preference optimization suite (PVPO/DCPO/…); stability/effectiveness
   monitors.
-- **Collaboration Modes & Depth** — Per-run preferences for orchestrator collaboration with
-  auto escalation, budgets, and answer strategies. See
+- **Collaboration Modes & Depth** — Per-run preferences for orchestrator collaboration with auto
+  escalation, budgets, and answer strategies. See
   [docs/orchestrator_collaboration.md](docs/orchestrator_collaboration.md).
 - **Runtime Adapters** — LangGraph/CrewAI/AgentScope/AutoGen/Agent Squad/Semantic Kernel/SuperAGI
   with policy/trace parity.
@@ -416,12 +416,13 @@ constitutional bypass.
 - PDF/OCR (PyMuPDF/Tesseract)
 - Playwright browser agent
 - Fusion Controller (multimodal I/O)
-- **MetaCLIP2** embedding service + vector index; image region extraction (saliency or OCR blocks); Studio preview for visual citations.
-  **Exit Criteria:**
+- **MetaCLIP2** embedding service + vector index; image region extraction (saliency or OCR blocks);
+  Studio preview for visual citations. **Exit Criteria:**
 - Voice roundtrip working
 - PDF → structured JSON
 - Browser agent completes form
-- Cross-modal search demo (“find the whiteboard with graph about revenue”); answer includes **image region citation** and supporting text.
+- Cross-modal search demo (“find the whiteboard with graph about revenue”); answer includes **image
+  region citation** and supporting text.
 
 ---
 
@@ -784,13 +785,17 @@ Every LLM span must include:
 - Federated task delegation between orgs.
 - Marketplace rentals of expert agents.
 - Strategic dialogues for corporate planning.
-- **Cross-modal incident triage** — search logs + screenshots ("error dialog about OAuth on staging") with visual box citation.
-- **Docs & diagrams** — retrieve architecture diagram segments that support a claim and cite the exact region.
+- **Cross-modal incident triage** — search logs + screenshots ("error dialog about OAuth on
+  staging") with visual box citation.
+- **Docs & diagrams** — retrieve architecture diagram segments that support a claim and cite the
+  exact region.
 
 ## 13) Risks & Mitigations
 
-- **Visual hallucinations / weak grounding** → require region-level evidence with IoU≥τ and cosine similarity≥σ; block delivery if evaluator fails; fall back to text-only RAG.
-- **Storage growth** → thumbnail + region-crop tiering; TTL for rarely accessed artifacts; object-store lifecycle rules.
+- **Visual hallucinations / weak grounding** → require region-level evidence with IoU≥τ and cosine
+  similarity≥σ; block delivery if evaluator fails; fall back to text-only RAG.
+- **Storage growth** → thumbnail + region-crop tiering; TTL for rarely accessed artifacts;
+  object-store lifecycle rules.
 
 ---
 

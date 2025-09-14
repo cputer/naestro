@@ -45,7 +45,8 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **TensorRT Model Optimizer (NVIDIA)** — <https://github.com/NVIDIA/TensorRT-Model-Optimizer>
 - **LMCache** — <https://github.com/LMCache/LMCache>
 - **NIXL (KV / cache transfer)** — <https://github.com/ai-dynamo/nixl>
-- **NVIDIA DGX Spark (Workstation page)** — <https://www.nvidia.com/en-us/products/workstations/dgx-spark/>
+- **NVIDIA DGX Spark (Workstation page)** —
+  <https://www.nvidia.com/en-us/products/workstations/dgx-spark/>
 - **NVIDIA DGX Spark Datasheet (PDF)** —
   <https://nvdam.widen.net/s/tlzm8smqjx/workstation-datasheet-dgx-spark-gtc25-spring-nvidia-us-3716899-web>
 
@@ -66,16 +67,17 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **finllm-apps (cross-framework finance agents)** — <https://github.com/tinztwins/finllm-apps>
 - **Nebius UDR (Universal Deep Research prototype)** —
   <https://github.com/demianarc/nebiusaistudiodeepresearch>
-- **SFR-DeepResearch (self-factored retrieval)** —
-  <https://github.com/arekfu/sfr-deep-research>
+- **SFR-DeepResearch (self-factored retrieval)** — <https://github.com/arekfu/sfr-deep-research>
 - **Awesome-Nano-Banana-images (edge/device OS images; reference-only)** —
   <https://github.com/PicoTrex/Awesome-Nano-Banana-images>
 
 ## Vision / Multimodal
 
-- **MetaCLIP2 (multilingual vision-text embeddings)** — <https://huggingface.co/docs/transformers/model_doc/metaclip2>
+- **MetaCLIP2 (multilingual vision-text embeddings)** —
+  <https://huggingface.co/docs/transformers/model_doc/metaclip2>
 - **Transformers (integration docs)** — <https://huggingface.co/docs/transformers/index>
-- **Text↔Image search notebook (example)** — <https://github.com/huggingface/notebooks/blob/main/examples/image_similarity.ipynb>
+- **Text↔Image search notebook (example)** —
+  <https://github.com/huggingface/notebooks/blob/main/examples/image_similarity.ipynb>
 
 ## Voice / Speech
 
@@ -127,7 +129,8 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 ## Tooling / Connectors / Protocols
 
 - **Model Context Protocol (MCP)** — <https://modelcontextprotocol.io/>
-- **OpenAI adds powerful but dangerous support for MCP in ChatGPT Dev Mode (VentureBeat)** — _link unavailable_
+- **OpenAI adds powerful but dangerous support for MCP in ChatGPT Dev Mode (VentureBeat)** — _link
+  unavailable_
 - **Zapier Platform** — <https://platform.zapier.com/>
 - **Jira Cloud Platform** — <https://developer.atlassian.com/cloud/jira/platform/>
 
