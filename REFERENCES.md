@@ -66,6 +66,8 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **finllm-apps (cross-framework finance agents)** — <https://github.com/tinztwins/finllm-apps>
 - **Nebius UDR (Universal Deep Research prototype)** —
   <https://github.com/demianarc/nebiusaistudiodeepresearch>
+- **SFR-DeepResearch (self-factored retrieval)** —
+  <https://github.com/arekfu/sfr-deep-research>
 - **Awesome-Nano-Banana-images (edge/device OS images; reference-only)** —
   <https://github.com/PicoTrex/Awesome-Nano-Banana-images>
 
