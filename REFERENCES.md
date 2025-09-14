@@ -16,7 +16,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 
 - **NVIDIA — Small Language Models for Agentic AI (2025)** —
   <https://www.vectrix.ai/blog-post/understanding-large-and-small-language-models-key-differences-and-applications>
-- **SmolLM3** — <https://huggingface.co/HuggingFaceTB/SmolLM-3B>
+- **SmolLM3** — <https://huggingface.co/HuggingFaceTB/SmolLM3-3B>
 - **SmolHub (SLM Benchmark/Directory)** — <https://www.smolhub.com/smolhub>
 - **Phi-3-mini** — <https://huggingface.co/microsoft/phi-3-mini-4k-instruct>
 - **Qwen2.5** — <https://huggingface.co/Qwen>
@@ -45,7 +45,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **TensorRT Model Optimizer (NVIDIA)** — <https://github.com/NVIDIA/TensorRT-Model-Optimizer>
 - **LMCache** — <https://github.com/LMCache/LMCache>
 - **NIXL (KV / cache transfer)** — <https://github.com/ai-dynamo/nixl>
-- **NVIDIA DGX Spark (Marketplace)** — <https://marketplace.nvidia.com/en-us/developer/dgx-spark/>
+- **NVIDIA DGX Spark (Workstation page)** — <https://www.nvidia.com/en-us/products/workstations/dgx-spark/>
 - **NVIDIA DGX Spark Datasheet (PDF)** —
   <https://nvdam.widen.net/s/tlzm8smqjx/workstation-datasheet-dgx-spark-gtc25-spring-nvidia-us-3716899-web>
 
@@ -59,10 +59,10 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **AutoAgent (clustered swarms)** — <https://github.com/Link-AGI/AutoAgents>
 - **Agent Squad (AWS Labs)** — <https://github.com/awslabs/agent-squad>
   - Docs — <https://awslabs.github.io/agent-squad/>
-- **Open Computer Agent (OCA)** — <https://github.com/oc-agent/oc-agent>
-- **OmniNova** — <https://github.com/omninova-ai/omninova>
-- **Symphony** — <https://github.com/symphony-llm/symphony>
-- **ART Prompt-Ops** — <https://github.com/promptslab/ART>
+- **Open Computer Agent (OCA)** — _link unavailable_
+- **OmniNova** — <https://github.com/LuChenCornell/OmniNova>
+- **Symphony** — _link unavailable_
+- **ART Prompt-Ops** — _link unavailable_
 - **finllm-apps (cross-framework finance agents)** — <https://github.com/tinztwins/finllm-apps>
 - **Nebius UDR (Universal Deep Research prototype)** —
   <https://github.com/demianarc/nebiusaistudiodeepresearch>
@@ -85,11 +85,11 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
   - Announcement Tweet — <https://x.com/Alibaba_Qwen/status/1965068737297707261>
   - Coverage —
     <https://www.marktechpost.com/2025/09/09/alibaba-qwen-team-releases-qwen3-asr-a-new-speech-recognition-model-built-upon-qwen3-omni-achieving-robust-speech-recogition-performance/>
-  - Hugging Face Demo — <https://huggingface.co/spaces/Qwen/Qwen3-ASR>
+  - Hugging Face Demo — <https://huggingface.co/spaces/Qwen/Qwen3-ASR-Demo>
   - ModelScope Studio — <https://modelscope.cn/studios/Qwen/Qwen3-ASR>
   - API (Bailian) — <https://bailian.console.alibabacloud.com/?tab=doc#/doc/>
   - Main site — <https://qwen.ai/>
-  - Model card — <https://huggingface.co/Qwen/Qwen3-ASR>
+  - Model card — <https://modelscope.cn/models/Qwen/Qwen3-ASR/summary>
 
 ## Safety / Policy / AuthN/Z
 
@@ -101,7 +101,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 
 ## Agent Learning / RL / Evolution
 
-- **Agent Lightning** — <https://huggingface.co/papers/2409.00422>
+- **Agent Lightning** — <https://arxiv.org/abs/2409.00422>
 - **AlphaEvolve (performance-guided codegen)** — <https://arxiv.org/abs/2409.00567>
 - **Reinforcement Learning for ML Engineering Agents** — <https://arxiv.org/abs/2509.01684>
 
@@ -125,8 +125,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 ## Tooling / Connectors / Protocols
 
 - **Model Context Protocol (MCP)** — <https://modelcontextprotocol.io/>
-- **OpenAI adds powerful but dangerous support for MCP in ChatGPT Dev Mode (VentureBeat)** —
-  <https://venturebeat.com/dev/openai-adds-powerful-but-dangerous-support-for-mcp-in-chatgpt-dev-mode>
+- **OpenAI adds powerful but dangerous support for MCP in ChatGPT Dev Mode (VentureBeat)** — _link unavailable_
 - **Zapier Platform** — <https://platform.zapier.com/>
 - **Jira Cloud Platform** — <https://developer.atlassian.com/cloud/jira/platform/>
 
