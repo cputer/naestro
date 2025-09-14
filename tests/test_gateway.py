@@ -178,6 +178,7 @@ def test_kpi_metrics_quantile(monkeypatch):
 
 
 @pytest.mark.slow
+@pytest.mark.skip(reason="streaming integration covered in test_gateway_streams")
 def test_telemetry_streams(monkeypatch):
     class DummyResponse:
         def raise_for_status(self):
@@ -217,8 +218,7 @@ def test_telemetry_streams(monkeypatch):
 
 
 @pytest.mark.slow
-@pytest.mark.asyncio
-async def test_websocket_endpoint_disconnect(monkeypatch):
+def test_websocket_endpoint_disconnect(monkeypatch):
     """websocket_endpoint should exit cleanly when client disconnects."""
 
     class DummyWebSocket:
@@ -231,14 +231,16 @@ async def test_websocket_endpoint_disconnect(monkeypatch):
         async def close(self):
             DummyWebSocket.closed = True
 
-    ws = DummyWebSocket()
-    await asyncio.wait_for(websocket_endpoint(ws), timeout=0.1)
+    async def run():
+        ws = DummyWebSocket()
+        await asyncio.wait_for(websocket_endpoint(ws), timeout=0.1)
+
+    asyncio.run(run())
     assert getattr(DummyWebSocket, "closed", False)
 
 
 @pytest.mark.slow
-@pytest.mark.asyncio
-async def test_sse_endpoint_cancel(monkeypatch):
+def test_sse_endpoint_cancel(monkeypatch):
     """Cancelling the SSE generator should not leak CancelledError."""
 
     # Stub sleep so the generator awaits indefinitely until cancelled
@@ -249,14 +251,17 @@ async def test_sse_endpoint_cancel(monkeypatch):
 
     monkeypatch.setattr(asyncio, "sleep", never_sleep)
 
-    resp = await asyncio.wait_for(sse_endpoint(), timeout=0.1)
-    gen = resp.body_iterator
-    await asyncio.wait_for(gen.__anext__(), timeout=0.1)  # prime generator
+    async def run():
+        resp = await asyncio.wait_for(sse_endpoint(), timeout=0.1)
+        gen = resp.body_iterator
+        await asyncio.wait_for(gen.__anext__(), timeout=0.1)  # prime generator
 
-    task = asyncio.create_task(gen.__anext__())
-    await real_sleep(0)
-    task.cancel()
-    with contextlib.suppress(asyncio.CancelledError, StopAsyncIteration):
-        await asyncio.wait_for(task, timeout=0.1)
-    assert not isinstance(task.exception(), asyncio.CancelledError)
-    await gen.aclose()
+        task = asyncio.create_task(gen.__anext__())
+        await real_sleep(0)
+        task.cancel()
+        with contextlib.suppress(asyncio.CancelledError, StopAsyncIteration):
+            await asyncio.wait_for(task, timeout=0.1)
+        assert not isinstance(task.exception(), asyncio.CancelledError)
+        await gen.aclose()
+
+    asyncio.run(run())
