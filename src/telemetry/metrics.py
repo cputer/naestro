@@ -84,6 +84,13 @@ collab_prompt_depth = LabeledGauge(
     "collab_prompt_depth", "Last requested collaboration depth per mode."
 )
 
+# Preference metrics ---------------------------------------------------------
+
+# Number of times collaboration preferences were clamped.
+pref_clamps = SimpleCounter(
+    "pref_clamps_total", "Number of times collaboration preferences were clamped."
+)
+
 # Server level metrics --------------------------------------------------------
 
 # Total orchestrate requests seen by the gateway server.

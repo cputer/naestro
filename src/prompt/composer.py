@@ -26,7 +26,7 @@ from __future__ import annotations
 from typing import Any, Dict, Iterable, List, Mapping
 
 from orchestrator.planner import clamp_prefs
-from src.telemetry.metrics import collab_prompts, collab_prompt_depth
+from src.telemetry.metrics import collab_prompts, collab_prompt_depth, pref_clamps
 
 
 def _aggregate(responses: Iterable[Mapping[str, Any]]) -> str:
@@ -97,3 +97,27 @@ def choose_answer(responses: List[Mapping[str, Any]], prefs: Mapping[str, Any]) 
 
     # Fallback – aggregate everything.
     return _aggregate(responses)
+
+
+def answer_stream(
+    responses: Iterable[Mapping[str, Any]], prefs: Mapping[str, Any]
+):
+    """Yield a final answer for ``responses`` based on ``prefs``.
+
+    The current implementation is intentionally lightweight: it yields a single
+    chunk containing the result of :func:`choose_answer`.
+    """
+
+    yield choose_answer(list(responses), prefs)
+
+
+def add_pref_clamp(prefs: Mapping[str, Any]) -> Dict[str, Any]:
+    """Clamp collaboration preferences and record a metric.
+
+    This helper wraps :func:`orchestrator.planner.clamp_prefs` so tests can
+    assert that the preferences were clamped and a metric emitted.
+    """
+
+    cfg = clamp_prefs(dict(prefs))
+    pref_clamps.inc()
+    return cfg
