@@ -1,8 +1,8 @@
 # Orchestrator Collaboration Modes & Depth
 
-Naestro's orchestrator supports several collaboration strategies when coordinating with
-online models. These preferences control how aggressively the system fans out work across
-models and how much autonomy the router has to escalate.
+Naestro's orchestrator supports several collaboration strategies when coordinating with online
+models. These preferences control how aggressively the system fans out work across models and how
+much autonomy the router has to escalate.
 
 ## Modes
 
@@ -18,20 +18,33 @@ Depth tunes the intensity of collaboration. `0` is minimal while `3` is exhausti
 
 ## Additional Flags
 
-- **auto** – allow the router to escalate mode/depth if confidence is low and
-  budget and latency caps permit.
+- **auto** – allow the router to escalate mode/depth if confidence is low and budget and latency
+  caps permit.
 - **ask_online** – when `false`, all cloud calls are blocked.
 - **budget_usd** – maximum spend for the run.
 - **p95_latency_s** – target 95th percentile latency.
 - **answer_strategy** – one of `self_if_confident`, `aggregate_always`,
   `ask_clarify_below_threshold` (requires `confidence_threshold`).
 
+## Example
+
+The preferences can be supplied when launching a run or in a job spec:
+
+```json
+{
+  "mode": "collaborate",
+  "depth": 2,
+  "auto": true,
+  "budget_usd": 0.5
+}
+```
+
 ## Telemetry
 
-Runs emit OpenTelemetry/Prometheus metrics prefixed with `orch.` capturing the selected
-mode, depth, auto flag, budgets, and whether an automatic escalation occurred.
+Runs emit OpenTelemetry/Prometheus metrics prefixed with `orch.` capturing the selected mode, depth,
+auto flag, budgets, and whether an automatic escalation occurred.
 
 ## References
 
-See [`ROADMAP.md`](./ROADMAP.md) for upcoming work integrating these preferences
-throughout the planner, router, prompt composer, and UI.
+See [`ROADMAP.md`](../ROADMAP.md) for upcoming work integrating these preferences throughout the
+planner, router, prompt composer, and UI.
