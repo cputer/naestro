@@ -12,6 +12,7 @@ from fastapi import FastAPI, WebSocket
 from fastapi.responses import JSONResponse, StreamingResponse
 from starlette.websockets import WebSocketDisconnect
 from pydantic import BaseModel
+from src.telemetry.metrics import orchestrate_requests, telemetry_events
 
 app = FastAPI(title="NAESTRO Gateway")
 ORCH = os.getenv("ORCH_URL", "http://orchestrator:8081")
@@ -64,6 +65,7 @@ async def orchestrate(task: dict):
     """Proxy task execution to the orchestrator."""
 
     global REQUEST_COUNT, REQUEST_LATENCIES
+    orchestrate_requests.inc()
     start = time.perf_counter()
     async with httpx.AsyncClient(timeout=120) as client:
         try:
@@ -106,6 +108,7 @@ def _kpi_metrics() -> KPIMetrics:
 
 
 def _telemetry_event() -> Telemetry:
+    telemetry_events.inc()
     return Telemetry(
         timestamp=time.time(),
         system=_system_metrics(),

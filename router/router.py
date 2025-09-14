@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Iterable, Sequence
 
 from .collab_policy import CollaborationMode, CollaborationPolicy
+from src.telemetry.metrics import collab_routes
 
 
 class Router:
@@ -31,4 +32,6 @@ class Router:
 
         agents = list(agents)
         CollaborationPolicy.enforce(self.mode, len(agents))
+        # Record the routing event for telemetry purposes.
+        collab_routes.inc(self.mode.value)
         return agents

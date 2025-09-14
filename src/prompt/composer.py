@@ -26,6 +26,7 @@ from __future__ import annotations
 from typing import Any, Dict, Iterable, List, Mapping
 
 from orchestrator.planner import clamp_prefs
+from src.telemetry.metrics import collab_prompts, collab_prompt_depth
 
 
 def _aggregate(responses: Iterable[Mapping[str, Any]]) -> str:
@@ -56,6 +57,9 @@ def add_collab_headers(prompt: str, prefs: Mapping[str, Any]) -> str:
     mode = cfg["mode"]
     depth = cfg["depth"]
     header = f"<<cop.mode:{mode}>> <<cop.depth:{depth}>>"
+    # Emit telemetry for prompt composition.
+    collab_prompts.inc(mode)
+    collab_prompt_depth.set(mode, depth)
     return f"{header}\n{prompt}"
 
 
