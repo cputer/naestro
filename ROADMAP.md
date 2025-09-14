@@ -59,7 +59,9 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
 16. **SLM-first efficiency** — Router defaults to small language models for lower cost and latency,
     escalating to larger models only when needed. Router may consult resources like SmolHub for
     up-to-date benchmarks on SLM performance/cost tradeoffs.
-17. **Ultra-sparse MoE scaling** — Qwen3-Next-80B-A3B uses an ultra-sparse MoE (~3B active params per token; extreme low activation ratio), delivering order-of-magnitude efficiency gains over Qwen3-32B at 32K+ context [Qwen3-Next Blog][Qwen3-Next].
+17. **Ultra-sparse MoE scaling** — Qwen3-Next-80B-A3B uses an ultra-sparse MoE (~3B active params
+    per token; extreme low activation ratio), delivering order-of-magnitude efficiency gains over
+    Qwen3-32B at 32K+ context [Qwen3-Next Blog][Qwen3-Next].
 
 ---
 
@@ -75,21 +77,24 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
   immutable audit.
 - **Tool/Skill Registry** — Typed contracts (JSON Schema), adapters
   (MCP/HTTP/CLI/DB/Browser/PDF/Vision/ASR/TTS/SEO/Geo/**n8n/Nango/Firecrawl/Gitingest**).
-  - MCP is a first-class integration target for both read (fetch/search) and write (actions) connectors [MCP-DevMode]. Naestro can directly compose MCP tools for workflows like Jira updates, GitHub/CI
-    operations, Slack/Email, or Zapier/n8n automations—while enforcing Policy Engine gates
-    (rate/role/domain allowlists), consent prompts, and full trace/provenance.
+  - MCP is a first-class integration target for both read (fetch/search) and write (actions)
+    connectors [MCP-DevMode]. Naestro can directly compose MCP tools for workflows like Jira
+    updates, GitHub/CI operations, Slack/Email, or Zapier/n8n automations—while enforcing Policy
+    Engine gates (rate/role/domain allowlists), consent prompts, and full trace/provenance.
     - Supports read/fetch and write/actions (e.g., Jira ticket updates, GitHub ops, Slack/Zapier
       flows); composable in multi-tool chains with policy & audit.
 
 - **Memory Fabric** — Episodic/semantic/skills; vector+graph (Qdrant/Weaviate/Graph store);
   retrieval policies; decision narratives.
 - **Evaluators** — Code/static/factuality/safety/latency/cost; trajectory evaluators; AI Safety
-  Index gates.
+  Index gates. Add **visual-grounding checks**: verify that a claimed fact is supported by an image
+  region (IoU threshold) and matching caption text; fail if mismatch or low similarity.
 - **Claim Verifier** — Chain-of-verification, citations, abstention, uncertainty calibration.
 - **Introspector** — Failure mining; lessons; prompt/route/tool upgrades; AlphaEvolve proposals;
   metacog narratives.
 - **Self-PR Bot** — Opens PRs; canary; sign/merge with green; escalates constitutional deltas.
-- **Evidence Store** — Short-lived artifacts (crawl chunks, repo digests, passages) + provenance.
+- **Evidence Store** — now supports **multimodal artifacts** (images/screenshots/diagrams) with
+  vector indices powered by MetaCLIP2; stores region-level boxes/masks for visual citations.
 - **REFRAG Controller** — Compression/expansion policy; encoder+projection; vLLM/TRT-LLM hooks.
 - **AgentOps Orchestrator** — Capability→trajectory→final evaluators; HITL gates; multi-agent
   metrics.
@@ -299,9 +304,12 @@ constitutional bypass.
 - **Gemini-2.5 Pro**
 - **Claude**
 - **Grok**
-- **Qwen3-Next-80B-A3B** — Ultra-sparse MoE (~3B active params per token; extreme low activation ratio). Order-of-magnitude efficiency gains (internal benchmarks show much lower cost/latency than Qwen3-32B, especially at 32K+ context) [Qwen3-Next Blog][Qwen3-Next]
+- **Qwen3-Next-80B-A3B** — Ultra-sparse MoE (~3B active params per token; extreme low activation
+  ratio). Order-of-magnitude efficiency gains (internal benchmarks show much lower cost/latency than
+  Qwen3-32B, especially at 32K+ context) [Qwen3-Next Blog][Qwen3-Next]
 - **ERNIE X1.1 (Baidu API, Qianfan)** — agent-tuned reasoning model with strong factuality and
-  instruction following; performs on par with GPT-5/Gemini-2.5 Pro [Reuters][ERNIE-Reuters] [PRNewswire][ERNIE-PRN].
+  instruction following; performs on par with GPT-5/Gemini-2.5 Pro [Reuters][ERNIE-Reuters]
+  [PRNewswire][ERNIE-PRN].
 
 #### Routing policy
 
@@ -324,10 +332,10 @@ constitutional bypass.
 - **Scientific Code Pipelines:** agentic planning → code generation → experiment orchestration →
   evaluation loops tailored for empirical/scientific software; design informed by recent research on
   AI systems that help scientists write expert-level empirical software.
-- **Multimodal Search & Retrieval (MetaCLIP2)** — multilingual image↔text embeddings for cross-modal
-  search, screenshot/diagram grounding, and gallery/asset retrieval. Integrates with Evidence Store so
-  citations can reference an image region + text span. Enables hybrid RAG where visual evidence is
-  retrieved alongside text passages.
+- **Multimodal Search & Retrieval (MetaCLIP2)** — multilingual image↔text embeddings for
+  cross-modal search, screenshot/diagram grounding, and gallery/asset retrieval. Integrates with
+  Evidence Store so citations can reference an image region + text span. Enables hybrid RAG where
+  visual evidence is retrieved alongside text passages.
 
 ---
 
