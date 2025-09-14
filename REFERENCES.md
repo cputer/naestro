@@ -1,7 +1,8 @@
 # REFERENCES
 
 This file centralizes all links to external resources referenced in the Naestro roadmap and related
-docs. Keep it authoritative and in sync with `ROADMAP.md`.
+docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration modes, consult the
+[orchestrator collaboration guide](docs/orchestrator_collaboration.md).
 
 ---
 
