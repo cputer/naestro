@@ -61,6 +61,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 - **AutoAgent (clustered swarms)** — <https://github.com/Link-AGI/AutoAgents>
 - **Agent Squad (AWS Labs)** — <https://github.com/awslabs/agent-squad>
   - Docs — <https://awslabs.github.io/agent-squad/>
+- **Semantic Kernel** — <https://github.com/microsoft/semantic-kernel>
 - **Open Computer Agent (OCA)** — _link unavailable_
 - **OmniNova** — <https://github.com/LuChenCornell/OmniNova>
 - **Symphony** — _link unavailable_
@@ -68,7 +69,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 - **finllm-apps (cross-framework finance agents)** — <https://github.com/tinztwins/finllm-apps>
 - **Nebius UDR (Universal Deep Research prototype)** —
   <https://github.com/demianarc/nebiusaistudiodeepresearch>
-- **SFR-DeepResearch (self-factored retrieval)** — <https://github.com/arekfu/sfr-deep-research>
+- **SFR-DeepResearch (self-factored retrieval)** — _link unavailable_
 - **Awesome-Nano-Banana-images (edge/device OS images; reference-only)** —
   <https://github.com/PicoTrex/Awesome-Nano-Banana-images>
 
@@ -134,6 +135,8 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
   unavailable_
 - **Zapier Platform** — <https://platform.zapier.com/>
 - **Jira Cloud Platform** — <https://developer.atlassian.com/cloud/jira/platform/>
+- **n8n (workflow automation)** — <https://n8n.io>
+- **Nango (SaaS integrations)** — <https://nango.dev>
 
 ## Model Architecture Overviews
 
