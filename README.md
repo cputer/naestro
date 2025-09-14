@@ -226,3 +226,10 @@ MIT — see [License](LICENSE).
 | Providers schema  | v0.6+   | Core v1.4+                    |
 
 > Automated updates via Dependabot.
+
+---
+
+## Appendices / Key Integrations
+
+- **MetaCLIP2** — multilingual vision-text embeddings for cross-modal retrieval and grounding.
+
