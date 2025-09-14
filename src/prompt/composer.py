@@ -72,12 +72,12 @@ def choose_answer(responses: List[Mapping[str, Any]], prefs: Mapping[str, Any]) 
     answer is selected.
     """
 
+    if not responses:
+        return ""
+
     cfg = clamp_prefs(dict(prefs))
     strat = cfg["answer_strategy"]
     threshold = float(cfg["confidence_threshold"])
-
-    if not responses:
-        return ""
 
     top = responses[0]
     top_conf = float(top.get("confidence", 0.0))
