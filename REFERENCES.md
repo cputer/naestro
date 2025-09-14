@@ -30,13 +30,13 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 
 - **REFRAG (Long-context acceleration)** — <https://arxiv.org/abs/2509.01092>
 - **GraphRAG** — <https://github.com/microsoft/graphrag>
-- **LazyGraphRAG** — <https://github.com/microsoft/graphrag>
+- **LazyGraphRAG** — <https://github.com/sanikacentric/LazyGraphRAG>
 - **Firecrawl (crawl → extract → chunk → index)** — <https://github.com/mendableai/firecrawl>
-- **Gitingest (repo → digest)** — <https://github.com/kurtosis-tech/gitingest>
+- **Gitingest (repo → digest)** — <https://github.com/coderamp-labs/gitingest>
 - **Tensorlake (metadata-augmented RAG)** — <https://github.com/tensorlakeai/tensorlake>
 - **Agentic RAG (patterns/overview)** — _(internal)_ Agents Companion (Feb 2025)
 - **Advanced Chunking Strategies for RAG (Weaviate Blog, 2025)** —
-  <https://weaviate.io/blog/chunking-strategies>
+  <https://weaviate.io/blog/chunking-strategies-for-rag>
 
 ## Scaling / Serving / Optimization
 
@@ -56,7 +56,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **AgentScope** — <https://github.com/modelscope/agentscope>
 - **AutoGen** — <https://github.com/microsoft/autogen>
 - **SuperAGI** — <https://github.com/TransformerOptimus/SuperAGI>
-- **AutoAgent (clustered swarms)** — <https://github.com/SylphAI-Inc/AutoAgent>
+- **AutoAgent (clustered swarms)** — <https://github.com/Link-AGI/AutoAgents>
 - **Agent Squad (AWS Labs)** — <https://github.com/awslabs/agent-squad>
   - Docs — <https://awslabs.github.io/agent-squad/>
 - **Open Computer Agent (OCA)** — <https://github.com/oc-agent/oc-agent>
@@ -71,7 +71,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 
 ## Vision / Multimodal
 
-- **MetaCLIP2 (multilingual vision-text embeddings)** — <https://huggingface.co/docs/transformers/main/en/model_doc/metaclip2>
+- **MetaCLIP2 (multilingual vision-text embeddings)** — <https://huggingface.co/docs/transformers/model_doc/metaclip2>
 - **Transformers (integration docs)** — <https://huggingface.co/docs/transformers/index>
 - **Text↔Image search notebook (example)** — <https://github.com/huggingface/notebooks/blob/main/examples/image_similarity.ipynb>
 
@@ -79,7 +79,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 
 - **Parlant** — <https://github.com/parlant-io>
 - **VibeVoice** — <https://github.com/vibevoice>
-- **DIA TTS** — <https://github.com/diattss>
+- **DIA TTS** — <https://github.com/diatts>
 - **Qwen3-ASR (Multilingual ASR)**
   - Blog — <https://qwen.ai/blog?id=41e4c0f2a632d9ec23a7c51a47f0f16f>
   - Announcement Tweet — <https://x.com/Alibaba_Qwen/status/1965068737297707261>
