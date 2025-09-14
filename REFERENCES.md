@@ -32,6 +32,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`.
 - **Gitingest (repo → digest)** — <https://github.com/kurtosis-tech/gitingest>
 - **Tensorlake (metadata-augmented RAG)** — <https://github.com/tensorlakeai/tensorlake>
 - **Agentic RAG (patterns/overview)** — _(internal)_ Agents Companion (Feb 2025)
+- **Advanced Chunking Strategies for RAG (Weaviate Blog, 2025)** — <https://weaviate.io/blog/chunking-strategies>
 
 ## Scaling / Serving / Optimization
 
