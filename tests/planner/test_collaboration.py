@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pytest
 
@@ -40,8 +41,12 @@ def test_overrides_and_bounds():
 
 
 def test_schema_validation():
-    pytest.importorskip("jsonschema")
+    jsonschema = pytest.importorskip("jsonschema")
     plan = compile_plan("Y", tasks=[], inputs={}, outputs={}, overrides=None)
+    schema_path = Path(__file__).resolve().parents[2] / "schemas" / "plan.schema.json"
+    with open(schema_path) as f:
+        schema = json.load(f)
+    jsonschema.validate(plan, schema)
     assert isinstance(plan, dict)
 
 
