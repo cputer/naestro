@@ -413,6 +413,8 @@ constitutional bypass.
 **Deliverables:**
 
 - ASR/TTS (Parlant/VibeVoice/DIA)
+  - SV2TTS / Real-Time Voice Cloning is prototype-only and not suitable for production.
+  - Preferred production TTS: NVIDIA Riva, Coqui XTTS v2, Piper, ElevenLabs, PlayHT, Azure TTS, Google TTS, Amazon Polly.
 - PDF/OCR (PyMuPDF/Tesseract)
 - Playwright browser agent
 - Fusion Controller (multimodal I/O)
