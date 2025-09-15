@@ -57,9 +57,9 @@ system Node enabled.
 
 Run these commands locally to mirror the CI jobs:
 
-- **UI smoke**: `npm ci -C ui && npm run test:smoke -C ui`
+- **UI smoke**: `pnpm install --frozen-lockfile -C ui && pnpm run test:smoke -C ui`
 - **Python smoke**: `pytest -q -k "health or smoke"`
-- **UI full**: `npm ci -C ui && CI=true npm run test:ci -C ui`
+- **UI full**: `pnpm install --frozen-lockfile -C ui && CI=true pnpm run test:ci -C ui`
 - **Python full**:
   `pytest -m "not slow" --maxfail=1 -q --durations=10 --cov=src --cov-report=xml --cov-fail-under=100`
 
