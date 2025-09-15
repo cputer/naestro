@@ -37,7 +37,7 @@
     "prop-types": "^15.8.1",
     "typescript": "^5.5.4",
     "vite": "^7.1.5",
-    "vitest": "^2.1.9"
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
