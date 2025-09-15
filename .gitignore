@@ -9,6 +9,9 @@ __pycache__/
 node_modules/
 **/node_modules/
 
+# Ignore pnpm lockfiles
+pnpm-lock.yaml
+
 # Built UI output
 ui/dist/
 
