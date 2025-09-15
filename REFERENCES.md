@@ -96,6 +96,14 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
   - API (Bailian) — <https://bailian.console.alibabacloud.com/?tab=doc#/doc/>
   - Main site — <https://qwen.ai/>
   - Model card — <https://modelscope.cn/models/Qwen/Qwen3-ASR/summary>
+- **NVIDIA Riva TTS** — <https://developer.nvidia.com/riva>
+- **Coqui XTTS v2** — <https://huggingface.co/coqui/XTTS-v2>
+- **Piper** — <https://github.com/rhasspy/piper>
+- **ElevenLabs** — <https://elevenlabs.io>
+- **PlayHT** — <https://play.ht>
+- **Azure Neural TTS** — <https://azure.microsoft.com/products/ai-services/text-to-speech>
+- **Google WaveNet / Studio Voices** — <https://cloud.google.com/text-to-speech>
+- **Amazon Polly** — <https://aws.amazon.com/polly/>
 
 ## Safety / Policy / AuthN/Z
 
