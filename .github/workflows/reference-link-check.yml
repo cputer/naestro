@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 22
       - name: Install dependencies
-        run: npm ci
+        run: npm install --no-audit --no-fund
       - name: Check links
         run: |
           set -euo pipefail
