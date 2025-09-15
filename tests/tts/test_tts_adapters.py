@@ -31,6 +31,7 @@ def test_ssml_parsing_with_null_adapter():
         "break.ms": 500,
     }
     adapter = NullTTSAdapter()
+    assert adapter.supports_ssml() is True
     req = TTSRequest(text=ssml, ssml=True)
     data = b"".join(chunk.data for chunk in adapter.synthesize_stream(req))
     assert data.decode() == text
@@ -44,3 +45,14 @@ def test_piper_stub_requires_plain_text():
     req = TTSRequest(text=text)
     data = b"".join(chunk.data for chunk in adapter.synthesize_stream(req))
     assert data.decode() == text
+
+
+def test_parse_ssml_errors_and_tail():
+    malformed = "<emphasis>oops"
+    text, controls = parse_ssml(malformed)
+    assert text == malformed
+    assert controls == {}
+
+    text, controls = parse_ssml('<break time="oopsms"/>after')
+    assert text == "after"
+    assert controls == {}
