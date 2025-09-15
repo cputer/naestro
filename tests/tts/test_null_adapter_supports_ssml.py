@@ -1,4 +1,4 @@
-from src.voice import NullTTSAdapter
+from src.voice.adapters.tts_null import NullTTSAdapter
 
 def test_null_adapter_supports_ssml() -> None:
     adapter = NullTTSAdapter()
