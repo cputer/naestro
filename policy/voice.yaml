@@ -1,0 +1,10 @@
+# Policy rules for text-to-speech consent and PII handling.
+voiceConsent:
+  required: true
+  verifyRights: true
+piiRedaction:
+  enabled: true
+storage:
+  signedHashes:
+    prompts: true
+    audio: true
