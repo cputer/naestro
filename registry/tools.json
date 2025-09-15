@@ -8,5 +8,20 @@
       },
       "required": ["url"]
     }
+  },
+  "tts:synthesize": {
+    "description": "Synthesize speech using a configured TTS provider",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "provider": { "type": "string" },
+        "voice": { "type": "string" },
+        "style": { "type": "string" },
+        "stream": { "type": "boolean", "default": true },
+        "endpoint": { "type": "string" }
+      },
+      "required": ["text", "provider", "voice"]
+    }
   }
 }
