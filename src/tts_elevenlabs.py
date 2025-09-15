@@ -4,8 +4,15 @@ from __future__ import annotations
 
 import os
 from typing import Iterable
+from types import SimpleNamespace
 
-import requests
+try:  # pragma: no cover - exercised via tests
+    import requests  # type: ignore
+except ModuleNotFoundError:  # pragma: no cover
+    def _missing_requests(*args, **kwargs):
+        raise RuntimeError("requests library is required for ElevenLabs TTS")
+
+    requests = SimpleNamespace(post=_missing_requests)
 
 
 def synthesize(
