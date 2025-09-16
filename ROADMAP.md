@@ -2,6 +2,16 @@
 
 References for external resources are centralized in [REFERENCES.md](REFERENCES.md).
 
+## What's new
+
+- **REFRAG long-context acceleration (2025)** — The latest REFRAG paper introduces a retrieval-
+  aware compression pipeline that unlocks ~30.8× faster time-to-first-token (TTFT) while enabling
+  16× effective context windows for open-weight models. Read the full paper here: [REFRAG: Retrieval
+  Enhanced Fragmentation for Long-Context LLMs (PDF)](https://arxiv.org/pdf/2509.01092).
+- **Naestro integration** — Naestro exposes REFRAG through the dedicated REFRAG Controller coupled
+  with vLLM/TensorRT-LLM serving adapters so orchestrated agents can transparently benefit from
+  accelerated long-context inference.
+
 ## North Star
 
 Naestro evolves from a goal-driven multi-agent orchestrator into a continuously self-improving
