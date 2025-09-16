@@ -5,7 +5,7 @@ References for external resources are centralized in [REFERENCES.md](REFERENCES.
 ## What's new
 
 - **REFRAG long-context acceleration (2025)** — The latest REFRAG paper introduces a retrieval-
-  aware compression pipeline that unlocks ~30.8× faster time-to-first-token (TTFT) while enabling
+  aware compression pipeline that unlocks ~30.8× faster TTFT (time-to-first-token) while enabling
   16× effective context windows for open-weight models. Read the full paper here: [REFRAG: Retrieval
   Enhanced Fragmentation for Long-Context LLMs (PDF)](https://arxiv.org/pdf/2509.01092).
 - **Naestro integration** — Naestro exposes REFRAG through the dedicated REFRAG Controller coupled
@@ -50,7 +50,7 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
    metacognitive narratives.
 6. **Hallucination-resilience** — Retrieval-first planning, claim verifier, abstention, CoVe;
    citation-grounded outputs (informed by [Why LMs Hallucinate]).
-7. **Long-context acceleration** — REFRAG lane for open-weights (**16×** effective context, ~30× TTFT);
+7. **Long-context acceleration** — REFRAG lane for open-weights (**16×** effective context, ~30× TTFT (time-to-first-token));
    bypass for closed APIs.
 8. **AgentOps maturity** — Multi-agent plans, HITL evaluation, trajectory/final-response scoring,
    production robustness (mitigates [Tool-space interference in the MCP era]).
@@ -370,7 +370,7 @@ constitutional bypass.
   - REFRAG Controller manages compression policies, routing, and observability hooks.
   - Encoder + projection service packages the REFRAG encoder, projection heads, and quantized
     adapters for vLLM/SGLang and TensorRT-LLM backends.
-  - Serving hooks expose streaming APIs (AnyLLM/vLLM) with TTFT-aware scheduling and KV cache
+  - Serving hooks expose streaming APIs (AnyLLM/vLLM) with TTFT (time-to-first-token)-aware scheduling and KV cache
     hydration.
   - RL-driven expansion policy selects fragments for reinflation using reward models + bandit
     feedback from downstream evaluators.
@@ -383,7 +383,7 @@ constitutional bypass.
      packets to serving adapters with policy/audit tags.
   3. Decode: serving hooks hydrate KV cache, apply RL expansion, and stream tokens through
      Guardrails/observability before final responses.
-- **Expected wins** — ~30× faster time-to-first-token, 16× effective context, and lower memory/KV
+- **Expected wins** — ~30× faster TTFT (time-to-first-token), 16× effective context, and lower memory/KV
   footprints for long-horizon plans.
 - **Safety & rollout** — gated by policy toggles, offline eval suites, canary traffic, and HITL
   sign-off; fallback path keeps standard decoding for regressions or safety triggers.
@@ -757,6 +757,14 @@ Every LLM span must include:
 - Every run has narrative explanation attached
 - Visual causal graph for last 5 production failures
 
+### Educational & Introspective References
+To support operator understanding and research prototyping, we track minimal, from-scratch LLM builds
+that expose gradients and attention at a granular level (scalar autograd / micrograd lineage). These
+toy models are not production code; they are used for pedagogy, causal interventions, and instrumented
+explanations aligned to Phase U goals.
+
+- [Scalar-Autograd LLM from scratch][ScalarAutogradLLM]
+
 ---
 
 ## Phase V (Weeks 164–172): Marketplace Ecosystem Launch
@@ -875,3 +883,4 @@ Every LLM span must include:
 [Paper2Agent]: REFERENCES.md#research--concepts
 [All You Need Is A Fuzzing Brain]: REFERENCES.md#research--concepts
 [Statistical Methods in Generative AI]: REFERENCES.md#research--concepts
+[ScalarAutogradLLM]: REFERENCES.md#educational--introspection

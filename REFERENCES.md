@@ -6,6 +6,14 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 
 ---
 
+## Educational & Introspection
+
+- **Scalar-Autograd LLM from scratch** — step-by-step tiny framework showing backprop/attention at scalar granularity;
+  useful for explainability demos and causal probes in Phase U.  
+  Link: https://bclarkson-code.com/posts/llm-from-scratch-scalar-autograd/post.html
+
+[ScalarAutogradLLM]: REFERENCES.md#educational--introspection
+
 ## Research & Concepts
 
 - Tool-space interference in the MCP era
