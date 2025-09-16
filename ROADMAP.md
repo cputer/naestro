@@ -40,6 +40,8 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
    criteria; agentic RAG and adaptive sources.
 2. **Model+tool orchestration** — Router chooses LLM/tools using live telemetry + historical
    win-rates; bandit updates; federated learning for privacy.
+   > Informed by [DeepDive] (arXiv:2507.02592), which shows how knowledge-graph–grounded data and
+   > multi-turn RL improve web agent training and orchestration fidelity.
 3. **Formalized self-improvement** — Self-PRs (prompt/router/config/test deltas) gated by
    evals/canary; AlphaEvolve-style optimization for hot paths (see [Bootstrapping Task Spaces]).
    > Backed by recent research (AlphaXiv 2509.02359v1) showing how autonomous agents can decompose
@@ -545,6 +547,7 @@ constitutional bypass.
   **Exit Criteria:**
 - Complex multi-source Qs solved
 - Full trace in Studio UI
+- Multi-turn web agent demo (DeepDive-inspired KG+RL data) shows measurable accuracy gains vs. naive retrieval
 
 ---
 
@@ -873,3 +876,4 @@ Every LLM span must include:
 [Paper2Agent]: REFERENCES.md#research--concepts
 [All You Need Is A Fuzzing Brain]: REFERENCES.md#research--concepts
 [Statistical Methods in Generative AI]: REFERENCES.md#research--concepts
+[DeepDive]: REFERENCES.md#research--concepts

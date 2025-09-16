@@ -8,6 +8,11 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 
 ## Research & Concepts
 
+- **DeepDive: Advancing Deep Search Agents with Knowledge Graphs and Multi-Turn RL**  
+  arXiv:2507.02592 (July 2025).  
+  Trains web agents on knowledge-graph–constructed datasets with multi-turn RL, improving retrieval,
+  grounding, and multi-hop query performance.  
+  PDF: https://arxiv.org/abs/2507.02592
 - Tool-space interference in the MCP era
 - Paper2Agent
 - Virtual Agent Economies

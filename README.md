@@ -85,6 +85,10 @@ Spec and scaffolding guidance in [VS Code Extension](docs/VS_CODE_EXTENSION.md).
 
 - **Agentic Orchestration** — multi-phase workflows you can trace and audit.
 - **Multi-Model Routing** — cost/latency-aware routes across NIM, vLLM, and a small model tier.
+- **Model+tool orchestration** — Router chooses LLM/tools using live telemetry + historical
+  win-rates; bandit updates; federated learning for privacy.
+  > Informed by [DeepDive] (arXiv:2507.02592), which shows how knowledge-graph–grounded data and
+  > multi-turn RL improve web agent training and orchestration fidelity.
 - **RAG on Postgres + pgvector** — BM25 + cosine + feedback reranker.
 - **Secure Sandbox** — Docker-executed verification with seccomp + no-network.
 - **PII Calibration** — Shannon entropy thresholds with a 550-item dataset.
@@ -248,3 +252,5 @@ MIT — see [License](LICENSE).
 - **AutoAgent** — clustered agents.
 - **MetaCLIP2** — multilingual vision-text embeddings for cross-modal retrieval and grounding.
 - **Fusion Controller** — real-time multimodal streams (video/audio, depth, pose, motion masks). Evaluation datasets include SpatialVID (~7K hrs with depth, pose, object masks, motion trends).
+ 
+[DeepDive]: REFERENCES.md#research--concepts
