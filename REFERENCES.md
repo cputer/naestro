@@ -29,7 +29,10 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 
 ## Retrieval & RAG
 
-- **REFRAG (Long-context acceleration)** — <https://arxiv.org/abs/2509.01092>
+- **REFRAG: Rethinking RAG based Decoding** — Xiaoqiang Lin et al. (Meta Superintelligence Labs; NUS; Rice) — arXiv:2509.01092 (1 Sep 2025)
+  - PDF — <https://arxiv.org/pdf/2509.01092>
+  - Code — _link TBD_
+  - Summary — Reuses retrieval across decoding to accelerate streaming RAG, yielding ~30.8× faster TTFT, 16× longer context handling, and no accuracy loss.
 - **GraphRAG** — <https://github.com/microsoft/graphrag>
 - **LazyGraphRAG** — <https://github.com/sanikacentric/LazyGraphRAG>
 - **Firecrawl (crawl → extract → chunk → index)** — <https://github.com/mendableai/firecrawl>
