@@ -41,27 +41,27 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
 2. **Model+tool orchestration** — Router chooses LLM/tools using live telemetry + historical
    win-rates; bandit updates; federated learning for privacy.
 3. **Formalized self-improvement** — Self-PRs (prompt/router/config/test deltas) gated by
-   evals/canary; AlphaEvolve-style optimization for hot paths.
+   evals/canary; AlphaEvolve-style optimization for hot paths (see [Bootstrapping Task Spaces]).
    > Backed by recent research (AlphaXiv 2509.02359v1) showing how autonomous agents can decompose
    > tasks, reuse artifacts, and self-improve toward becoming autonomous software engineers.
 4. **Safety-first autonomy** — Capability bounds, consent layers, provable rollback, constitutional
-   principles, guardrails, HITL.
+   principles, guardrails, HITL (risk trade-offs noted in [Reasoning Introduces New Poisoning Attacks Yet Makes Them More Complicated] and [R2AI]).
 5. **Observability & provenance** — Logs, metrics, traces; signed artifacts; time-travel debugging;
    metacognitive narratives.
 6. **Hallucination-resilience** — Retrieval-first planning, claim verifier, abstention, CoVe;
-   citation-grounded outputs.
+   citation-grounded outputs (informed by [Why LMs Hallucinate]).
 7. **Long-context acceleration** — REFRAG lane for open-weights (**16×** effective context, ~30× TTFT);
    bypass for closed APIs.
 8. **AgentOps maturity** — Multi-agent plans, HITL evaluation, trajectory/final-response scoring,
-   production robustness.
+   production robustness (mitigates [Tool-space interference in the MCP era]).
 9. **Preference-optimized policies** — PVPO/DCPO/GRPO-RoC/ARPO/TreePO/MixGRPO/DuPO for stable,
    efficient routing/reasoning.
 10. **Runtime interop** — Pluggable runtimes (LangGraph, CrewAI, AgentScope, AutoGen, Agent Squad,
     SuperAGI, Semantic Kernel) under unified policy/trace contracts.
 11. **Strategic autonomy & compute economics** — Tokenomics credits/budgets; marketplace for
-    skills/agents/data; decentralized delegation.
+    skills/agents/data; decentralized delegation (economic framing from [Virtual Agent Economies]).
 12. **Advanced cognitive fusion** — Neuro-symbolic (Z3/Prolog), causal AI, multimodal sensor fusion,
-    edge/neuromorphic/quantum hooks.
+    edge/neuromorphic/quantum hooks (built on [Visual Representation Alignment] and [Causal Attention with Lookahead Keys]).
 13. **No-code enablement** — n8n/Studio flows to compose agents & tools.
 14. **Human-AI partnership** — Strategic Dialogue Engine, Oversight Council, narrative explanations.
 15. **Resilience & efficiency** — Retries (Tenacity), fallback routing, Redis caching +
@@ -277,6 +277,8 @@ flowchart TB
 ---
 
 ## 4) Self-Rewrite Loop (guarded autonomy)
+
+Inspired by [Paper2Agent] and [All You Need Is A Fuzzing Brain] for automated self-PR exploration.
 
 1. **Collect**: dropped runs, OOM, policy denials, P95 spikes, evaluator misses, flaky tests; cost
    flags; federated failure sharing.
@@ -547,6 +549,8 @@ constitutional bypass.
 ---
 
 ## 9) Observability & Metrics (OTel + Prometheus)
+
+Evaluator metric design builds on [Statistical Methods in Generative AI].
 
 Every LLM span must include:
 
@@ -858,3 +862,14 @@ Every LLM span must include:
 [Agent Squad]: REFERENCES.md#agent-runtimes--frameworks--interop
 [Semantic Kernel]: REFERENCES.md#agent-runtimes--frameworks--interop
 [SuperAGI]: REFERENCES.md#agent-runtimes--frameworks--interop
+[Bootstrapping Task Spaces]: REFERENCES.md#research--concepts
+[Why LMs Hallucinate]: REFERENCES.md#research--concepts
+[Virtual Agent Economies]: REFERENCES.md#research--concepts
+[Tool-space interference in the MCP era]: REFERENCES.md#research--concepts
+[Reasoning Introduces New Poisoning Attacks Yet Makes Them More Complicated]: REFERENCES.md#research--concepts
+[R2AI]: REFERENCES.md#research--concepts
+[Visual Representation Alignment]: REFERENCES.md#research--concepts
+[Causal Attention with Lookahead Keys]: REFERENCES.md#research--concepts
+[Paper2Agent]: REFERENCES.md#research--concepts
+[All You Need Is A Fuzzing Brain]: REFERENCES.md#research--concepts
+[Statistical Methods in Generative AI]: REFERENCES.md#research--concepts
