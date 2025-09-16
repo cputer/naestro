@@ -148,6 +148,9 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 - **Jira Cloud Platform** — <https://developer.atlassian.com/cloud/jira/platform/>
 - **n8n (workflow automation)** — <https://n8n.io>
 - **Nango (SaaS integrations)** — <https://nango.dev>
+- **Nanobrowser** — open-source Chrome extension for AI-powered web automation.
+  - Runs multi-agent workflows via user-supplied LLM API keys.
+  - GitHub — <https://github.com/nanobrowser/nanobrowser>
 
 ## Model Architecture Overviews
 

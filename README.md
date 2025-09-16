@@ -242,4 +242,8 @@ MIT — see [License](LICENSE).
 
 ## Appendices / Key Integrations
 
+- **Firecrawl** — web crawl & extract.
+- **Gitingest** — repo → digest.
+- **Nanobrowser** — browser-based web automation.
+- **AutoAgent** — clustered agents.
 - **MetaCLIP2** — multilingual vision-text embeddings for cross-modal retrieval and grounding.
