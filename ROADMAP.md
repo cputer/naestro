@@ -796,6 +796,11 @@ Every LLM span must include:
 - `evidence/vision/*` (image region store, thumbnails, mask/box metadata)
 - `evaluators/vision_grounding/*` (IoU, similarity thresholds, tests)
 - `studio/components/vision-citation/*` (UI overlay for boxes/masks)
+- `refrag/encoder_service/*` (REFRAG encoder service components for compression/expansion)
+- `refrag/policy/*` (reinforcement learning policy modules for routing/optimization)
+- `refrag/adapters/vllm/*` (vLLM adapter wiring REFRAG into serving stack)
+- `refrag/adapters/trtllm/*` (TensorRT-LLM adapter for REFRAG deployment)
+- `refrag/evals/*` (evaluation harnesses validating REFRAG performance)
 
 ---
 
