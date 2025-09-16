@@ -27,6 +27,12 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
   - vLLM support — <https://blog.vllm.ai/2025/09/11/qwen3-next.html>
   - NVIDIA Model Card — <https://build.nvidia.com/qwen/qwen3-next-80b-a3b-thinking/modelcard>
 
+## Datasets
+
+- **SpatialVID** — *A Large-Scale Video Dataset with Spatial Annotations* (NJU-3DV, 2025).
+  ~7K hours of video with annotations: camera pose, depth maps, dynamic object masks, scene text descriptions (camera, motion trends, summary).
+  Project — <https://nju-3dv.github.io/projects/SpatialVID>
+
 ## Retrieval & RAG
 
 - **REFRAG: Rethinking RAG based Decoding** — Xiaoqiang Lin et al. (Meta Superintelligence Labs; NUS; Rice) — arXiv:2509.01092 (1 Sep 2025)
