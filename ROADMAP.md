@@ -213,6 +213,7 @@ flowchart TB
     GraphRAG[GraphRAG / LazyGraphRAG]
     Firecrawl[Firecrawl (Web Crawl & Extract)]
     Gitingest[Gitingest (Repo → Digest)]
+    NanoBrowser[Nanobrowser (Browser/Web Automation)]
     AutoAgent[AutoAgent (Clustered Agents)]
     AgentSquad[Agent Squad Runtime]
     SuperAGI[SuperAGI Runtime]
