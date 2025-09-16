@@ -173,7 +173,7 @@ flowchart TB
     vLLM[vLLM / SGLang]
     TRT[TensorRT-LLM]
     Triton[Triton Inference Server]
-    REFRAGE[REFRAG Encoder + Projection]
+    REFRAGE[REFRAG Encoder + φ Projection]
     Z3[Z3 / Prolog Solvers]
   end
 
