@@ -6,8 +6,8 @@ References for external resources are centralized in [REFERENCES.md](REFERENCES.
 
 - **REFRAG long-context acceleration (2025)** — The latest REFRAG paper introduces a retrieval-
   aware compression pipeline that unlocks ~30.8× faster TTFT (time-to-first-token) while enabling
-  16× effective context windows for open-weight models. Read the full paper here: [REFRAG: Retrieval
-  Enhanced Fragmentation for Long-Context LLMs (PDF)](https://arxiv.org/pdf/2509.01092).
+  16× effective context windows for open-weight models. Read the full paper here:
+  [REFRAG: Retrieval Enhanced Fragmentation for Long-Context LLMs (PDF)](https://arxiv.org/pdf/2509.01092).
 - **Naestro integration** — Naestro exposes REFRAG through the dedicated REFRAG Controller coupled
   with vLLM/TensorRT-LLM serving adapters so orchestrated agents can transparently benefit from
   accelerated long-context inference.
@@ -45,13 +45,14 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
    > Backed by recent research (AlphaXiv 2509.02359v1) showing how autonomous agents can decompose
    > tasks, reuse artifacts, and self-improve toward becoming autonomous software engineers.
 4. **Safety-first autonomy** — Capability bounds, consent layers, provable rollback, constitutional
-   principles, guardrails, HITL (risk trade-offs noted in [Reasoning Introduces New Poisoning Attacks Yet Makes Them More Complicated] and [R2AI]).
+   principles, guardrails, HITL (risk trade-offs noted in [Reasoning Introduces New Poisoning
+   Attacks Yet Makes Them More Complicated] and [R2AI]).
 5. **Observability & provenance** — Logs, metrics, traces; signed artifacts; time-travel debugging;
    metacognitive narratives.
 6. **Hallucination-resilience** — Retrieval-first planning, claim verifier, abstention, CoVe;
    citation-grounded outputs (informed by [Why LMs Hallucinate]).
-7. **Long-context acceleration** — REFRAG lane for open-weights (**16×** effective context, ~30× TTFT (time-to-first-token));
-   bypass for closed APIs.
+7. **Long-context acceleration** — REFRAG lane for open-weights (**16×** effective context, ~30×
+   TTFT (time-to-first-token)); bypass for closed APIs.
 8. **AgentOps maturity** — Multi-agent plans, HITL evaluation, trajectory/final-response scoring,
    production robustness (mitigates [Tool-space interference in the MCP era]).
 9. **Preference-optimized policies** — PVPO/DCPO/GRPO-RoC/ARPO/TreePO/MixGRPO/DuPO for stable,
@@ -61,7 +62,8 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
 11. **Strategic autonomy & compute economics** — Tokenomics credits/budgets; marketplace for
     skills/agents/data; decentralized delegation (economic framing from [Virtual Agent Economies]).
 12. **Advanced cognitive fusion** — Neuro-symbolic (Z3/Prolog), causal AI, multimodal sensor fusion,
-    edge/neuromorphic/quantum hooks (built on [Visual Representation Alignment] and [Causal Attention with Lookahead Keys]).
+    edge/neuromorphic/quantum hooks (built on [Visual Representation Alignment] and [Causal
+    Attention with Lookahead Keys]).
 13. **No-code enablement** — n8n/Studio flows to compose agents & tools.
 14. **Human-AI partnership** — Strategic Dialogue Engine, Oversight Council, narrative explanations.
 15. **Resilience & efficiency** — Retries (Tenacity), fallback routing, Redis caching +
@@ -114,8 +116,8 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
 - **Collaboration Modes & Depth** — Per-run preferences for orchestrator collaboration with auto
   escalation, budgets, and answer strategies (see
   [docs/orchestrator_collaboration.md](docs/orchestrator_collaboration.md) for details).
-- **Runtime Adapters** — [LangGraph]/[CrewAI]/[AgentScope]/[AutoGen]/[Agent Squad]/[Semantic Kernel]/[SuperAGI]
-  with policy/trace parity.
+- **Runtime Adapters** — [LangGraph]/[CrewAI]/[AgentScope]/[AutoGen]/[Agent Squad]/[Semantic
+  Kernel]/[SuperAGI] with policy/trace parity.
 - **Tokenomics Engine** — Credits/budgets; marketplace transactions.
 - **Fusion Controller** — Multimodal stream fusion; neuro-symbolic solvers; causal graphs.
 - **Federation Hub** — Cross-instance delegation; Flower-based updates without data sharing.
@@ -370,8 +372,8 @@ constitutional bypass.
   - REFRAG Controller manages compression policies, routing, and observability hooks.
   - Encoder + projection service packages the REFRAG encoder, projection heads, and quantized
     adapters for vLLM/SGLang and TensorRT-LLM backends.
-  - Serving hooks expose streaming APIs (AnyLLM/vLLM) with TTFT (time-to-first-token)-aware scheduling and KV cache
-    hydration.
+  - Serving hooks expose streaming APIs (AnyLLM/vLLM) with TTFT (time-to-first-token)-aware
+    scheduling and KV cache hydration.
   - RL-driven expansion policy selects fragments for reinflation using reward models + bandit
     feedback from downstream evaluators.
   - Multi-tier cache (Redis + disk + object storage) stores compressed fragments, expansion hints,
@@ -383,8 +385,8 @@ constitutional bypass.
      packets to serving adapters with policy/audit tags.
   3. Decode: serving hooks hydrate KV cache, apply RL expansion, and stream tokens through
      Guardrails/observability before final responses.
-- **Expected wins** — ~30× faster TTFT (time-to-first-token), 16× effective context, and lower memory/KV
-  footprints for long-horizon plans.
+- **Expected wins** — ~30× faster TTFT (time-to-first-token), 16× effective context, and lower
+  memory/KV footprints for long-horizon plans.
 - **Safety & rollout** — gated by policy toggles, offline eval suites, canary traffic, and HITL
   sign-off; fallback path keeps standard decoding for regressions or safety triggers.
 
@@ -451,7 +453,8 @@ constitutional bypass.
 
 - ASR/TTS (Parlant/VibeVoice/DIA)
   - SV2TTS / Real-Time Voice Cloning is prototype-only and not suitable for production.
-  - Preferred production TTS: NVIDIA Riva, Coqui XTTS v2, Piper, ElevenLabs, PlayHT, Azure TTS, Google TTS, Amazon Polly.
+  - Preferred production TTS: NVIDIA Riva, Coqui XTTS v2, Piper, ElevenLabs, PlayHT, Azure TTS,
+    Google TTS, Amazon Polly.
 - PDF/OCR (PyMuPDF/Tesseract)
 - Playwright browser agent
 - Fusion Controller (multimodal I/O)
@@ -527,11 +530,24 @@ constitutional bypass.
 
 - vLLM/TRT multi-node with LMCache KV-transfer
 - Helm charts (K8s deployment)
-- REFRAG compression lane A/B harness  
-  **Exit Criteria:**
+- REFRAG compression lane A/B harness **Exit Criteria:**
 - Near-linear throughput scaling
 - P95 stable under load
 - ≥10× TTFT speedup on long-context with accuracy parity
+
+#### Emerging GPU Kernel Optimizations
+
+Projects like Standard Kernel demonstrate that lightweight, hand-tuned CUDA+PTX kernels can
+outperform vendor libraries:
+
+- Matmul at 102–105% cuBLAS in ~100 LOC
+- Attention at 104% FlashAttention-3 in ~500 LOC
+- Fused LLaMA-3 FFN at 120% PyTorch performance (gpt-fast)
+
+**Relevance to Naestro**: These efforts suggest future router lanes may incorporate
+community-optimized kernels (for matmul, attention, FFN) as drop-in backends. Naestro’s REFRAG
+Controller and Scaling phases can benefit directly from kernel-gen research, especially in BF16
+regimes on H100/next-gen accelerators.
 
 ---
 
@@ -545,8 +561,8 @@ constitutional bypass.
   **Exit Criteria:**
 - Complex multi-source Qs solved
 - Full trace in Studio UI
-- Multi-turn web agent demo (DeepDive-inspired KG+RL data) shows measurable accuracy gains vs.
-  naive retrieval.
+- Multi-turn web agent demo (DeepDive-inspired KG+RL data) shows measurable accuracy gains vs. naive
+  retrieval.
 
 ---
 
@@ -758,10 +774,11 @@ Every LLM span must include:
 - Visual causal graph for last 5 production failures
 
 ### Educational & Introspective References
-To support operator understanding and research prototyping, we track minimal, from-scratch LLM builds
-that expose gradients and attention at a granular level (scalar autograd / micrograd lineage). These
-toy models are not production code; they are used for pedagogy, causal interventions, and instrumented
-explanations aligned to Phase U goals.
+
+To support operator understanding and research prototyping, we track minimal, from-scratch LLM
+builds that expose gradients and attention at a granular level (scalar autograd / micrograd
+lineage). These toy models are not production code; they are used for pedagogy, causal
+interventions, and instrumented explanations aligned to Phase U goals.
 
 - [Scalar-Autograd LLM from scratch][ScalarAutogradLLM]
 
@@ -876,7 +893,8 @@ explanations aligned to Phase U goals.
 [Why LMs Hallucinate]: REFERENCES.md#research--concepts
 [Virtual Agent Economies]: REFERENCES.md#research--concepts
 [Tool-space interference in the MCP era]: REFERENCES.md#research--concepts
-[Reasoning Introduces New Poisoning Attacks Yet Makes Them More Complicated]: REFERENCES.md#research--concepts
+[Reasoning Introduces New Poisoning Attacks Yet Makes Them More Complicated]:
+  REFERENCES.md#research--concepts
 [R2AI]: REFERENCES.md#research--concepts
 [Visual Representation Alignment]: REFERENCES.md#research--concepts
 [Causal Attention with Lookahead Keys]: REFERENCES.md#research--concepts
