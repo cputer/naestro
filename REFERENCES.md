@@ -6,6 +6,23 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 
 ---
 
+## Research & Concepts
+
+- Tool-space interference in the MCP era
+- Paper2Agent
+- Virtual Agent Economies
+- Bootstrapping Task Spaces for Self-Improvement
+- The Illusion of Diminishing Returns: Measuring Long Horizon Execution in LLMs
+- Why Language Models Hallucinate
+- Reasoning Introduces New Poisoning Attacks Yet Makes Them More Complicated
+- All You Need Is A Fuzzing Brain
+- R2AI: Towards Resistant and Resilient AI in an Evolving World
+- Statistical Methods in Generative AI
+- Language Self-Play For Data-Free Training
+- Causal Attention with Lookahead Keys
+- Visual Representation Alignment for Multimodal LLMs
+- “Curated by TuringPost (Sept 2025): <https://turingpost.com/p/fod118>”
+
 ## Models / Architectures
 
 - **ERNIE X1.1 (Wave Summit 2025 release)**
