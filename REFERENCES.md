@@ -87,6 +87,17 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 - **NVIDIA DGX Spark Datasheet (PDF)** —
   <https://nvdam.widen.net/s/tlzm8smqjx/workstation-datasheet-dgx-spark-gtc25-spring-nvidia-us-3716899-web>
 
+## Hardware Optimizations
+
+- **BF16 (Brain Floating Point format)** — <https://cloud.google.com/tpu/docs/bfloat16>
+- **GSPMD (General and Scalable Parallelization for ML Computation)** — <https://arxiv.org/abs/2105.04663>
+- **OpenXLA — XLA Compiler** — <https://openxla.org/xla>
+- **Google Pathways** — <https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/>
+- **PJRT (Portable JIT Runtime)** — <https://openxla.org/pjrt>
+- **FlashAttention-3** — <https://tridao.me/publications/flashattention3/flashattention3.pdf>
+- **NVIDIA Hopper Tensor Core GPU Architecture** —
+  <https://resources.nvidia.com/en-us-tensor-core/gtc22-nvidia-hopper-architecture-whitepaper>
+
 ## Agent Runtimes / Frameworks & Interop
 
 - **LangGraph** — <https://github.com/langchain-ai/langgraph>
