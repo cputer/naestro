@@ -247,3 +247,4 @@ MIT — see [License](LICENSE).
 - **Nanobrowser** — browser-based web automation.
 - **AutoAgent** — clustered agents.
 - **MetaCLIP2** — multilingual vision-text embeddings for cross-modal retrieval and grounding.
+- **Fusion Controller** — real-time multimodal streams (video/audio, depth, pose, motion masks). Evaluation datasets include SpatialVID (~7K hrs with depth, pose, object masks, motion trends).
