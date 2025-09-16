@@ -50,7 +50,7 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
    metacognitive narratives.
 6. **Hallucination-resilience** — Retrieval-first planning, claim verifier, abstention, CoVe;
    citation-grounded outputs.
-7. **Long-context acceleration** — REFRAG lane for open-weights (16× effective context, ≥10× TTFT);
+7. **Long-context acceleration** — REFRAG lane for open-weights (**16×** effective context, ~30× TTFT);
    bypass for closed APIs.
 8. **AgentOps maturity** — Multi-agent plans, HITL evaluation, trajectory/final-response scoring,
    production robustness.
