@@ -40,6 +40,21 @@ research and code generation to SEO, Geo analytics, and multimodal interaction.
 
 ---
 
+## Research Track (parallel to Phases A–W)
+
+Naestro tracks cutting-edge research to guide design choices:
+
+- **Agent compatibility & interference:** [Tool-space interference in the MCP era]
+- **Agentic self-improvement:** [Bootstrapping Task Spaces for Self-Improvement], [Paper2Agent]
+- **Safety & robustness:** [Reasoning Introduces New Poisoning Attacks Yet Makes Them More Complicated], [R2AI]
+- **Hallucination resilience:** [Why LMs Hallucinate]
+- **Long-horizon execution:** [The Illusion of Diminishing Returns]
+- **Evaluation foundations:** [Statistical Methods in Generative AI]
+- **Exploration & fuzzing:** [All You Need Is A Fuzzing Brain]
+- **Causal & multimodal advances:** [Causal Attention with Lookahead Keys], [Visual Representation Alignment]
+
+Full curated list: https://turingpost.com/p/fod118
+
 ## Documentation
 
 - [Whitepaper](./WHITEPAPER.md)
@@ -248,3 +263,15 @@ MIT — see [License](LICENSE).
 - **AutoAgent** — clustered agents.
 - **MetaCLIP2** — multilingual vision-text embeddings for cross-modal retrieval and grounding.
 - **Fusion Controller** — real-time multimodal streams (video/audio, depth, pose, motion masks). Evaluation datasets include SpatialVID (~7K hrs with depth, pose, object masks, motion trends).
+
+[Tool-space interference in the MCP era]: REFERENCES.md#research--concepts
+[Bootstrapping Task Spaces for Self-Improvement]: REFERENCES.md#research--concepts
+[Paper2Agent]: REFERENCES.md#research--concepts
+[Reasoning Introduces New Poisoning Attacks Yet Makes Them More Complicated]: REFERENCES.md#research--concepts
+[R2AI]: REFERENCES.md#research--concepts
+[Why LMs Hallucinate]: REFERENCES.md#research--concepts
+[The Illusion of Diminishing Returns]: REFERENCES.md#research--concepts
+[Statistical Methods in Generative AI]: REFERENCES.md#research--concepts
+[All You Need Is A Fuzzing Brain]: REFERENCES.md#research--concepts
+[Causal Attention with Lookahead Keys]: REFERENCES.md#research--concepts
+[Visual Representation Alignment]: REFERENCES.md#research--concepts
