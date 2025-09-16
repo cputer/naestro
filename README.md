@@ -99,6 +99,8 @@ Spec and scaffolding guidance in [VS Code Extension](docs/VS_CODE_EXTENSION.md).
 ## ✨ Features
 
 - **Agentic Orchestration** — multi-phase workflows you can trace and audit.
+- **Model+tool orchestration** — Router chooses LLM/tools using live telemetry + historical
+  win-rates (see [DeepDive](https://arxiv.org/abs/2507.02592)).
 - **Multi-Model Routing** — cost/latency-aware routes across NIM, vLLM, and a small model tier.
 - **RAG on Postgres + pgvector** — BM25 + cosine + feedback reranker.
 - **Secure Sandbox** — Docker-executed verification with seccomp + no-network.

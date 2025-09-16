@@ -12,6 +12,8 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 - Paper2Agent
 - Virtual Agent Economies
 - Bootstrapping Task Spaces for Self-Improvement
+- DeepDive: Advancing Deep Search Agents with Knowledge Graphs and Multi-Turn RL —
+  arXiv:2507.02592 — <https://arxiv.org/abs/2507.02592>
 - The Illusion of Diminishing Returns: Measuring Long Horizon Execution in LLMs
 - Why Language Models Hallucinate
 - Reasoning Introduces New Poisoning Attacks Yet Makes Them More Complicated
