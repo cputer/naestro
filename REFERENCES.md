@@ -8,8 +8,8 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 
 ## Educational & Introspection
 
-- **Scalar-Autograd LLM from scratch** — step-by-step tiny framework showing backprop/attention at scalar granularity;
-  useful for explainability demos and causal probes in Phase U.  
+- **Scalar-Autograd LLM from scratch** — step-by-step tiny framework showing backprop/attention at
+  scalar granularity; useful for explainability demos and causal probes in Phase U.  
   Link: https://bclarkson-code.com/posts/llm-from-scratch-scalar-autograd/post.html
 
 [ScalarAutogradLLM]: REFERENCES.md#educational--introspection
@@ -20,8 +20,8 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 - Paper2Agent
 - Virtual Agent Economies
 - Bootstrapping Task Spaces for Self-Improvement
-- DeepDive: Advancing Deep Search Agents with Knowledge Graphs and Multi-Turn RL —
-  arXiv:2507.02592 — <https://arxiv.org/abs/2507.02592>
+- DeepDive: Advancing Deep Search Agents with Knowledge Graphs and Multi-Turn RL — arXiv:2507.02592
+  — <https://arxiv.org/abs/2507.02592>
 - The Illusion of Diminishing Returns: Measuring Long Horizon Execution in LLMs
 - Why Language Models Hallucinate
 - Reasoning Introduces New Poisoning Attacks Yet Makes Them More Complicated
@@ -56,16 +56,18 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 
 ## Datasets
 
-- **SpatialVID** — *A Large-Scale Video Dataset with Spatial Annotations* (NJU-3DV, 2025).
-  ~7K hours of video with annotations: camera pose, depth maps, dynamic object masks, scene text descriptions (camera, motion trends, summary).
-  Project — <https://nju-3dv.github.io/projects/SpatialVID>
+- **SpatialVID** — _A Large-Scale Video Dataset with Spatial Annotations_ (NJU-3DV, 2025). ~7K hours
+  of video with annotations: camera pose, depth maps, dynamic object masks, scene text descriptions
+  (camera, motion trends, summary). Project — <https://nju-3dv.github.io/projects/SpatialVID>
 
 ## Retrieval & RAG
 
-- **REFRAG: Rethinking RAG based Decoding** — Xiaoqiang Lin et al. (Meta Superintelligence Labs; NUS; Rice) — arXiv:2509.01092 (1 Sep 2025)
+- **REFRAG: Rethinking RAG based Decoding** — Xiaoqiang Lin et al. (Meta Superintelligence Labs;
+  NUS; Rice) — arXiv:2509.01092 (1 Sep 2025)
   - PDF — <https://arxiv.org/pdf/2509.01092>
   - Code — _link TBD_
-  - Summary — Reuses retrieval across decoding to accelerate streaming RAG, yielding ~30.8× faster TTFT, 16× longer context handling, and no accuracy loss.
+  - Summary — Reuses retrieval across decoding to accelerate streaming RAG, yielding ~30.8× faster
+    TTFT, 16× longer context handling, and no accuracy loss.
 - **GraphRAG** — <https://github.com/microsoft/graphrag>
 - **LazyGraphRAG** — <https://github.com/sanikacentric/LazyGraphRAG>
 - **Firecrawl (crawl → extract → chunk → index)** — <https://github.com/mendableai/firecrawl>
@@ -90,13 +92,19 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 ## Hardware Optimizations
 
 - **BF16 (Brain Floating Point format)** — <https://cloud.google.com/tpu/docs/bfloat16>
-- **GSPMD (General and Scalable Parallelization for ML Computation)** — <https://arxiv.org/abs/2105.04663>
+- **GSPMD (General and Scalable Parallelization for ML Computation)** —
+  <https://arxiv.org/abs/2105.04663>
 - **OpenXLA — XLA Compiler** — <https://openxla.org/xla>
-- **Google Pathways** — <https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/>
+- **Google Pathways** —
+  <https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/>
 - **PJRT (Portable JIT Runtime)** — <https://openxla.org/pjrt>
 - **FlashAttention-3** — <https://tridao.me/publications/flashattention3/flashattention3.pdf>
 - **NVIDIA Hopper Tensor Core GPU Architecture** —
   <https://resources.nvidia.com/en-us-tensor-core/gtc22-nvidia-hopper-architecture-whitepaper>
+
+- **Standard Kernel (2025)** — startup developing high-performance CUDA+PTX kernels. Reported >100%
+  cuBLAS/FlashAttention performance with compact, hand-tuned code. Announcement —
+  <https://twitter.com/Standard_Kernel> (General Catalyst, Felicis backed).
 
 ## Agent Runtimes / Frameworks & Interop
 
