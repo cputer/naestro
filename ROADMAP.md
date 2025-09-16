@@ -361,6 +361,30 @@ constitutional bypass.
   Evidence Store so citations can reference an image region + text span. Enables hybrid RAG where
   visual evidence is retrieved alongside text passages.
 
+### REFRAG Integration Plan (Naestro)
+
+- **Core components**
+  - REFRAG Controller manages compression policies, routing, and observability hooks.
+  - Encoder + projection service packages the REFRAG encoder, projection heads, and quantized
+    adapters for vLLM/SGLang and TensorRT-LLM backends.
+  - Serving hooks expose streaming APIs (AnyLLM/vLLM) with TTFT-aware scheduling and KV cache
+    hydration.
+  - RL-driven expansion policy selects fragments for reinflation using reward models + bandit
+    feedback from downstream evaluators.
+  - Multi-tier cache (Redis + disk + object storage) stores compressed fragments, expansion hints,
+    and decoder-ready tensors for hot workloads.
+- **Pipeline: ingest → query → decode**
+  1. Ingest: documents/code/telemetry are chunked, encoded via REFRAG encoder, projected, and stored
+     in the Memory Fabric with cache metadata.
+  2. Query: retrieval assembles fragment sets, applies compression policies, and hands KV-ready
+     packets to serving adapters with policy/audit tags.
+  3. Decode: serving hooks hydrate KV cache, apply RL expansion, and stream tokens through
+     Guardrails/observability before final responses.
+- **Expected wins** — ~30× faster time-to-first-token, 16× effective context, and lower memory/KV
+  footprints for long-horizon plans.
+- **Safety & rollout** — gated by policy toggles, offline eval suites, canary traffic, and HITL
+  sign-off; fallback path keeps standard decoding for regressions or safety triggers.
+
 ---
 
 ## 8) Phased Delivery Plan
