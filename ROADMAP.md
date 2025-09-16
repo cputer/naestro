@@ -545,6 +545,8 @@ constitutional bypass.
   **Exit Criteria:**
 - Complex multi-source Qs solved
 - Full trace in Studio UI
+- Multi-turn web agent demo (DeepDive-inspired KG+RL data) shows measurable accuracy gains vs.
+  naive retrieval.
 
 ---
 
