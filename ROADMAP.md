@@ -613,7 +613,8 @@ Every LLM span must include:
 **Deliverables:**
 
 - Z3/Prolog solver tools
-- Fusion Controller: real-time multimodal streams (video/audio)  
+- Fusion Controller: real-time multimodal streams (video/audio, depth, pose, motion masks)
+- Evaluation datasets include SpatialVID (7K hours with depth, pose, object masks, motion trends)
   **Exit Criteria:**
 - Sudoku/logistics solved with 100% accuracy via solver
 - Live video → real-time description by agent
