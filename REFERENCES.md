@@ -17,9 +17,15 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 [ZapierPlatform]: REFERENCES.md#tooling--connectors--protocols
 [n8n]: REFERENCES.md#tooling--connectors--protocols
 [Nango]: REFERENCES.md#tooling--connectors--protocols
-[OPA]: REFERENCES.md#safety--policy--authnz
-[Casbin]: REFERENCES.md#safety--policy--authnz
-[Keycloak]: REFERENCES.md#safety--policy--authnz
+[OpenTelemetry]: REFERENCES.md#observability--formal-methods
+[Prometheus]: REFERENCES.md#observability--formal-methods
+[Grafana]: REFERENCES.md#observability--formal-methods
+[Langfuse]: REFERENCES.md#observability--formal-methods
+[TLA+]: REFERENCES.md#observability--formal-methods
+[Coq]: REFERENCES.md#observability--formal-methods
+[OPA]: REFERENCES.md#identitypolicy
+[Casbin]: REFERENCES.md#identitypolicy
+[Keycloak]: REFERENCES.md#identitypolicy
 
 ## Research & Concepts
 
@@ -101,6 +107,15 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 - **NVIDIA DGX Spark Datasheet (PDF)** —
   <https://nvdam.widen.net/s/tlzm8smqjx/workstation-datasheet-dgx-spark-gtc25-spring-nvidia-us-3716899-web>
 
+## Observability & Formal Methods
+
+- **OpenTelemetry** — <https://opentelemetry.io/>
+- **Prometheus** — <https://prometheus.io/>
+- **Grafana** — <https://grafana.com/>
+- **Langfuse** — <https://langfuse.com/>
+- **TLA+** — <https://lamport.azurewebsites.net/tla/tla.html>
+- **Coq** — <https://coq.inria.fr/>
+
 ## Hardware Optimizations
 
 - **BF16 (Brain Floating Point format)** — <https://cloud.google.com/tpu/docs/bfloat16>
@@ -177,6 +192,9 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 
 - **NeMo Guardrails** — <https://github.com/NVIDIA/NeMo-Guardrails>
 - **Guardrails AI** — <https://github.com/shreyar/guardrails>
+
+## Identity/Policy
+
 - **OPA (Open Policy Agent)** — <https://github.com/open-policy-agent/opa>
 - **Casbin** — <https://github.com/casbin/casbin>
 - **Keycloak** — <https://www.keycloak.org/>
