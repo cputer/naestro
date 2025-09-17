@@ -357,6 +357,14 @@ constitutional bypass.
     needs.
   - **Hybrid Pre + Post strategy**: hot paths keep pre-chunks for speed; cold/complex queries use
     post-chunking for accuracy.
+  - **Noise-Aware Retrieval Policies**: calibrate embedding scores, rescoring, and fusion to
+    suppress noisy passages using diagnostic patterns surfaced in [RAG’s Biggest Lie].
+  - **Self-Retrieval Triggers (Self-RAG)**: orchestrator agents introspect reasoning traces and
+    confidence signals to autonomously fire follow-up retrieval rounds when coverage gaps mirror
+    the failure modes mapped in [RAG’s Biggest Lie].
+  - **RAG Evaluation Suite**: dedicated harness tracking retrieval precision/recall, grounding, and
+    abstention adherence across synthetic + live corpora informed by the taxonomies in
+    [RAG’s Biggest Lie].
 - **Hallucination-Resistant Generation (HRG):** Retrieval-first planning, self-consistency,
   chain-of-verification (CoVe), calibrated uncertainty, abstention, structured outputs with JSON
   Schema, and tool-use preference for factual queries.
