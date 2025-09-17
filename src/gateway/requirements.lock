@@ -14,6 +14,9 @@ certifi==2025.8.3
     # via
     #   httpcore
     #   httpx
+    #   requests
+charset-normalizer==3.4.3
+    # via requests
 click==8.2.1
     # via uvicorn
 fastapi==0.116.1
@@ -30,6 +33,7 @@ idna==3.10
     # via
     #   anyio
     #   httpx
+    #   requests
 prometheus-client==0.22.1
     # via -r src/gateway/requirements.txt
 pydantic==2.11.7
@@ -37,6 +41,8 @@ pydantic==2.11.7
 pydantic-core==2.33.2
     # via pydantic
 python-dotenv==1.1.1
+    # via -r src/gateway/requirements.txt
+requests==2.32.4
     # via -r src/gateway/requirements.txt
 sniffio==1.3.1
     # via anyio
@@ -52,5 +58,7 @@ typing-extensions==4.14.1
     #   typing-inspection
 typing-inspection==0.4.1
     # via pydantic
+urllib3==2.5.0
+    # via requests
 uvicorn==0.35.0
     # via -r src/gateway/requirements.txt
