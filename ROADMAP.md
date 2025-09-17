@@ -125,6 +125,7 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
   [docs/orchestrator_collaboration.md](docs/orchestrator_collaboration.md) for details).
 - **Runtime Adapters** — [LangGraph]/[CrewAI]/[AgentScope]/[AutoGen]/[Agent Squad]/[Semantic
   Kernel]/[SuperAGI] with policy/trace parity.
+- **ROMA** — Recursive meta-agent runtime for step-by-step decomposition and parallel sub-agent execution.
 - **Tokenomics Engine** — Credits/budgets; marketplace transactions.
 - **Fusion Controller** — Multimodal stream fusion; neuro-symbolic solvers; causal graphs.
 - **Federation Hub** — Cross-instance delegation; Flower-based updates without data sharing.
