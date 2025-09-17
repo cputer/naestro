@@ -5,6 +5,9 @@ All notable changes to this project will be documented here. This project adhere
 
 ## [Unreleased]
 
+- Updated: **VISION.md** with Engineering Quality, Meta-Cognition, Ecosystem, and Governance sections
+- Updated: cross-links in README/ROADMAP; added reference anchors
+
 ## [1.4.0] - 2025-09-02
 
 ### Added
