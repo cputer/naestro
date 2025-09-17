@@ -1,6 +1,7 @@
 # Naestro ROADMAP — Evolving Autonomous System (ASI Trajectory)
 
 References for external resources are centralized in [REFERENCES.md](REFERENCES.md).
+_This roadmap follows the long-term direction in [Naestro VISION](./VISION.md)._
 
 ## What's new
 
