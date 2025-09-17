@@ -604,6 +604,14 @@ Every LLM span must include:
 - **Multimodal KPIs** — image↔text retrieval latency, top‑k recall@{1,5}, cross‑modal MRR,
   visual-grounding pass rate (IoU≥τ), % answers with image citations, storage hit rate for cached
   region crops.
+- `rag.context_precision` — measure how much of the retrieved context is actually cited or grounded
+  in the final answer, surfacing when retrieval packs spans with irrelevant filler.
+- `rag.context_recall` — quantify the fraction of required facts that existed in retrieval but
+  failed to appear in the answer, spotlighting when agents ignored pertinent evidence.
+- `rag.noise_tolerance_score` — track answer quality as controlled noise is injected into context to
+  understand how robust the chain is to distractors versus “RAG’s Biggest Lie” hallucination.
+- `rag.leakage_risk` — estimate sensitive or policy-scoped content passed through to answers from
+  retrieved context, alerting reviewers when guardrails are bypassed by RAG payloads.
 
 ---
 
