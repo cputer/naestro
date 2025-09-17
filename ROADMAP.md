@@ -913,6 +913,9 @@ interventions, and instrumented explanations aligned to Phase U goals.
   pools so Self-RAG’s verifier/planner loops learn to reject spurious hits, a robustness tactic born
   from the [RAG’s Biggest Lie] insight that “perfect retrieval” is a myth and resilience requires
   stress-testing grounding.
+- **Agency Automation (n8n + Naestro)** — Kick off Naestro plans from n8n triggers (webhooks, CRM
+  updates, incident pings), stream progress back into the FlowTemplate library, and require
+  evaluators plus consent prompts before flows escalate from “Copilot” to fully autonomous runs.
 
 ## 13) Risks & Mitigations
 
