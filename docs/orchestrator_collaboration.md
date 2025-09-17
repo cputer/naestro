@@ -6,6 +6,10 @@ much autonomy the router has to escalate.
 
 ## Modes
 
+When collaboration mode allows external automation imports, Researcher and Runner agents can pull
+FlowTemplate workflows as starting points. Imported flows respect consent policies and can be
+reviewed in Copilot depth before escalation.
+
 - **solo** – run locally without consulting other models.
 - **consult** – issue a single query to an online model and return.
 - **collaborate** – delegate roles (Researcher, Coder, Reviewer) to multiple models.
