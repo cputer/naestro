@@ -7,6 +7,9 @@ All notable changes to this project will be documented here. This project adhere
 
 - Updated: **VISION.md** with Engineering Quality, Meta-Cognition, Ecosystem, and Governance sections
 - Updated: cross-links in README/ROADMAP; added reference anchors
+- Updated: **docs/usecases/agency_automation.md** outlining the Agency Automation flow, rollout plan, and KPIs
+- Updated: **ROADMAP.md** “What’s new” section with the REFRAG long-context acceleration lane and Naestro integration notes
+- Updated: **REFERENCES.md** to capture the latest REFRAG, SmolHub, and Qwen3-Next citations for roadmap alignment
 
 ## [1.4.0] - 2025-09-02
 
