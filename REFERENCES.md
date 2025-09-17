@@ -68,6 +68,11 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
   - Code — _link TBD_
   - Summary — Reuses retrieval across decoding to accelerate streaming RAG, yielding ~30.8× faster
     TTFT, 16× longer context handling, and no accuracy loss.
+- **RAG’s Biggest Lie — Retrieval-Augmented Generation for Large Language Models: A Survey** —
+  <https://arxiv.org/abs/2312.10997>
+  - Summary — Comprehensive survey that formalizes Naive, Advanced, and Modular/Self-RAG
+    paradigms, detailing retrieval granularity, adaptive planning, and evaluation gaps for
+    production-grade systems.
 - **GraphRAG** — <https://github.com/microsoft/graphrag>
 - **LazyGraphRAG** — <https://github.com/sanikacentric/LazyGraphRAG>
 - **Firecrawl (crawl → extract → chunk → index)** — <https://github.com/mendableai/firecrawl>
