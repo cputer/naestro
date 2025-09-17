@@ -1,0 +1,12 @@
+datasets:
+  - name: InfoSeek
+    description: >-
+      Placeholder configuration for the InfoSeek deep research benchmarking suite
+      until dataset ingestion is wired up.
+    enabled: false
+    path: /path/to/infoseek/dataset
+    tasks:
+      - deep_research_planning
+      - browse_comp_plus
+      - hierarchical_reasoning
+    k_samples: 0

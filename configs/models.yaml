@@ -1,0 +1,11 @@
+routers:
+  - name: ling-flash-2.0
+    display_name: Ling-flash-2.0 router
+    description: >-
+      Placeholder for the Ling-flash-2.0 mixture-of-experts router lane
+      (100B total parameters with ~6.1B activated, delivering ~7× dense-model
+      efficiency and 128K-context throughput) until integration is complete.
+    enabled: false
+    tags:
+      - moe
+      - experimental
