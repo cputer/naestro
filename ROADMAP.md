@@ -569,12 +569,14 @@ regimes on H100/next-gen accelerators.
 **Deliverables:**
 
 - Researcher/Validator agents
-- Multi-hop query expansion + evidence synth  
+- Multi-hop query expansion + evidence synth
+- Self-RAG-aligned iterative retrieval loops (retrieve → critique → refine)
+- Embedded self-critique routines with traceable verifier feedback cycles
   **Exit Criteria:**
-- Complex multi-source Qs solved
-- Full trace in Studio UI
+- Complex multi-source Qs solved with documented critique/refine iterations
+- Full trace in Studio UI capturing retrieval loops and critique artifacts
 - Multi-turn web agent demo (DeepDive-inspired KG+RL data) shows measurable accuracy gains vs. naive
-  retrieval.
+  retrieval, including ablation evidencing the self-critique + iterative retrieval uplift.
 
 ---
 
