@@ -26,6 +26,9 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 [OPA]: REFERENCES.md#identitypolicy
 [Casbin]: REFERENCES.md#identitypolicy
 [Keycloak]: REFERENCES.md#identitypolicy
+[Ling-flash-2.0]: REFERENCES.md#models--architectures
+[InfoSeek]: REFERENCES.md#datasets
+[InfoSeekFramework]: REFERENCES.md#datasets
 
 ## Research & Concepts
 
@@ -66,12 +69,16 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
     <https://qwen.ai/blog?from=research.latest-advancements-list&id=4074cca80393150c248e508aa62983f9cb7d27cd>
   - vLLM support — <https://blog.vllm.ai/2025/09/11/qwen3-next.html>
   - NVIDIA Model Card — <https://build.nvidia.com/qwen/qwen3-next-80b-a3b-thinking/modelcard>
+- **Ling-flash-2.0** — 100B total parameters with ~6.1B activated (≈4.8B non-embedding) delivering ~7× dense-model efficiency and 128K-context throughput for high-speed reasoning workloads.
+  - Paper — _Every FLOP Counts: Scaling a 300B Mixture-of-Experts LING LLM without Premium GPUs_ — <https://arxiv.org/abs/2503.05139>
 
 ## Datasets
 
 - **SpatialVID** — _A Large-Scale Video Dataset with Spatial Annotations_ (NJU-3DV, 2025). ~7K hours
   of video with annotations: camera pose, depth maps, dynamic object masks, scene text descriptions
   (camera, motion trends, summary). Project — <https://nju-3dv.github.io/projects/SpatialVID>
+- **InfoSeek** — _Open Data Synthesis For Deep Research_ (Ziyi Xia et al., 2025). Hierarchical constraint-satisfaction tasks (50K train, curated eval, reject-sampled trajectories) that stress deep research planning and BrowseComp-Plus benchmarking. Paper — <https://arxiv.org/abs/2509.00375>
+- **InfoSeek Framework** — Dual-agent synthesis stack that mines entities/relations, constructs research trees, and emits meta-tagged question decompositions for compound reward design. Code — <https://github.com/VectorSpaceLab/InfoSeek>
 
 ## Retrieval & RAG
 
