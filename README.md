@@ -91,8 +91,13 @@ To configure the WebSocket base URL during build, run:
 ### VS Code Extension (Qoder-style)
 
 A lightweight extension that talks to Naestro Core (/api/runs, /ws/live) to refactor code, explain
-errors, and generate tests **without leaving the IDE**.  
+errors, and generate tests **without leaving the IDE**.
 Spec and scaffolding guidance in [VS Code Extension](docs/VS_CODE_EXTENSION.md).
+
+## Workflow Libraries
+
+- **FlowTemplate** — Browse thousands of automation workflows for n8n, Make.com, Zapier.
+  - [Catalog](https://flowtemplate.com/workflows) · [Overview](https://flowtemplate.com/) · [Guide](https://flowtemplate.com/guide)
 
 ---
 
