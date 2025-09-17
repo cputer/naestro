@@ -13,6 +13,13 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
   Link: https://bclarkson-code.com/posts/llm-from-scratch-scalar-autograd/post.html
 
 [ScalarAutogradLLM]: REFERENCES.md#educational--introspection
+[MCP]: REFERENCES.md#tooling--connectors--protocols
+[ZapierPlatform]: REFERENCES.md#tooling--connectors--protocols
+[n8n]: REFERENCES.md#tooling--connectors--protocols
+[Nango]: REFERENCES.md#tooling--connectors--protocols
+[OPA]: REFERENCES.md#safety--policy--authnz
+[Casbin]: REFERENCES.md#safety--policy--authnz
+[Keycloak]: REFERENCES.md#safety--policy--authnz
 
 ## Research & Concepts
 
