@@ -8,6 +8,9 @@ References for external resources are centralized in [REFERENCES.md](REFERENCES.
   aware compression pipeline that unlocks ~30.8× faster TTFT (time-to-first-token) while enabling
   16× effective context windows for open-weight models. Read the full paper here:
   [REFRAG: Retrieval Enhanced Fragmentation for Long-Context LLMs (PDF)](https://arxiv.org/pdf/2509.01092).
+- **Modular Self-RAG evolution** — Self-RAG is now organized into pluggable retrieval, planning,
+  verification, and critique loops so orchestrated agents can adapt depth, abstention, and
+  grounding policies per task—directly addressing the systemic gaps surfaced in [RAG’s Biggest Lie].
 - **Naestro integration** — Naestro exposes REFRAG through the dedicated REFRAG Controller coupled
   with vLLM/TensorRT-LLM serving adapters so orchestrated agents can transparently benefit from
   accelerated long-context inference.
@@ -880,6 +883,7 @@ interventions, and instrumented explanations aligned to Phase U goals.
 [MCP-DevMode]: REFERENCES.md#tooling--connectors--protocols
 [n8n]: REFERENCES.md#tooling--connectors--protocols
 [Nango]: REFERENCES.md#tooling--connectors--protocols
+[RAG’s Biggest Lie]: REFERENCES.md#retrieval--rag
 [Firecrawl]: REFERENCES.md#retrieval--rag
 [Gitingest]: REFERENCES.md#retrieval--rag
 [LangGraph]: REFERENCES.md#agent-runtimes--frameworks--interop
