@@ -100,6 +100,9 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
     - Supports read/fetch and write/actions (e.g., Jira ticket updates, GitHub ops, Slack/Zapier
       flows); composable in multi-tool chains with policy & audit.
   - Vision embeddings: **MetaCLIP2** adapter (encode image/text queries; multilingual).
+  - Read-only `FlowTemplateImporter` entries (inputs: template URL/ID + platform tag; outputs:
+    temporary artifact bundle + generated `Plan.json`) with policy gates that require explicit
+    consent before touching external webhooks or API keys during hydration.
 
 - **Memory Fabric** — Episodic/semantic/skills; vector+graph (Qdrant/Weaviate/Graph store);
   retrieval policies; decision narratives.
@@ -208,6 +211,7 @@ flowchart TB
     Parlant[Parlant + VibeVoice (ASR/TTS)]
     DIA[DIA TTS (multi-speaker)]
     n8n[n8n Flow Export]
+    FlowTemplate[FlowTemplate (Workflow templates: n8n / Make.com / Zapier)]
     Nango[Nango SaaS Hub]
     ART[ART Prompt-Ops]
     Tensorlake[Tensorlake Metadata-RAG]
@@ -377,6 +381,8 @@ constitutional bypass.
   cross-modal search, screenshot/diagram grounding, and gallery/asset retrieval. Integrates with
   Evidence Store so citations can reference an image region + text span. Enables hybrid RAG where
   visual evidence is retrieved alongside text passages.
+- **Workflow Template Import** — Naestro can ingest FlowTemplate catalogs (n8n/Make/Zapier) and
+  auto-convert them to `Plan.json` while preserving triggers, actions, and policy constraints.
 
 ### REFRAG Integration Plan (Naestro)
 
@@ -528,7 +534,9 @@ constitutional bypass.
 
 - Metadata-based retrieval (Tensorlake-style)
 - Firecrawl (web crawl/extract)
-- Gitingest (repo digests)  
+- Gitingest (repo digests)
+- FlowTemplate ingestion: parse → map to Tool/Skill Registry → emit Plan.json + consent/policy
+  gates.
   **Exit Criteria:**
 - Faster, more accurate RAG vs baseline
 - URL/repo ingestion → Q&A with citations
@@ -569,6 +577,8 @@ regimes on H100/next-gen accelerators.
 **Deliverables:**
 
 - Researcher/Validator agents
+- FlowTemplate bootstrap — Researcher/Runner agents import FlowTemplate workflows to accelerate
+  plan composition before handing tasks to validators.
 - Multi-hop query expansion + evidence synth
 - Self-RAG-aligned iterative retrieval loops (retrieve → critique → refine)
 - Embedded self-critique routines with traceable verifier feedback cycles
@@ -612,6 +622,9 @@ Every LLM span must include:
   understand how robust the chain is to distractors versus “RAG’s Biggest Lie” hallucination.
 - `rag.leakage_risk` — estimate sensitive or policy-scoped content passed through to answers from
   retrieved context, alerting reviewers when guardrails are bypassed by RAG payloads.
+- Template import metrics — instrument FlowTemplate ingestion via `workflow.template_source`,
+  `workflow.import_warnings_count`, `workflow.sanitized_nodes_count`, and
+  `workflow.simulated_success_rate`.
 
 ---
 
@@ -857,6 +870,11 @@ interventions, and instrumented explanations aligned to Phase U goals.
 - `refrag/adapters/vllm/*` (vLLM adapter wiring REFRAG into serving stack)
 - `refrag/adapters/trtllm/*` (TensorRT-LLM adapter for REFRAG deployment)
 - `refrag/evals/*` (evaluation harnesses validating REFRAG performance)
+- `integrations/flowtemplate/*` (catalog connectors, ingestion jobs, consent receipts)
+- `converters/flowtemplate/{n8n,make,zapier}/*` (template translators to `Plan.json`)
+- `policies/flowtemplate_sanitizers/*` (guardrails for imported triggers/actions/webhooks)
+- `evaluators/flowtemplate/*` (dry-run simulators and policy compliance checks)
+- `studio/components/flowtemplate-import/*` (Copilot previews, diffing, consent prompts)
 
 ---
 
@@ -867,6 +885,9 @@ interventions, and instrumented explanations aligned to Phase U goals.
 - SEO/Geo audits + auto-PRs.
 - Voice-driven sprints (multi-speaker agent debates).
 - SaaS automations (HubSpot→Slack→GitHub).
+- Import → Adapt → Run — bring in a FlowTemplate automation (e.g., AI chatbot / HTTP tool /
+  web-search agent), preview it in Copilot mode, evaluate the run, then promote it to Auto once the
+  evaluators pass.
 - Repo ingestion → Q&A with citation-guarantees.
 - Whole-report reasoning at speed — REFRAG lets local models read entire docs/logs with accuracy
   parity and dramatically lower latency/cost.
