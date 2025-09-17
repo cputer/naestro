@@ -98,6 +98,7 @@ Spec and scaffolding guidance in [VS Code Extension](docs/VS_CODE_EXTENSION.md).
 
 - **FlowTemplate** — Browse thousands of automation workflows for n8n, Make.com, Zapier.
   - [Catalog](https://flowtemplate.com/workflows) · [Overview](https://flowtemplate.com/) · [Guide](https://flowtemplate.com/guide)
+  - ℹ️ FlowTemplate module backlog updates live in [ROADMAP.md §11](./ROADMAP.md#11-filemodule-backlog) (connectors, converters, sanitizers, evaluators, studio import components).
 
 ---
 
