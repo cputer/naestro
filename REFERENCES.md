@@ -13,14 +13,14 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
   Link: https://bclarkson-code.com/posts/llm-from-scratch-scalar-autograd/post.html
 
 [ScalarAutogradLLM]: REFERENCES.md#educational--introspection
-[MCP]: REFERENCES.md#tooling--connectors--protocols
+[MCP]: REFERENCES.md#agency-automation--orchestration
 [ZapierPlatform]: REFERENCES.md#tooling--connectors--protocols
-[n8n]: REFERENCES.md#tooling--connectors--protocols
+[n8n]: REFERENCES.md#agency-automation--orchestration
 [Nango]: REFERENCES.md#tooling--connectors--protocols
-[OpenTelemetry]: REFERENCES.md#observability--formal-methods
-[Prometheus]: REFERENCES.md#observability--formal-methods
+[OpenTelemetry]: REFERENCES.md#agency-automation--orchestration
+[Prometheus]: REFERENCES.md#agency-automation--orchestration
 [Grafana]: REFERENCES.md#observability--formal-methods
-[Langfuse]: REFERENCES.md#observability--formal-methods
+[Langfuse]: REFERENCES.md#agency-automation--orchestration
 [TLA+]: REFERENCES.md#observability--formal-methods
 [Coq]: REFERENCES.md#observability--formal-methods
 [OPA]: REFERENCES.md#identitypolicy
@@ -109,12 +109,17 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 
 ## Observability & Formal Methods
 
-- **OpenTelemetry** — <https://opentelemetry.io/>
-- **Prometheus** — <https://prometheus.io/>
 - **Grafana** — <https://grafana.com/>
-- **Langfuse** — <https://langfuse.com/>
 - **TLA+** — <https://lamport.azurewebsites.net/tla/tla.html>
 - **Coq** — <https://coq.inria.fr/>
+
+## Agency Automation & Orchestration
+
+- **n8n (workflow automation)** — <https://n8n.io>
+- **Model Context Protocol (MCP)** — <https://modelcontextprotocol.io/>
+- **Langfuse** — <https://langfuse.com/>
+- **OpenTelemetry** — <https://opentelemetry.io/>
+- **Prometheus** — <https://prometheus.io/>
 
 ## Hardware Optimizations
 
@@ -224,12 +229,10 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 
 ## Tooling / Connectors / Protocols
 
-- **Model Context Protocol (MCP)** — <https://modelcontextprotocol.io/>
 - **OpenAI adds powerful but dangerous support for MCP in ChatGPT Dev Mode (VentureBeat)** — _link
   unavailable_
 - **Zapier Platform** — <https://platform.zapier.com/>
 - **Jira Cloud Platform** — <https://developer.atlassian.com/cloud/jira/platform/>
-- **n8n (workflow automation)** — <https://n8n.io>
 - **Nango (SaaS integrations)** — <https://nango.dev>
 - **Nanobrowser** — open-source Chrome extension for AI-powered web automation.
   - Runs multi-agent workflows via user-supplied LLM API keys.
