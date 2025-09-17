@@ -906,7 +906,7 @@ interventions, and instrumented explanations aligned to Phase U goals.
 [MCP-DevMode]: REFERENCES.md#tooling--connectors--protocols
 [n8n]: REFERENCES.md#tooling--connectors--protocols
 [Nango]: REFERENCES.md#tooling--connectors--protocols
-[RAG’s Biggest Lie]: REFERENCES.md#retrieval--rag
+[RAG’s Biggest Lie]: REFERENCES.md#ref-rags-biggest-lie
 [Firecrawl]: REFERENCES.md#retrieval--rag
 [Gitingest]: REFERENCES.md#retrieval--rag
 [LangGraph]: REFERENCES.md#agent-runtimes--frameworks--interop
