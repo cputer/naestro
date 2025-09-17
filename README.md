@@ -29,6 +29,9 @@ depth.
 
 See also: [References](./REFERENCES.md) for external tech and source links.
 
+Use-Cases:
+- [Agency Automation (n8n + Naestro)](docs/usecases/agency_automation.md)
+
 ---
 
 ## Vision
