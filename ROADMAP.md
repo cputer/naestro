@@ -886,6 +886,10 @@ interventions, and instrumented explanations aligned to Phase U goals.
   staging") with visual box citation.
 - **Docs & diagrams** — retrieve architecture diagram segments that support a claim and cite the
   exact region.
+- **Noise-enhanced retrieval** — inject 10–20% intentionally irrelevant documents into candidate
+  pools so Self-RAG’s verifier/planner loops learn to reject spurious hits, a robustness tactic born
+  from the [RAG’s Biggest Lie] insight that “perfect retrieval” is a myth and resilience requires
+  stress-testing grounding.
 
 ## 13) Risks & Mitigations
 
