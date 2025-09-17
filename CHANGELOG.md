@@ -11,6 +11,9 @@ All notable changes to this project will be documented here. This project adhere
 - Updated: **ROADMAP.md** “What’s new” section with the REFRAG long-context acceleration lane and Naestro integration notes
 - Updated: **REFERENCES.md** to capture the latest REFRAG, SmolHub, and Qwen3-Next citations for roadmap alignment
 
+- Updated: **REFERENCES.md** to include the Ling-flash-2.0 and InfoSeek research citations
+- Updated: **ROADMAP.md** with Ling-flash-2.0 milestones and InfoSeek evaluation checkpoints
+
 ## [1.4.0] - 2025-09-02
 
 ### Added
