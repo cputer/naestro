@@ -42,6 +42,8 @@ pydantic-core==2.33.2
     # via pydantic
 python-dotenv==1.1.1
     # via -r src/gateway/requirements.txt
+pyyaml==6.0.2
+    # via -r src/gateway/requirements.txt
 requests==2.32.4
     # via -r src/gateway/requirements.txt
 sniffio==1.3.1
