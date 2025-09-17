@@ -23,8 +23,9 @@ Naestro is an AI Orchestrator for multi-model collaboration. Review the
 [orchestrator collaboration guide](docs/orchestrator_collaboration.md) for collaboration modes and
 depth.
 
-📖 Read the [Whitepaper](./WHITEPAPER.md)  
-➡️ See the [Roadmap](./ROADMAP.md) 🌌 Explore the [Vision](./VISION.md)
+📖 Read the [Whitepaper](./WHITEPAPER.md)
+➡️ See the [Roadmap](./ROADMAP.md)
+Read the full **Naestro VISION** → [VISION.md](./VISION.md)
 
 See also: [References](./REFERENCES.md) for external tech and source links.
 
