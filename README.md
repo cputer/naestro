@@ -25,7 +25,7 @@ depth.
 
 📖 Read the [Whitepaper](./WHITEPAPER.md)
 ➡️ See the [Roadmap](./ROADMAP.md)
-Read the full **Naestro VISION** → [VISION.md](./VISION.md)
+
 
 See also: [References](./REFERENCES.md) for external tech and source links.
 
