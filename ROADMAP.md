@@ -336,6 +336,10 @@ constitutional bypass.
 - **Qwen3-Next-80B-A3B** — Ultra-sparse MoE (~3B active params per token; extreme low activation
   ratio). Order-of-magnitude efficiency gains (internal benchmarks show much lower cost/latency than
   Qwen3-32B, especially at 32K+ context) [Qwen3-Next Blog][Qwen3-Next]
+- **Ling-flash-2.0 MoE lane** — 100B total parameters with ~6.1B activated (~4.8B non-embedding),
+  providing a dedicated sparse MoE route for high-throughput long-context reasoning workloads;
+  orchestrator can tap this lane when REFRAG compression demands sparse scaling
+  [Ling-flash-2.0][Ling-flash-2.0] — [Ling-flash-2.0 Paper][Ling-flash-2.0 Paper].
 - **ERNIE X1.1 (Baidu API, Qianfan)** — agent-tuned reasoning model with strong factuality and
   instruction following; performs on par with GPT-5/Gemini-2.5 Pro [Reuters][ERNIE-Reuters]
   [PRNewswire][ERNIE-PRN].
@@ -385,6 +389,9 @@ constitutional bypass.
   visual evidence is retrieved alongside text passages.
 - **Workflow Template Import** — Naestro can ingest FlowTemplate catalogs (n8n/Make/Zapier) and
   auto-convert them to `Plan.json` while preserving triggers, actions, and policy constraints.
+- **MoE-aware routing** — Router ingests expert-activation telemetry/costs to prefer sparse MoE
+  lanes (e.g., Ling-flash-2.0) when they yield better quality-per-dollar for long-context runs
+  [Ling-flash-2.0][Ling-flash-2.0].
 
 ### REFRAG Integration Plan (Naestro)
 
@@ -495,7 +502,9 @@ constitutional bypass.
 
 - Bandit router (Thompson sampling)
 - Introspector: detect reusable subplans
-- Skill registry (typed, versioned)  
+- Skill registry (typed, versioned)
+- InfoSeek evaluation lane — integrate [InfoSeek][InfoSeek] tasks via [InfoSeek Framework][InfoSeek
+  Framework] to benchmark deep research planning and browse tooling.
   **Exit Criteria:**
 - Router converges to cheaper/better models
 - ≥5 skills encapsulated as registry items
@@ -932,6 +941,10 @@ interventions, and instrumented explanations aligned to Phase U goals.
 [MCP-DevMode]: REFERENCES.md#tooling--connectors--protocols
 [n8n]: REFERENCES.md#tooling--connectors--protocols
 [Nango]: REFERENCES.md#tooling--connectors--protocols
+[Ling-flash-2.0]: REFERENCES.md#models--architectures
+[Ling-flash-2.0 Paper]: REFERENCES.md#models--architectures
+[InfoSeek]: REFERENCES.md#datasets
+[InfoSeek Framework]: REFERENCES.md#datasets
 [RAG’s Biggest Lie]: REFERENCES.md#ref-rags-biggest-lie
 [Firecrawl]: REFERENCES.md#retrieval--rag
 [Gitingest]: REFERENCES.md#retrieval--rag
