@@ -76,6 +76,43 @@ Naestro evolves in stages:
 5. **Evolving ASI** → surpassing human-level capability in general-purpose problem solving, while
    remaining safe and governed.
 
+## Engineering Quality & Reliability
+
+- Autonomous PRs must clear layered regression, property-based, and chaos suites before any
+  self-merge; failing gates auto-freeze self-edit loops.
+- Supply-chain integrity is enforced via signed SBOMs, deterministic builds, and continuous
+  dependency diffing.
+- Live reliability SLO dashboards drive automated canary + rollback whenever error budgets are
+  threatened.
+- Every action is audit-logged with human override controls to pause autonomy under anomaly
+  thresholds.
+
+## Meta-Cognition & Explainability
+
+- Dual-loop cognition: planner + critic agents reflect on reasoning traces before acting.
+- Transparent memory graphs show why each tool or plan was chosen, with introspection UIs for
+  humans to inspect and edit.
+- Causal probes and scalar-level tracing allow us to debug latent states and attention flows for
+  safety-critical runs.[ScalarAutogradLLM]
+
+## Ecosystem & Marketplace
+
+- Open marketplace exposes curated connectors and skills with rev-share, versioning, and automated
+  compliance review.
+- MCP-native interfaces let external runtimes register secure capabilities and message streams
+  without bespoke glue.[MCP]
+- Turnkey SaaS integrations (Zapier, n8n, Nango) give enterprise teams instant workflow coverage
+  across thousands of apps.[ZapierPlatform][n8n][Nango]
+
+## Governance & Data Sovereignty
+
+- Policy-as-code stack (OPA, Casbin) enforces tenant-level allow/deny, rate limits, and safety
+  guardrails across agents.[OPA][Casbin]
+- Unified identity plane via Keycloak/SSO ensures every action is attributable, consented, and
+  revocable.[Keycloak]
+- Regional deployment blueprints support data residency, customer-managed keys, and zero-trust
+  federation by default.
+
 ## Final Vision
 
 A system that:
