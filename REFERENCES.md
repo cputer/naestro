@@ -124,6 +124,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 - **Semantic Kernel** — <https://github.com/microsoft/semantic-kernel>
 - **Open Computer Agent (OCA)** — _link unavailable_
 - **OmniNova** — <https://github.com/LuChenCornell/OmniNova>
+- **ROMA (Recursive-Open-Meta-Agent framework)** — <https://github.com/sentient-agi/ROMA>
 - **Symphony** — _link unavailable_
 - **ART Prompt-Ops** — _link unavailable_
 - **finllm-apps (cross-framework finance agents)** — <https://github.com/tinztwins/finllm-apps>
