@@ -1,12 +1,13 @@
 datasets:
   - name: InfoSeek
     description: >-
-      Placeholder configuration for the InfoSeek deep research benchmarking suite
-      until dataset ingestion is wired up.
-    enabled: false
-    path: /path/to/infoseek/dataset
+      InfoSeek deep research benchmarking suite covering research tree
+      construction, compound QA, and reward-finetuning trajectory splits
+      used to stress multi-hop planning and BrowseComp-Plus readiness.
+    enabled: true
+    path: hf://datasets/Lk123/InfoSeek
     tasks:
-      - deep_research_planning
-      - browse_comp_plus
-      - hierarchical_reasoning
-    k_samples: 0
+      - research_tree_construction
+      - compound_question_answering
+      - trajectory_reward_finetuning
+    k_samples: 256
