@@ -5,7 +5,7 @@ All notable changes to this project will be documented here. This project adhere
 
 ## [Unreleased]
 
-- Added: AgentScope runtime listing documentation and Mermaid diagram.
+- Added: AgentScope runtime listing docs + Mermaid diagram.
 - Added: Adapter/config stub for AgentScope integrations.
 - Updated: **VISION.md** with Engineering Quality, Meta-Cognition, Ecosystem, and Governance sections
 - Updated: cross-links in README/ROADMAP; added reference anchors
