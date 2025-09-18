@@ -9,3 +9,31 @@ routers:
     tags:
       - moe
       - experimental
+  - name: magistral-1.2-small
+    display_name: Magistral-1.2-small router
+    description: >-
+      Placeholder for the Magistral-1.2 small-form-factor router lane
+      (optimized for low-latency guardrail and filtering duties) until the
+      production integration is wired up.
+    provider: magistral
+    family: magistral-1.2
+    params: 8000000000
+    enabled: false
+    tags:
+      - magistral
+      - router
+      - preview
+  - name: magistral-1.2-24b
+    display_name: Magistral-1.2-24B router
+    description: >-
+      Placeholder for the Magistral-1.2 24B router lane (full-capacity
+      deployment supporting long-context reasoning bursts) until production
+      rollout is complete.
+    provider: magistral
+    family: magistral-1.2
+    params: 24000000000
+    enabled: false
+    tags:
+      - magistral
+      - router
+      - preview
