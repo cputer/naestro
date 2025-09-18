@@ -504,7 +504,7 @@ constitutional bypass.
 - Introspector: detect reusable subplans
 - Skill registry (typed, versioned)
 - InfoSeek evaluation lane — integrate [InfoSeek][InfoSeek] tasks via [InfoSeek Framework][InfoSeek
-  Framework] to benchmark deep research planning and browse tooling.
+  Framework] to benchmark deep research planning, researcher evals, and Agentic RAG stress tests.
   **Exit Criteria:**
 - Router converges to cheaper/better models
 - ≥5 skills encapsulated as registry items
