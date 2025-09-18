@@ -31,6 +31,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 [Magistral Docs]: REFERENCES.md#models--architectures
 [InfoSeek]: REFERENCES.md#datasets
 [InfoSeek Framework]: REFERENCES.md#datasets
+[AgentScope]: https://github.com/agentscope-ai/agentscope
 
 ## Research & Concepts
 
@@ -155,7 +156,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 
 - **LangGraph** — <https://github.com/langchain-ai/langgraph>
 - **CrewAI** — <https://github.com/joaomdmoura/crewai>
-- **AgentScope** — <https://github.com/modelscope/agentscope>
+- **AgentScope** — [AgentScope]
 - **AutoGen** — <https://github.com/microsoft/autogen>
 - **SuperAGI** — <https://github.com/TransformerOptimus/SuperAGI>
 - **AutoAgent (clustered swarms)** — <https://github.com/Link-AGI/AutoAgents>
