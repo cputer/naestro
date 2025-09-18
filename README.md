@@ -31,6 +31,7 @@ See also: [References](./REFERENCES.md) for external tech and source links.
 
 Use-Cases:
 - [Agency Automation (n8n + Naestro)](docs/usecases/agency_automation.md)
+- Optional backend: **AgentScope** (Alibaba) — see [AgentScope].
 
 ---
 
@@ -287,3 +288,4 @@ MIT — see [License](LICENSE).
 [All You Need Is A Fuzzing Brain]: REFERENCES.md#research--concepts
 [Causal Attention with Lookahead Keys]: REFERENCES.md#research--concepts
 [Visual Representation Alignment]: REFERENCES.md#research--concepts
+[AgentScope]: https://github.com/agentscope-ai/agentscope
