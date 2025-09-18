@@ -60,6 +60,8 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
   - Press — PRNewswire —
     <https://www.prnewswire.com/news-releases/baidu-unveils-reasoning-model-ernie-x1-1-with-upgrades-in-key-capabilities-302551170.html>
 
+- **Grok 4 AGI Benchmarks** — <https://x.ai/blog/grok-4>
+
 - **NVIDIA — Small Language Models for Agentic AI (2025)** —
   <https://www.vectrix.ai/blog-post/understanding-large-and-small-language-models-key-differences-and-applications>
 - **SmolLM3** — <https://huggingface.co/HuggingFaceTB/SmolLM3-3B>
