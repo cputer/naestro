@@ -37,3 +37,16 @@ routers:
       - magistral
       - router
       - preview
+
+cloud:
+  - name: grok-4
+    provider: xai
+    capabilities:
+      - reasoning
+      - long_context
+      - coding
+    priority: 90
+    notes: >-
+      Grok 4 cloud-tier allocation used for overflow reasoning bursts,
+      multi-hop research assistance, and long-context synthesis when local
+      routers are saturated.
