@@ -332,7 +332,9 @@ constitutional bypass.
 - **GPT-5**
 - **Gemini-2.5 Pro**
 - **Claude**
-- **Grok**
+- **Grok 4** — …
+  Currently the closest model …
+  Integrated as a cloud escalation lane …
 - **Qwen3-Next-80B-A3B** — Ultra-sparse MoE (~3B active params per token; extreme low activation
   ratio). Order-of-magnitude efficiency gains (internal benchmarks show much lower cost/latency than
   Qwen3-32B, especially at 32K+ context) [Qwen3-Next Blog][Qwen3-Next]
