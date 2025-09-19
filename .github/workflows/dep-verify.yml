@@ -65,6 +65,9 @@ jobs:
     defaults:
       run:
         shell: bash
+    env:
+      PYTHONHASHSEED: "0"
+      # GPU runners must also export CUBLAS_WORKSPACE_CONFIG=:4096:8
     steps:
       - name: Checkout
         uses: actions/checkout@v5
