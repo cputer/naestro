@@ -1,0 +1,119 @@
+llm_datasets:
+  enabled: false
+  notes: >-
+    Curated catalog seeded from the mlabonne/llm-datasets project. The registry ships
+    disabled because sourcing, licensing, and governance reviews must be completed
+    before Naestro agents can act on any of the datasets that are referenced here.
+  categories:
+    - id: general_purpose
+      title: General-purpose SFT mixtures
+      summary: >-
+        Balanced instruction-following corpora spanning chat, reasoning, code, and math
+        tasks. Use these mixtures when you need broadly capable assistants.
+      sources:
+        - name: Infinity-Instruct
+          url: https://huggingface.co/datasets/BAAI/Infinity-Instruct
+          size: "≈7.5M samples"
+          license: CC-BY-SA-4.0
+          reference: mlabonne/llm-datasets — General-purpose mixtures table
+        - name: open-perfectblend
+          url: https://huggingface.co/datasets/mlabonne/open-perfectblend
+          size: "≈1.4M samples"
+          license: Apache-2.0
+          reference: mlabonne/llm-datasets — General-purpose mixtures table
+    - id: math_reasoning
+      title: Mathematical reasoning
+      summary: >-
+        High-rationale math corpora that stress symbolic reasoning, solutions with
+        justifications, and scratchpad workflows.
+      sources:
+        - name: OpenMathInstruct-2
+          url: https://huggingface.co/datasets/nvidia/OpenMathInstruct-2
+          size: "≈14M samples"
+          license: Apache-2.0
+          reference: mlabonne/llm-datasets — Math table
+        - name: NuminaMath-CoT
+          url: https://huggingface.co/datasets/AI-MO/NuminaMath-CoT
+          size: "≈859k samples"
+          license: Apache-2.0
+          reference: mlabonne/llm-datasets — Math table
+    - id: code_generation
+      title: Code generation and repair
+      summary: >-
+        Program synthesis, translation, and debugging corpora to adapt Naestro coders
+        and tool-use agents for software automation scenarios.
+      sources:
+        - name: opc-sft-stage2
+          url: https://huggingface.co/datasets/OpenCoder-LLM/opc-sft-stage2
+          size: "≈436k samples"
+          license: MIT
+          reference: mlabonne/llm-datasets — Code table
+        - name: CodeFeedback-Filtered-Instruction
+          url: https://huggingface.co/datasets/m-a-p/CodeFeedback-Filtered-Instruction
+          size: "≈157k samples"
+          license: Apache-2.0
+          reference: mlabonne/llm-datasets — Code table
+    - id: agentic_tooling
+      title: Agent & function-calling corpora
+      summary: >-
+        Structured output datasets that teach models to emit JSON/function call payloads
+        for downstream agents, workflows, and API integrations.
+      sources:
+        - name: hermes-function-calling-v1
+          url: https://huggingface.co/datasets/NousResearch/hermes-function-calling-v1
+          size: "≈11.6k samples"
+          license: Apache-2.0
+          reference: mlabonne/llm-datasets — Agent & Function calling table
+        - name: ToolACE
+          url: https://huggingface.co/datasets/Team-ACE/ToolACE
+          size: "≈11.3k samples"
+          license: Apache-2.0
+          reference: mlabonne/llm-datasets — Agent & Function calling table
+    - id: preference_alignment
+      title: Preference alignment
+      summary: >-
+        Chosen vs. rejected answer pairs for reward modeling, DPO, ORPO, and related
+        preference-learning techniques.
+      sources:
+        - name: Skywork-Reward-Preference-80K-v0.2
+          url: https://huggingface.co/datasets/Skywork/Skywork-Reward-Preference-80K-v0.2
+          size: "≈77k preference pairs"
+          license: Unknown — review dataset card before use
+          reference: mlabonne/llm-datasets — Preference alignment table
+        - name: ultrafeedback-binarized-preferences-cleaned
+          url: https://huggingface.co/datasets/argilla/ultrafeedback-binarized-preferences-cleaned
+          size: "≈61k preference pairs"
+          license: Apache-2.0
+          reference: mlabonne/llm-datasets — Preference alignment table
+  usage:
+    activation_steps:
+      - Review the mlabonne/llm-datasets README to confirm dataset freshness, licensing,
+        and curation notes.
+      - Complete internal data governance review and document consent/data handling
+        policies for every dataset before toggling `enabled` to true.
+      - Wire ingestion jobs (Hugging Face CLI, parquet snapshots, or data lake sync) and
+        register resulting artifacts in Naestro's evidence store.
+    plan_template:
+      summary: >-
+        When the registry is enabled, agents can draft ingestion or fine-tuning plans for a
+        given category by expanding this template.
+      steps:
+        - Validate licensing and usage restrictions with legal/compliance stakeholders.
+        - Stage the dataset in an isolated workspace with checksum validation.
+        - Run deduplication and safety filters (refusals, PII, policy violations).
+        - Emit a Naestro `Plan.json` proposal summarizing costs, tooling, and evaluators.
+  legal:
+    compliance_gates:
+      - The registry is informational. Each dataset requires explicit approval from the
+        Naestro governance process before it can be downloaded or used in training.
+      - Datasets that include personal data or sensitive content demand privacy impact
+        assessments and data minimization controls.
+    restrictions:
+      - Licenses vary widely (Apache, MIT, CC, research-only). Never assume rights transfer—
+        confirm each dataset's license and attribution requirements directly from the
+        upstream card or repository.
+      - Some datasets contain model-generated content with potential bias, toxicity, or
+        safety hazards. Apply evaluators and guardrails prior to production use.
+    contacts:
+      - Data Governance: datagovernance@example.com
+      - Legal Review: legal@example.com
