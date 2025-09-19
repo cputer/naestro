@@ -91,6 +91,26 @@ pref_clamps = SimpleCounter(
     "pref_clamps_total", "Number of times collaboration preferences were clamped."
 )
 
+# HICRA metrics --------------------------------------------------------------
+
+# Ratio of planner rewards to total rewards observed during HICRA credit assignment.
+hicra_planner_reward_ratio = LabeledGauge(
+    "hicra_planner_reward_ratio",
+    "Mean ratio of planner rewards to total rewards for HICRA trajectories.",
+)
+
+# Average collaboration depth observed while HICRA is enabled.
+hicra_depth = LabeledGauge(
+    "hicra_depth",
+    "Average collaboration depth recorded when running HICRA credit assignment.",
+)
+
+# Number of trajectories marked successful by the HICRA assigner.
+hicra_success = SimpleCounter(
+    "hicra_success_total",
+    "Number of HICRA trajectories marked successful during credit assignment.",
+)
+
 # Server level metrics --------------------------------------------------------
 
 # Total orchestrate requests seen by the gateway server.

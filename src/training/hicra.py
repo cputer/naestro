@@ -7,6 +7,11 @@ from typing import Any, Mapping, Optional
 
 import torch
 
+from src.telemetry.metrics import (
+    hicra_depth,
+    hicra_planner_reward_ratio,
+    hicra_success,
+)
 
 @dataclass
 class HICRAConfig:
@@ -119,6 +124,8 @@ class HICRACreditAssigner:
         else:
             credits = masked_rewards
 
+        self._emit_metrics(masked_rewards, mask_float)
+
         return credits * self.config.multiplier
 
     def _normalize(self, rewards: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
@@ -172,6 +179,31 @@ class HICRACreditAssigner:
             mask_tensor = mask_tensor.to(dtype=torch.bool)
 
         return mask_tensor
+
+    def _emit_metrics(self, masked_rewards: torch.Tensor, mask: torch.Tensor) -> None:
+        """Record HICRA telemetry for the provided rewards."""
+
+        if masked_rewards.ndim == 0 or masked_rewards.shape[-1] == 0:
+            return
+
+        with torch.no_grad():
+            planner_rewards = masked_rewards[..., 0]
+            total_rewards = masked_rewards.sum(dim=-1)
+            safe_totals = torch.where(
+                total_rewards != 0, total_rewards, torch.ones_like(total_rewards)
+            )
+
+            ratios = planner_rewards / safe_totals
+            ratio_mean = float(ratios.float().mean().item())
+            hicra_planner_reward_ratio.set("overall", ratio_mean)
+
+            depth_values = mask.sum(dim=-1)
+            depth_mean = float(depth_values.float().mean().item())
+            hicra_depth.set("overall", depth_mean)
+
+            success_count = int((total_rewards > 0).sum().item())
+            if success_count:
+                hicra_success.inc(success_count)
 
 
 def build_hicra_from_dict(config: Optional[Mapping[str, Any]]) -> HICRACreditAssigner:

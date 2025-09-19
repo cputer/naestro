@@ -8,6 +8,9 @@ from .metrics import (
     collab_routes,
     collab_prompts,
     collab_prompt_depth,
+    hicra_depth,
+    hicra_planner_reward_ratio,
+    hicra_success,
     orchestrate_requests,
     telemetry_events,
 )
@@ -16,6 +19,9 @@ __all__ = [
     "collab_routes",
     "collab_prompts",
     "collab_prompt_depth",
+    "hicra_depth",
+    "hicra_planner_reward_ratio",
+    "hicra_success",
     "orchestrate_requests",
     "telemetry_events",
 ]
