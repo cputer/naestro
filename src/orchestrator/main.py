@@ -1,11 +1,47 @@
 """FastAPI entrypoint for the LangGraph-based orchestrator."""
 
+from __future__ import annotations
+
 import logging
 import os
+from pathlib import Path
 from typing import Any, Dict, Optional
 
+import yaml
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+
+try:  # pragma: no cover - defensive import
+    from infra.determinism import enable as _det_en
+except Exception:  # pragma: no cover - determinism helper optional
+    def _det_en(*_args: Any, **_kwargs: Any) -> None:
+        return None
+
+
+def _load_runtime_config() -> Dict[str, Any]:
+    config_path = Path(__file__).resolve().parents[2] / "configs" / "runtime.yaml"
+    if not config_path.exists():
+        return {}
+    with config_path.open("r", encoding="utf-8") as handle:
+        data = yaml.safe_load(handle) or {}
+    if not isinstance(data, dict):
+        return {}
+    return data
+
+
+def _enable_determinism() -> None:
+    config = _load_runtime_config()
+    runtime_cfg = config.get("runtime", {}) if isinstance(config, dict) else {}
+    det_cfg = runtime_cfg.get("determinism", {})
+    if not isinstance(det_cfg, dict):
+        det_cfg = {}
+    enabled = det_cfg.get("enabled", True)
+    if enabled:
+        seed = int(det_cfg.get("seed", 0) or 0)
+        _det_en(seed=seed)
+
+
+_enable_determinism()
 
 from .math_agent import app as math_app
 from .orchestrator import app as workflow_app
