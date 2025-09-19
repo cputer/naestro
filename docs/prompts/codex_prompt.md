@@ -32,6 +32,15 @@ The tests for the assigner should live alongside the other unit suites, e.g.
 ## TODO / Integration Follow-Ups
 - When orchestrator support is ready, thread the trained assigner into
   `src/orchestrator/orchestrator.py` and `src/orchestrator/main.py`.
+- The live orchestrator entry points already exist under
+  `src/orchestrator/main.py` (FastAPI) and `src/orchestrator/orchestrator.py`
+  (LangGraph workflow). Target these modules when wiring policies or runtime
+  hooks instead of referencing a placeholder like
+  `naestro/training/orchestrator_rl.py`.
+- Router policy training is controlled through the real CLI at
+  `scripts/run_router_ppo.py`. When adjusting PPO behavior, update that script
+  and reference its actual flags: `--config`, `--updates`, `--seed`, and
+  `--episode-length`.
 - Document how the training outputs plug into the routers and agents under
   `src/orchestrator/` for future automation.
 - Add integration smoke tests once the orchestrator glue code in
