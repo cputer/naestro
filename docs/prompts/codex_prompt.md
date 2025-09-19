@@ -37,6 +37,9 @@ The tests for the assigner should live alongside the other unit suites, e.g.
   types and follow their naming conventions (`*_total` for counters, direct
   unit suffixes such as `_ms` for gauges) instead of wiring into a placeholder
   like `naestro/metrics/logger.py`.
+- Document the trainer by appending a HICRA section to
+  `docs/policy/rllm.md` so the existing policy training guide covers credit
+  assignment setup and usage.
 
 ## TODO / Integration Follow-Ups
 - When orchestrator support is ready, thread the trained assigner into
@@ -58,4 +61,5 @@ The tests for the assigner should live alongside the other unit suites, e.g.
 ## Validation Checklist
 - Unit tests import `HICRACreditAssigner` from `src.training.hicra`.
 - Ensure linting passes for the new package.
-- Capture README updates if configuration steps change.
+- Extend `docs/policy/rllm.md` with the new documentation if configuration
+  steps change.
