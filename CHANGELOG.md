@@ -5,6 +5,12 @@ All notable changes to this project will be documented here. This project adhere
 
 ## [Unreleased]
 
+- Documented: **docs/engineering/determinism.md** detailing the deterministic inference guard for GPU workloads.
+- Documented: Runtime toggle `runtime.determinism.guard_enabled` / `NAESTRO_DETERMINISTIC_GUARD` for enabling the guard.
+- Documented: Golden and canary evaluation flagging that forces deterministic inference during guard-protected runs.
+- Documented: CI hints directing contributors to keep the deterministic guard enabled for local checks.
+- Documented: Regression tests that compare logits/hash digests to confirm the guard's determinism guarantees.
+
 - Added: **docs/plugins/deepcode.md** describing the DeepCode plugin lane integration plan.
 - Added: README Plugins / Lanes entry linking to the DeepCode lane documentation.
 - Documented: DeepCode lane status remains blocked until the adapter is wired to clarify availability expectations.
