@@ -69,7 +69,7 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
 12. **Advanced cognitive fusion** — Neuro-symbolic (Z3/Prolog), causal AI, multimodal sensor fusion,
     edge/neuromorphic/quantum hooks (built on [Visual Representation Alignment] and [Causal
     Attention with Lookahead Keys]).
-13. **No-code enablement** — n8n/Studio flows to compose agents & tools.
+13. **No-code enablement** — n8n/Studio flows to compose agents & tools. UI/UX design may draw inspiration from [Huginn]-style event-driven scenario graphs.
 14. **Human-AI partnership** — Strategic Dialogue Engine, Oversight Council, narrative explanations.
 15. **Resilience & efficiency** — Retries (Tenacity), fallback routing, Redis caching +
     dogpile/singleflight.
