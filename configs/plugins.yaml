@@ -1,0 +1,5 @@
+plugins:
+  deepcode:
+    enabled: false
+    repo_dir: /workspace/naestro
+    notes: "DeepCode adapter is not wired yet"
