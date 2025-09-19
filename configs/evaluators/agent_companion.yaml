@@ -1,13 +1,57 @@
 agent_companion:
   enabled: false
+  summary: >-
+    Mirror of the Kaggle Agent Companion benchmark suites. The registry remains
+    off by default until the competitions are wired into automated release
+    gating and the required data-governance reviews are completed.
   suites:
-    placeholder_smoke:
+    reasoning:
+      enabled: false
       description: >-
-        Placeholder entry for future Agent Companion smoke evaluations.
-      datasets: []
+        Kaggle Agent Companion Reasoning Arena replication focused on
+        multi-step question answering with scratchpads, tool-aware planning,
+        and self-reflection loops. Results should be compared against the
+        Kaggle leaderboard before publishing Naestro scorecards.
+      notes:
+        - Offline dev mirrors Kaggle kernels to avoid leaking live leaderboard
+          problems.
+        - Targets high-signal prompts that stress reasoning depth, chain of
+          thought coverage, and self-critique adoption.
+      datasets:
+        - id: kaggle://agent-companion/reasoning-arena-dev-v1
+          split: dev
+          url: https://www.kaggle.com/competitions/agent-companion-reasoning-arena/data
+        - id: kaggle://agent-companion/reasoning-arena-live-v1
+          split: live
+          url: https://www.kaggle.com/competitions/agent-companion-reasoning-arena/leaderboard
+      metrics:
+        - final_answer_accuracy
+        - scratchpad_consistency
+        - self_reflection_coverage
+        - tool_call_alignment
       deterministic: false
-    placeholder_regression:
+    tool_use:
+      enabled: false
       description: >-
-        Placeholder entry for future Agent Companion regression coverage.
-      datasets: []
+        Kaggle Agent Companion Tool-Use Lab replication capturing API routing,
+        environment interactions, and guardrail compliance for action-oriented
+        agents. The suite validates function-calling traces and real-world
+        tool robustness before enabling automatic updates.
+      notes:
+        - Dev split replays Kaggle hosted notebooks with sanitized credentials
+          and stubbed API tokens.
+        - Live leaderboard submissions must satisfy Kaggle service quotas and
+          Naestro's production safety gates.
+      datasets:
+        - id: kaggle://agent-companion/tool-use-lab-dev-v1
+          split: dev
+          url: https://www.kaggle.com/competitions/agent-companion-tool-use-lab/data
+        - id: kaggle://agent-companion/tool-use-lab-live-v1
+          split: live
+          url: https://www.kaggle.com/competitions/agent-companion-tool-use-lab/leaderboard
+      metrics:
+        - task_success_rate
+        - api_call_accuracy
+        - guardrail_compliance
+        - latency_budget_adherence
       deterministic: false
