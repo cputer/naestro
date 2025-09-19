@@ -293,6 +293,12 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
   <https://www.alphaxiv.org/abs/2509.02359v1>
   - PDF — <https://papers-pdfs.assets.alphaxiv.org/2509.02359v1.pdf>
 
+## Policy Optimization / Reinforcement Learning
+
+- **RLLM (Reinforcement Learning for Language Agents)** — Open-source framework for post-training language agents with reinforcement learning, integrating VERL-based training pipelines and recipes that have powered releases such as DeepSWE, DeepCoder, and DeepScaleR. Repo — <https://github.com/rllm-org/rllm>
+  - Summary — Provides installable Conda/Docker setups, reference SWE training scripts/datasets, and logging assets so teams can assemble custom RL loops, run large-scale training, and inspect evaluation artifacts from recent releases.
+  - Naestro relevance — Offers a living reference implementation for Naestro's policy optimization efforts by showing how to productionize RL post-training, share evaluation telemetry, and reuse open-source stacks for agent benchmarking.
+
 ---
 
 Maintenance:
