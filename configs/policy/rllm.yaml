@@ -1,0 +1,51 @@
+rllm:
+  enabled: false
+  rollout_service:
+    enabled: false
+    address: "http://localhost:8080"
+  trainer:
+    enabled: false
+    backend: "trlx"
+  evaluation:
+    enabled: false
+  autopilot:
+    enabled: false
+  ppo:
+    rollout_length: 2048
+    mini_batch_size: 256
+    update_epochs: 4
+    gamma: 0.99
+    gae_lambda: 0.95
+    clip_coef: 0.2
+    value_loss_coef: 0.5
+    entropy_coef: 0.01
+    learning_rate: 0.0003
+    max_grad_norm: 1.0
+  experiment:
+    enabled: false
+    name: "naestro-rllm"
+    description: >-
+      Baseline configuration for training Naestro policies using RLLM PPO.
+    tags: []
+    output_dir: "outputs/rllm"
+    resume: false
+    checkpointing:
+      enabled: false
+      frequency_steps: 1000
+      keep_last_n: 5
+  observability:
+    enabled: false
+    logging:
+      enabled: false
+      level: "info"
+      destination: "logs/rllm.log"
+    metrics:
+      enabled: false
+      backend: "wandb"
+      project: "naestro"
+      entity: ""
+      tags: []
+    tracing:
+      enabled: false
+      exporter: "otlp"
+      endpoint: "http://localhost:4317"
