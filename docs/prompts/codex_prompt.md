@@ -28,6 +28,10 @@ The tests for the assigner should live alongside the other unit suites, e.g.
 
 - Build lightweight fixtures so tests can instantiate the assigner without
   orchestrator dependencies.
+- Place the trainer defaults in `configs/training/hicra.yaml` inside the
+  existing `configs/` tree. Use this real configuration file (create it in the
+  `configs/training/` directory) rather than referencing a placeholder
+  `config.yaml`.
 
 ## TODO / Integration Follow-Ups
 - When orchestrator support is ready, thread the trained assigner into
