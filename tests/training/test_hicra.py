@@ -44,3 +44,13 @@ def test_build_hicra_from_dict_handles_nested_config() -> None:
     credits = assigner(rewards)
 
     assert torch.allclose(credits, rewards * 3.0)
+
+
+def test_build_hicra_from_dict_supports_alias_keys() -> None:
+    assigner = build_hicra_from_dict(
+        {"hicra": {"planner_weight": 2.0, "normalize": True, "eps": 1e-6}}
+    )
+
+    assert assigner.config.multiplier == 2.0
+    assert assigner.config.normalize is True
+    assert assigner.config.normalization_eps == 1e-6
