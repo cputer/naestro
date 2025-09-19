@@ -166,6 +166,7 @@ flowchart TB
     Registry[Tool/Skill Registry]
     Memory[Memory Fabric]
     Evaluators[Evaluators]
+    AgentCompanion[Agent Companion Benchmarks]
     Verifier[Claim Verifier (CoVe/Abstain)]
     Introspector[Introspector]
     SelfPR[Self-PR Bot]
@@ -249,6 +250,7 @@ flowchart TB
   Agents --> Engines
   Agents --> Memory
   Evaluators --> Verifier
+  Evaluators --> AgentCompanion
   Verifier --> Evidence
   Introspector --> SelfPR
   SelfPR --> Studio
@@ -612,7 +614,7 @@ regimes on H100/next-gen accelerators.
 
 ## 9) Observability & Metrics (OTel + Prometheus)
 
-Evaluator metric design builds on [Statistical Methods in Generative AI].
+Evaluator metric design builds on [Statistical Methods in Generative AI]. Instrumentation maintains Agent Companion alignment so benchmark traces map cleanly into the Kaggle reference dashboards.
 
 Every LLM span must include:
 
