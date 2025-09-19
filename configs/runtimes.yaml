@@ -4,3 +4,8 @@ runtimes:
     notes: "Alibaba AgentScope; enable after adapter spike"
     policy_contract: "opa/casbin"
     tracing: "otel"
+  contains_agents:
+    enabled: false
+    notes: "contains-studio/agents; enable after adapter spike"
+    policy_contract: "opa/casbin"
+    tracing: "otel"
