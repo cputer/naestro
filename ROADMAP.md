@@ -126,6 +126,11 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
   [docs/orchestrator_collaboration.md](docs/orchestrator_collaboration.md) for details).
 - **Runtime Adapters** — [LangGraph]/[CrewAI]/[AgentScope]/[AutoGen]/[Agent Squad]/[Semantic
   Kernel]/[SuperAGI] with policy/trace parity.
+- **Plugin Lanes** — Standardized orchestrator channels for turnkey multi-agent workflows that
+  ship with guardrails, eval hooks, and policy bindings.
+  - **DeepCode lane** — Researcher→Coder→Reviewer→Runner auto-pipeline that ingests research
+    artifacts/specs, drafts architecture plans, scaffolds code + tests, runs regression suites,
+    and emits policy-compliant PRs for human-in-the-loop merge.
 - **ROMA** — Recursive meta-agent runtime for step-by-step decomposition and parallel sub-agent execution.
 - **Tokenomics Engine** — Credits/budgets; marketplace transactions.
 - **Fusion Controller** — Multimodal stream fusion; neuro-symbolic solvers; causal graphs.
@@ -927,6 +932,10 @@ interventions, and instrumented explanations aligned to Phase U goals.
 - **Agency Automation (n8n + Naestro)** — Kick off Naestro plans from n8n triggers (webhooks, CRM
   updates, incident pings), stream progress back into the FlowTemplate library, and require
   evaluators plus consent prompts before flows escalate from “Copilot” to fully autonomous runs.
+- **DeepCode Research→Codebase** — Research agents capture novel papers/specs, auto-summarize
+  findings into structured design docs, hand off to coder/reviewer lanes for implementation and
+  verification, then raise a policy-compliant PR with test results, documentation, and citations
+  ready for human sign-off.
 
 ## 13) Risks & Mitigations
 
