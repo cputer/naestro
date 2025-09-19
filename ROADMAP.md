@@ -120,7 +120,8 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
 - **AgentOps Orchestrator** — Capability→trajectory→final evaluators; HITL gates; multi-agent
   metrics. Selects optimal chunking strategy dynamically.
 - **PO Policy Module** — Preference optimization suite (PVPO/DCPO/…); stability/effectiveness
-  monitors.
+  monitors. Integrates the RLLM experiment lane so LLM-feedback reward shaping can directly inform
+  policy updates.
 - **Collaboration Modes & Depth** — Per-run preferences for orchestrator collaboration with auto
   escalation, budgets, and answer strategies (see
   [docs/orchestrator_collaboration.md](docs/orchestrator_collaboration.md) for details).
@@ -239,6 +240,9 @@ flowchart TB
     SemKernel[Semantic Kernel]
   end
 
+  %% ==== Experiments ====
+  RLLM[RLLM Experiment Lane]
+
   %% ==== Flows ====
   Studio -->|WS/SSE| Core
   Dialogue --> Planner
@@ -259,6 +263,7 @@ flowchart TB
   PO --> Planner
   PO --> Router
   PO --> REFRAGC
+  RLLM --> PO
   Router -->|default| SLMs
   Router -->|escalate| Local
   Router -->|escalate| Cloud
@@ -514,6 +519,8 @@ constitutional bypass.
 - Bandit router (Thompson sampling)
 - Introspector: detect reusable subplans
 - Skill registry (typed, versioned)
+- RLLM experiment lane — run Reinforcement Learning from LLM feedback to refine preference signals
+  that flow into the PO Policy Module.
 - InfoSeek evaluation lane — integrate [InfoSeek][InfoSeek] tasks via [InfoSeek Framework][InfoSeek
   Framework] to benchmark deep research planning, researcher evals, and Agentic RAG stress tests.
   **Exit Criteria:**
