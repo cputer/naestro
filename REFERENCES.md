@@ -44,6 +44,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 [Magistral Docs]: REFERENCES.md#models--architectures
 [InfoSeek]: REFERENCES.md#datasets
 [InfoSeek Framework]: REFERENCES.md#datasets
+[LLMDatasets]: REFERENCES.md#datasets
 [AgentScope]: https://github.com/agentscope-ai/agentscope
 [DeepCode]: https://github.com/HKUDS/DeepCode
 
@@ -104,6 +105,9 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 - **SpatialVID** — _A Large-Scale Video Dataset with Spatial Annotations_ (NJU-3DV, 2025). ~7K hours
   of video with annotations: camera pose, depth maps, dynamic object masks, scene text descriptions
   (camera, motion trends, summary). Project — <https://nju-3dv.github.io/projects/SpatialVID>
+- **[LLM Datasets Aggregator][LLMDatasets]** — Curated index of SFT, alignment, agent/function
+  calling corpora, plus supporting tooling notes maintained by Maxime Labonne. Repo —
+  <https://github.com/mlabonne/llm-datasets>
 - **[InfoSeek][InfoSeek]** — _Open Data Synthesis For Deep Research_ (Ziyi Xia et al., 2025). Hierarchical constraint-satisfaction tasks (50K train, curated eval, reject-sampled trajectories) that stress deep research planning and BrowseComp-Plus benchmarking. Paper — <https://arxiv.org/abs/2509.00375>
 - **[InfoSeek Framework][InfoSeek Framework]** — Dual-agent synthesis stack that mines entities/relations, constructs research trees, and emits meta-tagged question decompositions for compound reward design. Code — <https://github.com/VectorSpaceLab/InfoSeek>
 

@@ -15,6 +15,9 @@ _This roadmap follows the long-term direction in [Naestro VISION](./VISION.md)._
 - **Naestro integration** — Naestro exposes REFRAG through the dedicated REFRAG Controller coupled
   with vLLM/TensorRT-LLM serving adapters so orchestrated agents can transparently benefit from
   accelerated long-context inference.
+- **LLM dataset registry stub** — `configs/datasets/llm_datasets.yaml` documents the
+  [mlabonne/llm-datasets][LLMDatasets] catalog with disabled-by-default toggles, governance
+  checklists, and plan templates so ingestion only proceeds after legal review.
 
 ## North Star
 
@@ -895,6 +898,9 @@ interventions, and instrumented explanations aligned to Phase U goals.
 - `evaluators/vision_grounding/*` (IoU, similarity thresholds, tests)
 - `studio/components/vision-citation/*` (UI overlay for boxes/masks)
 - `fusion/datasets/spatialvid/*` (benchmark loaders, evaluation harness for pose/depth/masks)
+- `configs/datasets/llm_datasets.yaml` ([mlabonne/llm-datasets][LLMDatasets] catalog toggle; stay disabled until governance &
+  licensing sign-off completes)
+- `integrations/datasets/llm_datasets_registry.py` (plan/export helper that keeps mlabonne catalog interactions manual-only)
 - `refrag/encoder_service/*` (REFRAG encoder service components for compression/expansion)
 - `refrag/policy/*` (reinforcement learning policy modules for routing/optimization)
 - `refrag/adapters/vllm/*` (vLLM adapter wiring REFRAG into serving stack)
@@ -966,6 +972,7 @@ interventions, and instrumented explanations aligned to Phase U goals.
 [Nango]: REFERENCES.md#tooling--connectors--protocols
 [Ling-flash-2.0]: REFERENCES.md#models--architectures
 [Ling-flash-2.0 Paper]: REFERENCES.md#models--architectures
+[LLMDatasets]: REFERENCES.md#datasets
 [InfoSeek]: REFERENCES.md#datasets
 [InfoSeek Framework]: REFERENCES.md#datasets
 [RAG’s Biggest Lie]: REFERENCES.md#ref-rags-biggest-lie

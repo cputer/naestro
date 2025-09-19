@@ -29,6 +29,7 @@ All notable changes to this project will be documented here. This project adhere
 - Updated: **docs/usecases/agency_automation.md** outlining the Agency Automation flow, rollout plan, and KPIs
 - Updated: **ROADMAP.md** “What’s new” section with the REFRAG long-context acceleration lane and Naestro integration notes
 - Updated: **REFERENCES.md** to capture the latest REFRAG, SmolHub, and Qwen3-Next citations for roadmap alignment
+- Added: Disabled mlabonne/llm-datasets registry scaffolding (config, helper, docs, tests) to capture dataset governance gates.
 
 - Updated: **REFERENCES.md** to include the Ling-flash-2.0 and InfoSeek research citations
 - Updated: **ROADMAP.md** with Ling-flash-2.0 milestones and InfoSeek evaluation checkpoints
