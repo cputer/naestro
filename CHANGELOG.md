@@ -33,6 +33,14 @@ All notable changes to this project will be documented here. This project adhere
 - Updated: **REFERENCES.md** to include the Ling-flash-2.0 and InfoSeek research citations
 - Updated: **ROADMAP.md** with Ling-flash-2.0 milestones and InfoSeek evaluation checkpoints
 
+- Added: **REFERENCES.md** entry for the RLLM reinforcement-learning framework informing router PPO experiments.
+- Updated: **ROADMAP.md** Phase E deliverables to highlight the RLLM experiment lane feeding the PO Policy Module.
+- Added: **configs/policy/rllm.yaml** default-off toggles and hyperparameters for the router PPO lane.
+- Added: **integrations/policy/rllm_ppo_adapter.py** synthetic PPO adapter wiring reward weights and environment scaffolding.
+- Added: **scripts/run_router_ppo.py** CLI to launch the RLLM adapter, manage logging, and persist PPO artifacts.
+- Added: **tests/policy/test_rllm_config.py**, **tests/policy/test_rllm_adapter_import.py**, and **tests/infra/test_determinism.py** to lock configuration defaults, symbol exports, and deterministic guard behavior.
+- Docs: **docs/policy/rllm.md** outlining the RLLM training lane, safety gates, and enablement steps.
+
 ## [1.4.0] - 2025-09-02
 
 ### Added
