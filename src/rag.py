@@ -7,6 +7,14 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import Iterable
 
+try:  # pragma: no cover - defensive import
+    from infra.determinism import enable as _det_en
+except Exception:  # pragma: no cover - determinism helper optional
+    def _det_en(*_args, **_kwargs) -> None:
+        return None
+
+_det_en()
+
 from psycopg2.pool import SimpleConnectionPool
 from sentence_transformers import SentenceTransformer
 
