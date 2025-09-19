@@ -17,13 +17,15 @@ class HICRAConfig:
     enabled:
         When ``False`` the assigner short-circuits and returns zeros.
     multiplier:
-        Scalar factor applied to the computed credits.
+        Scalar factor applied to the computed credits. Configuration files may
+        specify this value using the ``planner_weight`` key.
     normalize:
         If ``True`` the assigner normalizes the masked rewards before applying
         the multiplier.
     normalization_eps:
         Small constant added during variance computation to avoid division by
-        zero when all masked rewards are identical.
+        zero when all masked rewards are identical. Configuration files may
+        specify this value using the ``eps`` or ``epsilon`` keys.
     """
 
     enabled: bool = True
@@ -53,10 +55,23 @@ class HICRAConfig:
 
         return cls(
             enabled=bool(_maybe_get(data, "enabled", default=True)),
-            multiplier=float(_maybe_get(data, "multiplier", default=1.0)),
+            multiplier=float(
+                _maybe_get(
+                    data,
+                    "multiplier",
+                    "planner_weight",
+                    default=1.0,
+                )
+            ),
             normalize=bool(_maybe_get(data, "normalize", default=False)),
             normalization_eps=float(
-                _maybe_get(data, "normalization_eps", "epsilon", default=1e-8)
+                _maybe_get(
+                    data,
+                    "normalization_eps",
+                    "epsilon",
+                    "eps",
+                    default=1e-8,
+                )
             ),
         )
 
