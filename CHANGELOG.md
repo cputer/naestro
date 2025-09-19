@@ -16,6 +16,9 @@ All notable changes to this project will be documented here. This project adhere
 - Documented: DeepCode lane status remains blocked until the adapter is wired to clarify availability expectations.
 - Added: AgentScope runtime listing docs + Mermaid diagram.
 - Added: Adapter/config stub for AgentScope integrations.
+- Updated: **README.md**, **ROADMAP.md**, and **REFERENCES.md** with Contains Agents runtime coverage.
+- Added: Runtime toggle for Contains Agents integrations in **configs/runtimes.yaml**.
+- Added: Contains Agents runtime adapter stub in **integrations/runtimes/contains_agents_adapter.py**.
 - Updated: **VISION.md** with Engineering Quality, Meta-Cognition, Ecosystem, and Governance sections
 - Updated: cross-links in README/ROADMAP; added reference anchors
 - Updated: **docs/usecases/agency_automation.md** outlining the Agency Automation flow, rollout plan, and KPIs
