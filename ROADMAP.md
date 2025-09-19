@@ -124,8 +124,8 @@ through AnyLLM (plus official SDKs). Safety via NeMo Guardrails / Guardrails AI.
 - **Collaboration Modes & Depth** — Per-run preferences for orchestrator collaboration with auto
   escalation, budgets, and answer strategies (see
   [docs/orchestrator_collaboration.md](docs/orchestrator_collaboration.md) for details).
-- **Runtime Adapters** — [LangGraph]/[CrewAI]/[AgentScope]/[AutoGen]/[Agent Squad]/[Semantic
-  Kernel]/[SuperAGI] with policy/trace parity.
+- **Runtime Adapters** — [LangGraph]/[CrewAI]/[AgentScope]/[Contains Agents]/[AutoGen]/[Agent
+  Squad]/[Semantic Kernel]/[SuperAGI] with policy/trace parity.
 - **Plugin Lanes** — Standardized orchestrator channels for turnkey multi-agent workflows that
   ship with guardrails, eval hooks, and policy bindings.
   - **DeepCode lane** — Researcher→Coder→Reviewer→Runner auto-pipeline that ingests research
