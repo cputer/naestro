@@ -227,6 +227,7 @@ flowchart TB
     OCA[Open Computer Agent (Browser/UI)]
     LMCache[LMCache / NIXL KV-Transfer]
     AgentScope[AgentScope Runtime]
+    ContainsAgents[Contains Agents Runtime]
     GraphRAG[GraphRAG / LazyGraphRAG]
     Firecrawl[Firecrawl (Web Crawl & Extract)]
     Gitingest[Gitingest (Repo → Digest)]
@@ -282,6 +283,7 @@ flowchart TB
   OCA --> Agents
   LMCache --> Engines
   AgentScope --> Core
+  ContainsAgents --> Core
   GraphRAG --> Memory
   Firecrawl --> Evidence
   Gitingest --> Evidence
