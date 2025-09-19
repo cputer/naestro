@@ -56,6 +56,9 @@ jobs:
 
   py_smoke:
     runs-on: ubuntu-latest
+    env:
+      PYTHONHASHSEED: "0"
+      # GPU runners must also export CUBLAS_WORKSPACE_CONFIG=:4096:8
     steps:
       - uses: actions/checkout@v5
       - name: Sanitize proxy env (global)
@@ -141,6 +144,9 @@ jobs:
 
   py_full:
     runs-on: ubuntu-latest
+    env:
+      PYTHONHASHSEED: "0"
+      # GPU runners must also export CUBLAS_WORKSPACE_CONFIG=:4096:8
     steps:
       - uses: actions/checkout@v5
       - name: Sanitize proxy env (global)

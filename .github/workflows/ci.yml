@@ -99,6 +99,9 @@ jobs:
       #     fail_ci_if_error: true
   python:
     runs-on: ubuntu-latest
+    env:
+      PYTHONHASHSEED: "0"
+      # GPU runners must also export CUBLAS_WORKSPACE_CONFIG=:4096:8
     steps:
       - uses: actions/checkout@v5
       - name: Sanitize proxy env (global)
