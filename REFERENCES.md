@@ -6,6 +6,12 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 
 ---
 
+## Educational / Transformer Internals
+
+- **Andrej Karpathy — Let's build GPT from scratch** — Step-by-step transformer internals
+  tutorial that hand-builds tokenization, attention, and training loops to demystify GPT
+  architecture from first principles. Video — <https://www.youtube.com/watch?v=kCc8FmEb1nY>
+
 ## Educational & Introspection
 
 - **Scalar-Autograd LLM from scratch** — step-by-step tiny framework showing backprop/attention at
@@ -52,6 +58,12 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 - Causal Attention with Lookahead Keys
 - Visual Representation Alignment for Multimodal LLMs
 - “Curated by TuringPost (Sept 2025): <https://turingpost.com/p/fod118>”
+
+## Automation & Inspiration
+
+- **Huginn** — Open-source automation system for creating agents that monitor events and trigger
+  follow-up actions through declarative workflows; long-running inspiration for modern agent
+  orchestration patterns. Repo — <https://github.com/huginn/huginn>
 
 ## Models / Architectures
 
