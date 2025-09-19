@@ -68,6 +68,7 @@ Full curated list: https://turingpost.com/p/fod118
 - [Multi-node deployment](docs/DEPLOY_MULTI_NODE.md)
 - [Apple sidecars](docs/APPLE_MODELS.md)
 - [Integrations](docs/INTEGRATIONS.md)
+- [Policy training (RLLM + HICRA)](docs/policy/rllm.md)
 - [Graphiti Guide](docs/GRAPHITI.md)
 - [Orchestrator collaboration](docs/orchestrator_collaboration.md)
 - [Studio ↔ Core API contract](docs/UI_API_CONTRACT.md)

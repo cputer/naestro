@@ -39,3 +39,30 @@
 - If observability logging is enabled, structured logs stream to `observability.logging.destination` (defaults to `logs/rllm.log` when configured).
 - Metrics exporters such as Weights & Biases read from `observability.metrics.*`; populate `project`, `entity`, and `tags` to publish training curves externally.
 - Traces emit to the configured OTLP endpoint when `observability.tracing.enabled` is true.
+
+## HICRA Credit Assignment
+
+Naestro ships a **HICRA** credit assignment helper that reshapes rollout rewards before PPO updates. The [`HICRACreditAssigner`](../../src/training/hicra.py) consumes a batch of step-wise rewards (optionally masked for variable-depth collaborations), performs masked normalization if requested, and scales the resulting credit tensor. This allows the router policy trainer to weight planner-driven signals differently from follow-up agent steps without rewriting PPO internals. When disabled the assigner returns zeros, so PPO falls back to the raw reward stream or skips gradient updates depending on how the trainer integrates the helper.
+
+### Enabling HICRA
+
+1. Start from [`configs/training/hicra.yaml`](../../configs/training/hicra.yaml) or embed an equivalent `hicra:` block inside your policy training configuration. The defaults ship enabled for local experimentation but honor downstream feature gates.
+2. Construct the helper with `build_hicra_from_dict` (available via `from src.training import build_hicra_from_dict`) so nested dictionaries resolve aliases such as `planner_weight`/`multiplier` and `eps`/`normalization_eps` automatically.
+3. Call the assigner on the trajectory reward tensor immediately before computing returns/advantages in your PPO loop. Pass the same boolean mask you use for padding so depth-aware statistics stay accurate.
+
+### Configuration knobs
+
+- `enabled` – toggles credit assignment; when `false` the helper emits zeroed credits and suppresses telemetry.
+- `multiplier` (`planner_weight`) – scalar applied to the final credits to emphasize or dampen planner contributions relative to other reward terms.
+- `normalize` – turns on masked zero-mean/unit-variance scaling so PPO sees stable magnitudes regardless of trajectory length.
+- `normalization_eps` (`eps`, `epsilon`) – numerical guard added during standard deviation computation when normalization is enabled.
+
+### Telemetry and workflow notes
+
+Enabling HICRA introduces additional metrics in [`src/telemetry/metrics.py`](../../src/telemetry/metrics.py):
+
+- `hicra_planner_reward_ratio` (`Gauge`) – mean ratio of the first-step planner reward to total reward per trajectory.
+- `hicra_depth` (`Gauge`) – average collaboration depth observed while HICRA is active (derives from the provided mask).
+- `hicra_success_total` (`Counter`) – count of trajectories whose summed reward is positive, useful for spotting collapsed credit schedules.
+
+Because HICRA can zero out rewards or rescale them aggressively, guard the PPO update so batches with all-zero credits do not trigger optimizer steps. When normalizing, prefer consistent masking across rollout collection and credit assignment to avoid skewed variance estimates. Surface the gauges alongside existing RLLM telemetry (e.g., Weights & Biases runs via `observability.metrics`) to correlate planner weighting with reward curves.
