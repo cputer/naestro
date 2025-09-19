@@ -1,3 +1,6 @@
+defaults:
+  deterministic: false
+
 datasets:
   - name: InfoSeek
     description: >-
@@ -11,3 +14,29 @@ datasets:
       - compound_question_answering
       - trajectory_reward_finetuning
     k_samples: 256
+
+suites:
+  golden_prompts:
+    description: >-
+      Golden prompt regression suite ensuring deterministic replayability
+      across high-signal prompts before enabling self-improvement loops.
+    datasets:
+      - InfoSeek
+    deterministic: true
+
+  canary_smoke:
+    description: >-
+      Canary smoke tests mirroring production guardrails; deterministic to
+      guarantee reproducible gating signals prior to rollout.
+    datasets:
+      - InfoSeek
+    deterministic: true
+
+  load_tests:
+    description: >-
+      Stress and soak tests focused on throughput and concurrency. These
+      intentionally allow nondeterministic execution to reflect production
+      variability.
+    datasets:
+      - InfoSeek
+    deterministic: false
