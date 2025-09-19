@@ -32,6 +32,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 [OPA]: REFERENCES.md#identitypolicy
 [Casbin]: REFERENCES.md#identitypolicy
 [Keycloak]: REFERENCES.md#identitypolicy
+[Huginn]: REFERENCES.md#automation--inspiration
 [Ling-flash-2.0]: REFERENCES.md#models--architectures
 [Magistral 1.2]: REFERENCES.md#models--architectures
 [Magistral Docs]: REFERENCES.md#models--architectures
