@@ -15,8 +15,14 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 ## Educational & Introspection
 
 - **Scalar-Autograd LLM from scratch** — step-by-step tiny framework showing backprop/attention at
-  scalar granularity; useful for explainability demos and causal probes in Phase U.  
+  scalar granularity; useful for explainability demos and causal probes in Phase U.
   Link: https://bclarkson-code.com/posts/llm-from-scratch-scalar-autograd/post.html
+
+## Evaluation & Benchmarks
+
+- **Agent Companion (Kaggle Whitepaper)** — 76-page field guide on operationalizing agentic systems at
+  scale with evaluation instrumentation, multi-agent collaboration patterns, and retrieval evolution.
+  PDF — <https://www.kaggle.com/whitepaper/agents-companion>
 
 [ScalarAutogradLLM]: REFERENCES.md#educational--introspection
 [MCP]: REFERENCES.md#agency-automation--orchestration
