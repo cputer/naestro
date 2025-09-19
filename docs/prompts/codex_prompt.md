@@ -32,6 +32,11 @@ The tests for the assigner should live alongside the other unit suites, e.g.
   existing `configs/` tree. Use this real configuration file (create it in the
   `configs/training/` directory) rather than referencing a placeholder
   `config.yaml`.
+- Instrument HICRA metrics through the shared telemetry helpers in
+  `src.telemetry.metrics`. Reuse the provided `LabeledCounter`/`LabeledGauge`
+  types and follow their naming conventions (`*_total` for counters, direct
+  unit suffixes such as `_ms` for gauges) instead of wiring into a placeholder
+  like `naestro/metrics/logger.py`.
 
 ## TODO / Integration Follow-Ups
 - When orchestrator support is ready, thread the trained assigner into
