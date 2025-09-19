@@ -32,6 +32,7 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 [InfoSeek]: REFERENCES.md#datasets
 [InfoSeek Framework]: REFERENCES.md#datasets
 [AgentScope]: https://github.com/agentscope-ai/agentscope
+[DeepCode]: https://github.com/HKUDS/DeepCode
 
 ## Research & Concepts
 
@@ -134,6 +135,10 @@ docs. Keep it authoritative and in sync with `ROADMAP.md`. For collaboration mod
 - **Langfuse** — <https://langfuse.com/>
 - **OpenTelemetry** — <https://opentelemetry.io/>
 - **Prometheus** — <https://prometheus.io/>
+
+## Agent Pipelines / Special Workflows
+
+- **[DeepCode] — Open Agentic Coding** — HKU Data Intelligence Lab's multi-agent workflow that transforms research papers, natural-language specs, or URLs into production-ready code with tests and documentation.
 
 ## Hardware Optimizations
 
