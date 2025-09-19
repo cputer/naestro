@@ -1,0 +1,13 @@
+agent_companion:
+  enabled: false
+  suites:
+    placeholder_smoke:
+      description: >-
+        Placeholder entry for future Agent Companion smoke evaluations.
+      datasets: []
+      deterministic: false
+    placeholder_regression:
+      description: >-
+        Placeholder entry for future Agent Companion regression coverage.
+      datasets: []
+      deterministic: false

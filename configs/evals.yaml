@@ -1,6 +1,9 @@
 defaults:
   deterministic: false
 
+includes:
+  - configs/evaluators/agent_companion.yaml
+
 datasets:
   - name: InfoSeek
     description: >-
