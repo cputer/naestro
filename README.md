@@ -105,6 +105,10 @@ Spec and scaffolding guidance in [VS Code Extension](docs/VS_CODE_EXTENSION.md).
   - [Catalog](https://flowtemplate.com/workflows) · [Overview](https://flowtemplate.com/) · [Guide](https://flowtemplate.com/guide)
   - ℹ️ FlowTemplate module backlog updates live in [ROADMAP.md §11](./ROADMAP.md#11-filemodule-backlog) (connectors, converters, sanitizers, evaluators, studio import components).
 
+## Plugins / Lanes
+
+- [DeepCode lane](docs/plugins/deepcode.md) — Researcher→Coder→Reviewer→Runner auto-pipeline that ingests research artifacts/specs, drafts architecture plans, scaffolds code + tests, runs regression suites, and emits policy-compliant PRs for human-in-the-loop merge.
+
 ---
 
 ## ✨ Features
