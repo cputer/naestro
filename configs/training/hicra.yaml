@@ -1,0 +1,7 @@
+# Default configuration for the HICRA credit assignment trainer.
+hicra:
+  enabled: false
+  notes: >-
+    Placeholder defaults for the upcoming HICRA credit assignment module.
+    Expand this configuration with datasets, optimizer settings, evaluation
+    schedules, and artifact locations as the trainer matures.
