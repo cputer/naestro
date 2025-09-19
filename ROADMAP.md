@@ -868,6 +868,7 @@ interventions, and instrumented explanations aligned to Phase U goals.
 - **Coverage:** 100% branch coverage (excl. bootstrap).
 - **Static checks:** mypy, ESLint, Semgrep/Bandit, IaC lint.
 - **Tests:** Unit, property, metamorphic, golden prompt suites.
+- **Determinism:** Guard enforces deterministic inference for golden and canary suites.
 - **Truthfulness CI:** fail on citation/CoVe regression.
 - **REFRAG CI:** block merges on latency/accuracy regressions.
 - **Policy CI:** stability & efficiency thresholds enforced.
