@@ -1,0 +1,3 @@
+policies:
+  max_drawdown: 2.0
+  min_return: 0.5
