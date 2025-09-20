@@ -2,7 +2,31 @@
 
 from __future__ import annotations
 
-from .governor import Decision, Governor
-from .policies import Policy, PolicyResult
+from .governor import Governor, apply_patches
+from .policies import (
+    BudgetPolicy,
+    LatencySLOPolicy,
+    Policy,
+    PolicyChecker,
+    PolicyLike,
+    PolicyResult,
+    RiskPolicy,
+    SafetyPolicy,
+)
+from .schemas import Decision, PolicyInput, PolicyPatch
 
-__all__ = ["Decision", "Governor", "Policy", "PolicyResult"]
+__all__ = [
+    "BudgetPolicy",
+    "Decision",
+    "Governor",
+    "LatencySLOPolicy",
+    "Policy",
+    "PolicyChecker",
+    "PolicyInput",
+    "PolicyLike",
+    "PolicyPatch",
+    "PolicyResult",
+    "RiskPolicy",
+    "SafetyPolicy",
+    "apply_patches",
+]

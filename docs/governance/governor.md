@@ -4,24 +4,25 @@ Policies encode guard rails that must pass before a pipeline proposal is
 executed. They are composed into a :class:`~naestro.governance.Governor`.
 
 ```python
-from naestro.governance import Decision, Governor, Policy, PolicyResult
+from naestro.governance import Decision, Governor, Policy, PolicyInput
 
 governor = Governor()
 
 
-def min_return(decision: Decision) -> PolicyResult:
-    passed = decision.score >= 0.3
-    return PolicyResult(
+def min_return(payload: PolicyInput) -> Decision:
+    score = payload.score or 0.0
+    passed = score >= 0.3
+    return Decision(
         name="min_return",
         passed=passed,
         reason="meets target" if passed else "return too small",
     )
 
 
-def max_drawdown(decision: Decision) -> PolicyResult:
-    drawdown = float(decision.metadata.get("max_drawdown", 0))
+def max_drawdown(payload: PolicyInput) -> Decision:
+    drawdown = float(payload.metadata.get("max_drawdown", 0))
     passed = drawdown <= 2.0
-    return PolicyResult(
+    return Decision(
         name="max_drawdown",
         passed=passed,
         reason="protected" if passed else "drawdown exceeded",
@@ -31,9 +32,8 @@ def max_drawdown(decision: Decision) -> PolicyResult:
 governor.register(Policy("return", "Ensure positive returns", min_return))
 governor.register(Policy("drawdown", "Respect drawdown limit", max_drawdown))
 
-allowed, results = governor.enforce(
-    Decision(subject="demo", score=0.4, metadata={"max_drawdown": 1.2})
-)
+policy_input = PolicyInput(subject="demo", score=0.4, metadata={"max_drawdown": 1.2})
+allowed, results = governor.enforce(policy_input)
 print(allowed)  # True
 for result in results:
     print(result.name, result.passed)
