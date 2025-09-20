@@ -169,7 +169,7 @@ class Envelope:
         }
 
 
-Forward = Callable[[str, Payload], tuple[str, Payload]]
+Forward = Callable[[str, Payload], tuple[str, Payload] | None]
 
 
 class Middleware(Protocol):
@@ -261,13 +261,18 @@ class MessageBus:
         forward_result: tuple[str, Payload] | None = None
         forward_called = False
 
-        def forward(next_event: str, next_payload: Payload) -> tuple[str, Payload]:
+        def forward(
+            next_event: str, next_payload: Payload
+        ) -> tuple[str, Payload] | None:
             nonlocal forward_called, final_event, final_payload, envelope
             nonlocal forward_result
             forward_called = True
             final_event, final_payload, envelope = self._dispatch(
                 index + 1, next_event, next_payload
             )
+            if envelope is None:
+                forward_result = None
+                return None
             forward_result = (final_event, final_payload)
             return forward_result
 
