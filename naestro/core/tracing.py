@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-import dataclasses
+from dataclasses import asdict, is_dataclass
 from datetime import datetime, timezone
-import json
+from json import dumps
 from pathlib import Path
 from types import TracebackType
 from typing import Any, cast, Mapping, MutableSequence
@@ -16,8 +16,8 @@ def _coerce(value: object) -> object:
         if callable(method):  # pragma: no branch - mypy friendly
             result = method()
             return _coerce(result)
-    if dataclasses.is_dataclass(value):
-        data = dataclasses.asdict(cast(Any, value))
+    if is_dataclass(value):
+        data = asdict(cast(Any, value))
         return {str(k): _coerce(v) for k, v in data.items()}
     if isinstance(value, Mapping):
         return {str(k): _coerce(v) for k, v in value.items()}
@@ -56,7 +56,7 @@ class Tracer:
 
     def flush(self) -> Path:
         target = self._run_path / "trace.json"
-        target.write_text(json.dumps(list(self._events), indent=2), encoding="utf-8")
+        target.write_text(dumps(list(self._events), indent=2), encoding="utf-8")
         return target
 
     def __enter__(self) -> "Tracer":

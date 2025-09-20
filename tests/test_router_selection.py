@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-import sys
 from pathlib import Path
+from sys import path as sys_path
 
 import pytest
 
 if __package__ in {None, ""}:
-    sys.path.append(str(Path(__file__).resolve().parents[1]))
+    sys_path.append(str(Path(__file__).resolve().parents[1]))
 
 from naestro.routing.model_registry import ModelInfo
 from naestro.routing.router import ModelRouter

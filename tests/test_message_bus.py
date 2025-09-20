@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import json
-import sys
+from json import loads
 from pathlib import Path
+from sys import path as sys_path
 from typing import Callable, Mapping
 
 import pytest
@@ -18,8 +18,8 @@ try:
     from naestro.core.trace import build_trace, write_trace
 except ModuleNotFoundError:  # pragma: no cover - defensive path setup
     PROJECT_ROOT = Path(__file__).resolve().parents[1]
-    if str(PROJECT_ROOT) not in sys.path:
-        sys.path.insert(0, str(PROJECT_ROOT))
+    if str(PROJECT_ROOT) not in sys_path:
+        sys_path.insert(0, str(PROJECT_ROOT))
     from naestro.agents.schemas import new_message
     from naestro.core.bus import (
         LoggingMiddleware,
@@ -117,7 +117,7 @@ def test_trace_builder_produces_serializable_output(tmp_path: Path) -> None:
     assert trace[0].to_dict()["event"] == "debate.finished"
     target = tmp_path / "trace.json"
     write_trace(bus.envelopes, target)
-    written = json.loads(target.read_text(encoding="utf-8"))
+    written = loads(target.read_text(encoding="utf-8"))
     assert written[0]["event"] == "debate.finished"
 
 

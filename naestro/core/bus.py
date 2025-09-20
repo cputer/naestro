@@ -6,7 +6,7 @@ from contextvars import ContextVar
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from importlib import resources
-import json
+from json import dumps, load, loads
 from types import MappingProxyType
 from typing import Any, Callable, Iterable, Mapping, MutableMapping, Protocol, Sequence
 
@@ -96,7 +96,7 @@ def _record_redactions(redactions: Iterable[str]) -> None:
 def _load_default_schema() -> Mapping[str, Any]:
     package = resources.files(__package__)
     with package.joinpath("schemas.json").open("r", encoding="utf-8") as stream:
-        return json.load(stream)
+        return load(stream)
 
 
 class _SchemaCatalog:
@@ -164,7 +164,7 @@ class Envelope:
             "sequence": self.sequence,
             "event": self.event,
             "timestamp": self.timestamp.isoformat(),
-            "payload": json.loads(json.dumps(self.payload, default=str)),
+            "payload": loads(dumps(self.payload, default=str)),
             "redactions": list(self.redactions),
         }
 

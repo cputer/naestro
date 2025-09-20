@@ -1,18 +1,18 @@
 from __future__ import annotations
 
-import sys
 from pathlib import Path
+from sys import path as sys_path
 from typing import Mapping
 
 if __package__ in {None, ""}:
-    sys.path.append(str(Path(__file__).resolve().parents[1]))
+    sys_path.append(str(Path(__file__).resolve().parents[1]))
 
 import pytest
 
 pytest.importorskip("jsonschema")
 
 from naestro.core.bus import MessageBus
-from naestro.governance.governor import Governor, apply_patches
+from naestro.governance.governor import apply_patches, Governor
 from naestro.governance.policies import Policy
 from naestro.governance.schemas import Decision, PolicyInput
 

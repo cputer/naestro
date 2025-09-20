@@ -1,13 +1,14 @@
 from __future__ import annotations
 
-import pathlib
-import sys
+from pathlib import Path
+from sys import path as sys_path
 from typing import Sequence
 
-if __package__ in {None, ""}:
-    sys.path.append(str(pathlib.Path(__file__).resolve().parents[1]))
-
 import pytest
+
+if __package__ in {None, ""}:
+    sys_path.append(str(Path(__file__).resolve().parents[1]))
+
 from naestro.agents.roles import Role, Roles
 from naestro.agents.schemas import Message
 

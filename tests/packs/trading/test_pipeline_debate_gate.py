@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from pathlib import Path
-import sys
+from sys import path as sys_path
 from typing import Sequence
 
 if __package__ in {None, ""}:
-    sys.path.append(str(Path(__file__).resolve().parents[3]))
+    sys_path.append(str(Path(__file__).resolve().parents[3]))
 
 import pytest
 
