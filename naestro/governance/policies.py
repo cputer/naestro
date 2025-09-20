@@ -7,7 +7,6 @@ from typing import Callable, Protocol
 
 from .schemas import Decision, PolicyInput
 
-
 PolicyResult = Decision
 """Alias maintained for backwards compatibility with earlier releases."""
 
@@ -22,7 +21,9 @@ class PolicyLike(Protocol):
     name: str
     description: str
 
-    def evaluate(self, policy_input: PolicyInput) -> Decision:  # pragma: no cover - protocol method
+    def evaluate(  # pragma: no cover - protocol method
+        self, policy_input: PolicyInput
+    ) -> Decision:
         """Evaluate the provided input and return a policy decision."""
 
 
@@ -43,7 +44,9 @@ class BudgetPolicy:
     """Ensure usage stays within a configured budget."""
 
     name: str = "budget"
-    description: str = "Validate that expected spend does not exceed the available budget."
+    description: str = (
+        "Validate that expected spend does not exceed the available budget."
+    )
 
     def evaluate(self, policy_input: PolicyInput) -> Decision:
         budget = policy_input.budget
@@ -72,8 +75,16 @@ class BudgetPolicy:
         limit_value = float(limit)
         metadata |= {"usage": usage_value, "limit": limit_value}
         if usage_value <= limit_value:
-            reason = f"{usage_value:.2f} {currency} within {limit_value:.2f} {currency} budget"
-            return Decision(name=self.name, passed=True, reason=reason, metadata=metadata)
+            reason = (
+                f"{usage_value:.2f} {currency} within "
+                f"{limit_value:.2f} {currency} budget"
+            )
+            return Decision(
+                name=self.name,
+                passed=True,
+                reason=reason,
+                metadata=metadata,
+            )
         excess = usage_value - limit_value
         metadata["excess"] = excess
         reason = (
@@ -94,12 +105,18 @@ class SafetyPolicy:
     """Check flagged categories against the configured block list."""
 
     name: str = "safety"
-    description: str = "Ensure content moderation checks do not report blocked categories."
+    description: str = (
+        "Ensure content moderation checks do not report blocked categories."
+    )
 
     def evaluate(self, policy_input: PolicyInput) -> Decision:
         safety = policy_input.safety
         if safety is None:
-            return Decision(name=self.name, passed=True, reason="No safety signals provided")
+            return Decision(
+                name=self.name,
+                passed=True,
+                reason="No safety signals provided",
+            )
         blocked = set(safety.blocked_categories)
         flagged = set(safety.flagged_categories)
         violations = sorted(blocked & flagged)
@@ -131,7 +148,9 @@ class RiskPolicy:
     """Validate that the risk score is below an acceptable threshold."""
 
     name: str = "risk"
-    description: str = "Require the risk score to remain under the configured threshold."
+    description: str = (
+        "Require the risk score to remain under the configured threshold."
+    )
     max_score: float | None = None
 
     def evaluate(self, policy_input: PolicyInput) -> Decision:
@@ -174,12 +193,18 @@ class LatencySLOPolicy:
     """Ensure latency measurements remain within an SLO."""
 
     name: str = "latency_slo"
-    description: str = "Validate that observed latency does not exceed the SLO."
+    description: str = (
+        "Validate that observed latency does not exceed the SLO."
+    )
     slo_ms: float | None = None
 
     def evaluate(self, policy_input: PolicyInput) -> Decision:
         latency = policy_input.latency
-        observed = float(latency.value_ms) if latency and latency.value_ms is not None else None
+        observed = (
+            float(latency.value_ms)
+            if latency and latency.value_ms is not None
+            else None
+        )
         slo = (
             float(latency.slo_ms)
             if latency and latency.slo_ms is not None

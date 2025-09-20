@@ -9,11 +9,24 @@ import yaml
 if __package__ in {None, ""}:
     sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-from naestro import Decision, DebateOrchestrator, Message, Policy, PolicyInput, Role, Roles
-from naestro import Governor
+from naestro import (
+    DebateOrchestrator,
+    Decision,
+    Governor,
+    Message,
+    Policy,
+    PolicyInput,
+    Role,
+    Roles,
+)
 
-from packs.trading import DebateGate, ExecutionAgent, RiskAgent, SignalAgent, TradingPipeline
-
+from packs.trading import (
+    DebateGate,
+    ExecutionAgent,
+    RiskAgent,
+    SignalAgent,
+    TradingPipeline,
+)
 
 CONFIG_ROOT = Path(__file__).resolve().parents[1] / "configs"
 TRADING_CONFIG = CONFIG_ROOT / "trading_demo.yaml"
@@ -37,7 +50,11 @@ def build_gate() -> DebateGate:
 
     def analyst(history: Sequence[Message]) -> str:
         confidence = len(history) + 1
-        return f"Approve with confidence {confidence}" if confidence > 1 else "Approve trade"
+        return (
+            f"Approve with confidence {confidence}"
+            if confidence > 1
+            else "Approve trade"
+        )
 
     def risk(history: Sequence[Message]) -> str:
         if any("drawdown" in message.content.lower() for message in history):

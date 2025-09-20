@@ -2,22 +2,29 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping, MutableMapping, MutableSequence, Sequence
+from collections.abc import (
+    Iterable,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Sequence,
+)
 from copy import deepcopy
 from typing import Any
 
 from naestro.core.bus import MessageBus
 
 from .policies import PolicyLike
+from .schemas import Decision, PolicyInput, PolicyPatch
 
 
 class _NullBus:
     """Fallback bus used when :mod:`jsonschema` is not available."""
 
-    def publish(self, event: str, payload: Mapping[str, Any]) -> None:  # pragma: no cover - trivial
+    def publish(  # pragma: no cover - trivial
+        self, event: str, payload: Mapping[str, Any]
+    ) -> None:
         return None
-
-from .schemas import Decision, PolicyInput, PolicyPatch
 
 
 def _coerce_input(data: PolicyInput | Mapping[str, Any]) -> PolicyInput:
@@ -62,7 +69,10 @@ class Governor:
         *,
         apply_policy_patches: bool = False,
         return_input: bool = False,
-    ) -> tuple[bool, list[Decision]] | tuple[bool, list[Decision], PolicyInput]:
+    ) -> (
+        tuple[bool, list[Decision]]
+        | tuple[bool, list[Decision], PolicyInput]
+    ):
         policy_input = _coerce_input(data)
         plan = deepcopy(policy_input.plan)
         results: list[Decision] = []
@@ -137,7 +147,9 @@ def _remove(container: Any, key: str | int) -> None:
     container.pop(key, None)
 
 
-def apply_patches(plan: Mapping[str, Any], patches: Iterable[PolicyPatch]) -> dict[str, Any]:
+def apply_patches(
+    plan: Mapping[str, Any], patches: Iterable[PolicyPatch]
+) -> dict[str, Any]:
     """Apply a collection of declarative patches to the supplied plan."""
 
     result: Any = deepcopy(plan)
@@ -149,7 +161,9 @@ def apply_patches(plan: Mapping[str, Any], patches: Iterable[PolicyPatch]) -> di
         value = deepcopy(patch.get("value")) if "value" in patch else None
         current = result
         for segment in path[:-1]:
-            current = _ensure_container(current, segment, create=op in {"set", "merge"})
+            current = _ensure_container(
+                current, segment, create=op in {"set", "merge"}
+            )
         final_segment = path[-1]
         if op == "set":
             _assign(current, final_segment, value)
