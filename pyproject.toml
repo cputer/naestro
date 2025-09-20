@@ -7,9 +7,11 @@ name = "naestro-lite"
 version = "0.1.0"
 description = "Deterministic debate orchestration and trading pipeline utilities."
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
-    "pydantic>=2.7.0",
+    "pydantic>=2.6",
+    "typing-extensions>=4.10",
+    "jsonschema>=4.22",
 ]
 authors = [
     { name = "Naestro Contributors" },
@@ -22,14 +24,14 @@ include = ["naestro", "naestro.*", "packs", "packs.*"]
 
 [project.optional-dependencies]
 dev = [
-    "black>=24.3.0",
-    "mypy>=1.8.0",
-    "pytest>=7.4.0",
-    "ruff>=0.1.9",
+    "black>=24.4.2",
+    "mypy>=1.10.0",
+    "pytest>=8.2.0",
+    "ruff>=0.4.8",
 ]
 
 [project.scripts]
-naestro = "naestro.cli:main"
+naestro = "examples.cli:main"
 
 [tool.black]
 line-length = 88
@@ -38,13 +40,14 @@ preview = true
 [tool.ruff]
 line-length = 88
 src = ["naestro", "packs", "examples", "tests"]
+target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "B", "I"]
 ignore = ["B905"]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 strict = true
 packages = ["naestro", "packs", "examples"]
 show_error_codes = true
