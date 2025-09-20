@@ -2,12 +2,9 @@
 
 from __future__ import annotations
 
-from typing import (
-    Mapping,
-    NotRequired,
-    Sequence,
-)
-from typing_extensions import TypedDict
+from typing import Mapping, Sequence
+
+from typing_extensions import NotRequired, TypedDict
 
 CapabilityList = Sequence[str] | set[str] | frozenset[str]
 
