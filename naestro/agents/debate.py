@@ -24,6 +24,10 @@ class DebateSettings(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
+DebateConfig = DebateSettings
+"""Backward compatible alias for :class:`DebateSettings`."""
+
+
 class DebateOutcome(BaseModel):
     """Result returned after running a debate session."""
 
@@ -116,4 +120,9 @@ class DebateOrchestrator:
             self._tracer.log_event(topic, payload)
 
 
-__all__ = ["DebateOrchestrator", "DebateOutcome", "DebateSettings"]
+__all__ = [
+    "DebateConfig",
+    "DebateOrchestrator",
+    "DebateOutcome",
+    "DebateSettings",
+]
