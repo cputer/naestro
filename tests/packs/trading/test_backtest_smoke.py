@@ -1,15 +1,17 @@
 from __future__ import annotations
 
 from pathlib import Path
-from sys import path as sys_path
+import sys
 
 import pytest
 
-if __package__ in {None, ""}:
-    sys_path.append(str(Path(__file__).resolve().parents[3]))
-
-from packs.trading import run_backtest
-from packs.trading.agents import TradeDecision
+try:
+    from packs.trading import run_backtest
+    from packs.trading.agents import TradeDecision
+except Exception:
+    sys.path.append(str(Path(__file__).resolve().parents[3]))
+    from packs.trading import run_backtest
+    from packs.trading.agents import TradeDecision
 
 
 def test_backtest_runs_and_computes_metrics() -> None:
