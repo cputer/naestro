@@ -1,7 +1,3 @@
-"""Run the trading pipeline with governance and debate gating."""
-
-from __future__ import annotations
-
 import sys
 from pathlib import Path
 from typing import Sequence, cast
@@ -9,9 +5,7 @@ from typing import Sequence, cast
 if __package__ in {None, ""}:
     sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-from naestro.agents import Role, RoleRegistry
-from naestro.core.debate import DebateOrchestrator
-from naestro.core.schemas import Message
+from naestro.agents import DebateOrchestrator, Message, Role, Roles
 from naestro.governance import Decision, Governor, Policy, PolicyResult
 
 from packs.trading import (
@@ -35,13 +29,10 @@ def build_gate() -> DebateGate:
             return "Reject trade"
         return "Approve trade"
 
-    registry = RoleRegistry(
-        [
-            Role("analyst", "Quant analyst", analyst),
-            Role("risk", "Risk supervisor", risk),
-        ]
-    )
-    orchestrator = DebateOrchestrator(registry)
+    roles = Roles()
+    roles.register(Role("analyst", "Quant analyst", analyst))
+    roles.register(Role("risk", "Risk supervisor", risk))
+    orchestrator = DebateOrchestrator(roles)
     return DebateGate(orchestrator, ["analyst", "risk"])
 
 

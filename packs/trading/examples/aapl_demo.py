@@ -10,9 +10,7 @@ from typing import List, Sequence
 if __package__ in {None, ""}:
     sys.path.append(str(Path(__file__).resolve().parents[3]))
 
-from naestro.agents import Role, RoleRegistry
-from naestro.core.debate import DebateOrchestrator
-from naestro.core.schemas import Message
+from naestro.agents import DebateOrchestrator, Message, Role, Roles
 
 from packs.trading import (
     DebateGate,
@@ -37,13 +35,10 @@ def build_gate() -> DebateGate:
     def risk(history: Sequence[Message]) -> str:
         return "Reject trade" if len(history) == 0 else "Approve trade"
 
-    registry = RoleRegistry(
-        [
-            Role("analyst", "Analyst", analyst),
-            Role("risk", "Risk", risk),
-        ]
-    )
-    orchestrator = DebateOrchestrator(registry)
+    roles = Roles()
+    roles.register(Role("analyst", "Analyst", analyst))
+    roles.register(Role("risk", "Risk", risk))
+    orchestrator = DebateOrchestrator(roles)
     return DebateGate(orchestrator, ["analyst", "risk"])
 
 

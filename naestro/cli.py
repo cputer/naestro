@@ -1,13 +1,7 @@
-"""Command line entry point for Naestro."""
-
-from __future__ import annotations
-
 import argparse
 from typing import Sequence, cast
 
-from naestro.agents import Role, RoleRegistry
-from naestro.core.debate import DebateOrchestrator, DebateSettings
-from naestro.core.schemas import Message
+from naestro.agents import DebateOrchestrator, DebateSettings, Message, Role, Roles
 from naestro.core.tracing import Tracer
 from naestro.governance import Decision, Governor, Policy, PolicyResult
 from packs.trading import (
@@ -19,7 +13,7 @@ from packs.trading import (
 )
 
 
-def build_roles() -> RoleRegistry:
+def build_roles() -> Roles:
     def analyst(history: Sequence[Message]) -> str:
         return "Approve trade" if len(history) % 2 == 0 else "Highlight momentum"
 
@@ -27,12 +21,10 @@ def build_roles() -> RoleRegistry:
         approvals = sum("approve" in message.content.lower() for message in history)
         return "Approve trade" if approvals >= 1 else "Reject trade"
 
-    return RoleRegistry(
-        [
-            Role("analyst", "Analyst reviewing opportunities", analyst),
-            Role("risk", "Risk reviewer", risk),
-        ]
-    )
+    roles = Roles()
+    roles.register(Role("analyst", "Analyst reviewing opportunities", analyst))
+    roles.register(Role("risk", "Risk reviewer", risk))
+    return roles
 
 
 def build_governor() -> Governor:
@@ -55,17 +47,17 @@ def build_governor() -> Governor:
     return governor
 
 
-def list_roles(registry: RoleRegistry) -> None:
+def list_roles(roles: Roles) -> None:
     print("Registered roles:")
-    for role in registry.list():
+    for role in roles.list():
         print(f"- {role.name}: {role.description}")
 
 
-def run_debate(registry: RoleRegistry, prompt: str, rounds: int) -> None:
+def run_debate(roles: Roles, prompt: str, rounds: int) -> None:
     with Tracer(run_name="cli-debate") as tracer:
-        orchestrator = DebateOrchestrator(registry, tracer=tracer)
+        orchestrator = DebateOrchestrator(roles, tracer=tracer)
         outcome = orchestrator.run(
-            [role.name for role in registry.list()],
+            [role.name for role in roles.list()],
             prompt,
             settings=DebateSettings(rounds=rounds),
         )
@@ -75,8 +67,8 @@ def run_debate(registry: RoleRegistry, prompt: str, rounds: int) -> None:
     print("Trace stored in", tracer.run_path)
 
 
-def run_pipeline(registry: RoleRegistry) -> None:
-    gate = DebateGate(DebateOrchestrator(registry), ["analyst", "risk"])
+def run_pipeline(roles: Roles) -> None:
+    gate = DebateGate(DebateOrchestrator(roles), ["analyst", "risk"])
     pipeline = TradingPipeline(
         SignalAgent(window=2),
         RiskAgent(max_exposure=1, min_confidence=0.15),
@@ -113,13 +105,13 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    registry = build_roles()
+    roles = build_roles()
     if args.command == "list-roles":
-        list_roles(registry)
+        list_roles(roles)
     elif args.command == "run-debate":
-        run_debate(registry, args.prompt, args.rounds)
+        run_debate(roles, args.prompt, args.rounds)
     elif args.command == "run-pipeline":
-        run_pipeline(registry)
+        run_pipeline(roles)
     return 0
 
 

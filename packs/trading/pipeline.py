@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import List, Sequence
 
-from naestro.core.debate import DebateOrchestrator, DebateSettings
+from naestro.agents import DebateOrchestrator, DebateSettings
 from naestro.governance.governor import Decision, Governor
 from naestro.governance.policies import PolicyResult
 

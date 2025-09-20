@@ -1,7 +1,19 @@
-"""Agent registry and reusable role definitions."""
+"""Agent role definitions and deterministic debate utilities."""
 
 from __future__ import annotations
 
-from .registry import Role, RoleRegistry
+from .debate import DebateOrchestrator, DebateOutcome, DebateSettings
+from .roles import Responder, Role, Roles
+from .schemas import DebateTranscript, Message, new_message
 
-__all__ = ["Role", "RoleRegistry"]
+__all__ = [
+    "DebateOrchestrator",
+    "DebateOutcome",
+    "DebateSettings",
+    "DebateTranscript",
+    "Message",
+    "Responder",
+    "Role",
+    "Roles",
+    "new_message",
+]
