@@ -220,13 +220,11 @@ class MessageBus:
         normalized = _normalize_payload(payload)
         token = _ENVELOPE_CONTEXT.set({"redactions": []})
         try:
-            final_event, final_payload, envelope, forwarded = self._dispatch(
+            final_event, final_payload, envelope = self._dispatch(
                 0, event, normalized
             )
-            if not forwarded:
-                return None
             if envelope is None:
-                envelope = self._deliver(final_event, final_payload)
+                return None
             return envelope
         finally:
             _ENVELOPE_CONTEXT.reset(token)
@@ -255,10 +253,11 @@ class MessageBus:
 
     def _dispatch(
         self, index: int, event: str, payload: Payload
-    ) -> tuple[str, Payload, Envelope | None, bool]:
+    ) -> tuple[str, Payload, Envelope | None]:
         if index >= len(self._middleware):
             envelope = self._deliver(event, payload)
-            return event, payload, envelope, True
+            return event, payload, envelope
+
         forwarded = False
         final_event = event
         final_payload = payload
@@ -267,10 +266,10 @@ class MessageBus:
         def forward(next_event: str, next_payload: Payload) -> tuple[str, Payload]:
             nonlocal forwarded, final_event, final_payload, envelope
             forwarded = True
-            final_event, final_payload, envelope, inner_forwarded = self._dispatch(
+            final_event, final_payload, envelope = self._dispatch(
                 index + 1, next_event, next_payload
             )
-            if not inner_forwarded:
+            if envelope is None:
                 forwarded = False
             return final_event, final_payload
 
@@ -280,7 +279,10 @@ class MessageBus:
             final_event, final_payload = result
             if envelope is None:
                 envelope = self._deliver(final_event, final_payload)
-        return final_event, final_payload, envelope, forwarded
+
+        if not forwarded:
+            return final_event, final_payload, None
+        return final_event, final_payload, envelope
 
     def clear(self) -> None:
         self._handlers.clear()
