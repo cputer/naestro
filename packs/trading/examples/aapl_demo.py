@@ -1,9 +1,11 @@
 """Run the TradingAgents demo pipeline with bundled sample data."""
+
 from __future__ import annotations
 
 # isort: off
 from importlib import resources
 from typing import Sequence
+
 # isort: on
 
 import csv
