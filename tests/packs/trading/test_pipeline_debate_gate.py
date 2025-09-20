@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+import sys  # isort: split
+
 from pathlib import Path
-import sys
 from typing import Sequence
 
 import pytest
