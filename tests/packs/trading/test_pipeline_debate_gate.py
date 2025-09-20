@@ -8,16 +8,15 @@ from typing import Sequence
 import pytest
 
 try:
-    from naestro.agents.debate import DebateOrchestrator
-    from naestro.agents.roles import Role, Roles
-    from naestro.agents.schemas import Message
-    from naestro.core.bus import MessageBus
+    import naestro  # noqa: F401
 except ModuleNotFoundError:
     sys.path.append(str(Path(__file__).resolve().parents[3]))
-    from naestro.agents.debate import DebateOrchestrator
-    from naestro.agents.roles import Role, Roles
-    from naestro.agents.schemas import Message
-    from naestro.core.bus import MessageBus
+    import naestro  # noqa: F401
+
+from naestro.agents.debate import DebateOrchestrator
+from naestro.agents.roles import Role, Roles
+from naestro.agents.schemas import Message
+from naestro.core.bus import MessageBus
 
 from packs.trading.agents import TradeDecision
 from packs.trading.pipelines import DebateGate
