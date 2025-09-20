@@ -123,7 +123,46 @@ def test_middleware_forwarding_halt_propagates() -> None:
     assert bus.envelopes == ()
 
 
-def test_middleware_fallback_after_halt_creates_envelope() -> None:
+def test_forwarding_middleware_copy_propagates_halt() -> None:
+    bus = MessageBus()
+    handled: list[Mapping[str, object]] = []
+
+    def outer_middleware(
+        event: str,
+        payload: dict[str, object],
+        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+    ) -> tuple[str, dict[str, object]]:
+        forwarded = forward(event, payload)
+        # Returning a copied tuple simulates middleware that proxies the result
+        # but does not preserve object identity.
+        return tuple(forwarded)
+
+    def halting_middleware(
+        event: str,
+        payload: dict[str, object],
+        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+    ) -> None:
+        return None
+
+    def handler(payload: Mapping[str, object]) -> None:
+        handled.append(payload)
+
+    bus.use(outer_middleware)
+    bus.use(halting_middleware)
+    bus.subscribe("debate.turn", handler)
+
+    message = new_message("analyst", "ready", metadata={"round": 0, "order": 0})
+    envelope = bus.publish(
+        "debate.turn",
+        {"message": message.to_dict(), "round": 0},
+    )
+
+    assert envelope is None
+    assert handled == []
+    assert bus.envelopes == ()
+
+
+def test_middleware_fallback_after_halt_is_ignored() -> None:
     bus = MessageBus()
     bus.register_schema(
         "debate.fallback",
@@ -181,13 +220,9 @@ def test_middleware_fallback_after_halt_creates_envelope() -> None:
         {"message": message.to_dict(), "round": 0},
     )
 
-    assert envelope is not None
-    assert envelope.event == "debate.fallback"
-    assert envelope.payload["handled_by"] == "fallback"
-    assert fallback_payloads == [
-        {"original_event": "debate.turn", "handled_by": "fallback"}
-    ]
-    assert [record.event for record in bus.envelopes] == ["debate.fallback"]
+    assert envelope is None
+    assert fallback_payloads == []
+    assert bus.envelopes == ()
 
 
 def test_middleware_preserves_downstream_tuple_when_envelope_exists() -> None:
