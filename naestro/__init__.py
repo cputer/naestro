@@ -6,10 +6,16 @@ third party extensions can import them directly from :mod:`naestro`.
 
 from __future__ import annotations
 
-from .agents.registry import Role, RoleRegistry
+from .agents import (
+    DebateOrchestrator,
+    DebateOutcome,
+    DebateSettings,
+    DebateTranscript,
+    Message,
+    Role,
+    Roles,
+)
 from .core.bus import LoggingMiddleware, MessageBus
-from .core.debate import DebateOrchestrator
-from .core.schemas import DebateTranscript, Message
 from .core.tracing import Tracer
 from .governance.governor import Decision, Governor
 from .governance.policies import Policy
@@ -19,6 +25,8 @@ from .routing.router import Router, RoutingRequest
 __all__ = [
     "Decision",
     "DebateOrchestrator",
+    "DebateOutcome",
+    "DebateSettings",
     "DebateTranscript",
     "LoggingMiddleware",
     "Message",
@@ -27,7 +35,7 @@ __all__ = [
     "ModelRegistry",
     "Policy",
     "Role",
-    "RoleRegistry",
+    "Roles",
     "Governor",
     "Router",
     "RoutingRequest",

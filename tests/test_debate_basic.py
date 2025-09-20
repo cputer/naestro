@@ -2,10 +2,8 @@ from __future__ import annotations
 
 from typing import List, Sequence
 
-from naestro.agents import Role, RoleRegistry
+from naestro.agents import DebateOrchestrator, DebateSettings, Message, Role, Roles
 from naestro.core.bus import MessageBus
-from naestro.core.debate import DebateOrchestrator, DebateSettings
-from naestro.core.schemas import Message
 
 
 def test_orchestrator_runs_rounds() -> None:
@@ -15,12 +13,9 @@ def test_orchestrator_runs_rounds() -> None:
     def critic(history: Sequence[Message]) -> str:
         return "approve" if len(history) > 0 else "needs more"
 
-    registry = RoleRegistry(
-        [
-            Role("analyst", "Provides initial view", analyst),
-            Role("critic", "Challenges proposals", critic),
-        ]
-    )
+    roles = Roles()
+    roles.register(Role("analyst", "Provides initial view", analyst))
+    roles.register(Role("critic", "Challenges proposals", critic))
     bus = MessageBus()
     rounds: List[int] = []
 
@@ -29,7 +24,7 @@ def test_orchestrator_runs_rounds() -> None:
         rounds.append(int(mapping["round"]))
 
     bus.subscribe("debate.turn", record)
-    orchestrator = DebateOrchestrator(registry, bus=bus)
+    orchestrator = DebateOrchestrator(roles, bus=bus)
     outcome = orchestrator.run(
         ["analyst", "critic"],
         "Is the trade compelling?",
