@@ -13,6 +13,7 @@ from packs.trading import (
     SignalAgent,
     TradingPipeline,
 )
+from packs.trading.agents import TradeDecision
 
 
 def test_pipeline_debate_gate_filters_trades() -> None:
@@ -42,3 +43,10 @@ def test_pipeline_debate_gate_filters_trades() -> None:
     assert len(result.trades) == 1
     assert len(result.rejected_trades) == 1
     assert result.rejected_trades[0].price == 100.5
+
+
+def test_debate_gate_approves_without_participants() -> None:
+    registry = RoleRegistry([])
+    gate = DebateGate(DebateOrchestrator(registry), [])
+    trade = TradeDecision(index=0, position=1, price=100.0, note="test")
+    assert gate.approve(trade) is True
