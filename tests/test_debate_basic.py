@@ -36,17 +36,32 @@ def test_orchestrator_runs_rounds_and_emits_events() -> None:
 
     orchestrator = DebateOrchestrator(roles, bus=bus)
     settings = DebateSettings(rounds=2, initial_offset=5, tags={"scenario": "trade"})
-    outcome = orchestrator.run(["analyst", "critic"], "Evaluate the setup", settings=settings)
+    outcome = orchestrator.run(
+        ["analyst", "critic"],
+        "Evaluate the setup",
+        settings=settings,
+    )
 
     assert isinstance(outcome, DebateOutcome)
     transcript = outcome.transcript
     assert transcript.tags == {"scenario": "trade"}
-    assert [message.metadata["round"] for message in transcript.messages[1:]] == [0, 0, 1, 1]
-    assert transcript.messages[0].metadata == {"round": -1, "order": -1}
-    assert transcript.messages[0].timestamp.isoformat() == "2024-01-01T00:00:05+00:00"
+
+    message_rounds = [
+        message.metadata["round"] for message in transcript.messages[1:]
+    ]
+    assert message_rounds == [0, 0, 1, 1]
+
+    first_message = transcript.messages[0]
+    assert first_message.metadata == {"round": -1, "order": -1}
+    assert first_message.timestamp.isoformat() == "2024-01-01T00:00:05+00:00"
+
     assert transcript.messages[-1].content == "approve"
     assert outcome.approved is True
-    assert outcome.rationale == "Debate[analyst, critic]: critic:approve, analyst:analysis-3, critic:approve"
+
+    expected_rationale = (
+        "Debate[analyst, critic]: critic:approve, analyst:analysis-3, critic:approve"
+    )
+    assert outcome.rationale == expected_rationale
 
     events = [envelope.event for envelope in bus.envelopes]
     assert events == [
@@ -67,4 +82,10 @@ def test_orchestrator_runs_rounds_and_emits_events() -> None:
     assert rounds == [0, 0, 1, 1]
 
     known_events = set(bus.known_events)
-    assert {"debate.started", "debate.turn", "debate.prompt", "debate.finished"} <= known_events
+    expected_events = {
+        "debate.started",
+        "debate.turn",
+        "debate.prompt",
+        "debate.finished",
+    }
+    assert expected_events <= known_events
