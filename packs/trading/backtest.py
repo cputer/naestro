@@ -19,7 +19,10 @@ class BacktestResult:
     metrics: Dict[str, float]
 
 
-def _realised_returns(prices: PriceSeries, trades: Iterable[TradeDecision]) -> List[float]:
+def _realised_returns(
+    prices: PriceSeries,
+    trades: Iterable[TradeDecision],
+) -> List[float]:
     realised: List[float] = []
     price_count = len(prices)
     for trade in trades:
@@ -31,7 +34,10 @@ def _realised_returns(prices: PriceSeries, trades: Iterable[TradeDecision]) -> L
     return realised
 
 
-def run_backtest(prices: PriceSeries, trades: Sequence[TradeDecision]) -> BacktestResult:
+def run_backtest(
+    prices: PriceSeries,
+    trades: Sequence[TradeDecision],
+) -> BacktestResult:
     """Replay trades against prices and compute deterministic metrics."""
 
     realised_returns = _realised_returns(prices, trades)
