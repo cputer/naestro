@@ -207,6 +207,7 @@ class MessageBus:
     def use(self, middleware: Middleware) -> None:
         self._middleware.append(middleware)
 
+    @property
     def known_events(self) -> Sequence[str]:
         return self._catalog.events
 
@@ -218,55 +219,68 @@ class MessageBus:
     ) -> Envelope | None:
         normalized = _normalize_payload(payload)
         token = _ENVELOPE_CONTEXT.set({"redactions": []})
-        redactions: tuple[str, ...] = ()
         try:
-            final_event, final_payload, forwarded = self._dispatch(0, event, normalized)
+            final_event, final_payload, envelope, forwarded = self._dispatch(
+                0, event, normalized
+            )
             if not forwarded:
                 return None
-            self._catalog.validate(final_event, final_payload)
-            context = _ENVELOPE_CONTEXT.get()
-            if context:
-                redactions = tuple(context.get("redactions", []))
-            sequence = self._sequence + 1
-            self._sequence = sequence
-            timestamp = self._base_timestamp + timedelta(milliseconds=sequence)
-            frozen_payload = _freeze_payload(final_payload)
-            envelope = Envelope(
-                sequence=sequence,
-                event=final_event,
-                payload=frozen_payload,
-                timestamp=timestamp,
-                redactions=redactions,
-            )
-            self._envelopes.append(envelope)
-            for handler in self._handlers.get(final_event, []):
-                handler(envelope.payload)
+            if envelope is None:
+                envelope = self._deliver(final_event, final_payload)
             return envelope
         finally:
             _ENVELOPE_CONTEXT.reset(token)
 
+    def _deliver(self, event: str, payload: Payload) -> Envelope:
+        self._catalog.validate(event, payload)
+        context = _ENVELOPE_CONTEXT.get()
+        redactions: tuple[str, ...] = ()
+        if context:
+            redactions = tuple(context.get("redactions", []))
+        sequence = self._sequence + 1
+        self._sequence = sequence
+        timestamp = self._base_timestamp + timedelta(milliseconds=sequence)
+        frozen_payload = _freeze_payload(payload)
+        envelope = Envelope(
+            sequence=sequence,
+            event=event,
+            payload=frozen_payload,
+            timestamp=timestamp,
+            redactions=redactions,
+        )
+        self._envelopes.append(envelope)
+        for handler in self._handlers.get(event, []):
+            handler(envelope.payload)
+        return envelope
+
     def _dispatch(
         self, index: int, event: str, payload: Payload
-    ) -> tuple[str, Payload, bool]:
+    ) -> tuple[str, Payload, Envelope | None, bool]:
         if index >= len(self._middleware):
-            return event, payload, True
+            envelope = self._deliver(event, payload)
+            return event, payload, envelope, True
         forwarded = False
         final_event = event
         final_payload = payload
+        envelope: Envelope | None = None
 
         def forward(next_event: str, next_payload: Payload) -> tuple[str, Payload]:
-            nonlocal forwarded, final_event, final_payload
+            nonlocal forwarded, final_event, final_payload, envelope
             forwarded = True
-            final_event, final_payload, _ = self._dispatch(
+            final_event, final_payload, envelope, inner_forwarded = self._dispatch(
                 index + 1, next_event, next_payload
             )
+            if not inner_forwarded:
+                forwarded = False
             return final_event, final_payload
 
         result = self._middleware[index](event, payload, forward)
         if result is not None:
             forwarded = True
             final_event, final_payload = result
-        return final_event, final_payload, forwarded
+            if envelope is None:
+                envelope = self._deliver(final_event, final_payload)
+        return final_event, final_payload, envelope, forwarded
 
     def clear(self) -> None:
         self._handlers.clear()
