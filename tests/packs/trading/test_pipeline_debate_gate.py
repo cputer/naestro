@@ -11,18 +11,15 @@ try:
     from naestro.agents.roles import Role, Roles
     from naestro.agents.schemas import Message
     from naestro.core.bus import MessageBus
-
-    from packs.trading.agents import TradeDecision
-    from packs.trading.pipelines import DebateGate
-except Exception:
+except ModuleNotFoundError:
     sys.path.append(str(Path(__file__).resolve().parents[3]))
     from naestro.agents.debate import DebateOrchestrator
     from naestro.agents.roles import Role, Roles
     from naestro.agents.schemas import Message
     from naestro.core.bus import MessageBus
 
-    from packs.trading.agents import TradeDecision
-    from packs.trading.pipelines import DebateGate
+from packs.trading.agents import TradeDecision
+from packs.trading.pipelines import DebateGate
 
 pytest.importorskip("jsonschema")
 
