@@ -258,30 +258,25 @@ class MessageBus:
             envelope = self._deliver(event, payload)
             return event, payload, envelope
 
-        forwarded = False
+        forward_called = False
         final_event = event
         final_payload = payload
         envelope: Envelope | None = None
 
         def forward(next_event: str, next_payload: Payload) -> tuple[str, Payload]:
-            nonlocal forwarded, final_event, final_payload, envelope
-            forwarded = True
+            nonlocal forward_called, final_event, final_payload, envelope
+            forward_called = True
             final_event, final_payload, envelope = self._dispatch(
                 index + 1, next_event, next_payload
             )
-            if envelope is None:
-                forwarded = False
             return final_event, final_payload
 
         result = self._middleware[index](event, payload, forward)
         if result is not None:
-            forwarded = True
             final_event, final_payload = result
-            if envelope is None:
+            if envelope is None and not forward_called:
                 envelope = self._deliver(final_event, final_payload)
 
-        if not forwarded:
-            return final_event, final_payload, None
         return final_event, final_payload, envelope
 
     def clear(self) -> None:
