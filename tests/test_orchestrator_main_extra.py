@@ -69,6 +69,39 @@ def test_route_model_explicit(om, monkeypatch):
     assert om._route_model("nim") == "http://nim"
 
 
+def test_load_runtime_config_missing_file(om, monkeypatch):
+    original_exists = om.Path.exists
+
+    def fake_exists(self):
+        if self.name == "runtime.yaml":
+            return False
+        return original_exists(self)
+
+    monkeypatch.setattr(om.Path, "exists", fake_exists)
+
+    assert om._load_runtime_config() == {}
+
+
+def test_load_runtime_config_non_mapping(om, monkeypatch):
+    monkeypatch.setattr(om.yaml, "safe_load", lambda handle: ["unexpected"])
+
+    assert om._load_runtime_config() == {}
+
+
+def test_enable_determinism_handles_non_mapping(om, monkeypatch):
+    monkeypatch.setattr(
+        om,
+        "_load_runtime_config",
+        lambda: {"runtime": {"determinism": ["unexpected"]}},
+    )
+    calls = {}
+    monkeypatch.setattr(om, "_det_en", lambda seed=0: calls.setdefault("seed", seed))
+
+    om._enable_determinism()
+
+    assert calls["seed"] == 0
+
+
 def test_run_memory_error(om, monkeypatch):
     monkeypatch.setattr(om, "_route_model", lambda policy: "url")
     called = {}
