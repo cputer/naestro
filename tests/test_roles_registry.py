@@ -1,27 +1,57 @@
 from __future__ import annotations
 
+import sys
+from pathlib import Path
 from typing import Sequence
 
-from naestro.agents import Message, Role, Roles
+if __package__ in {None, ""}:
+    sys.path.append(str(Path(__file__).resolve().parents[1]))
+
+import pytest
+
+from naestro.agents.roles import Role, Roles
+from naestro.agents.schemas import Message
 
 
-def test_register_and_lookup_role() -> None:
-    def strategy(history: Sequence[Message]) -> str:
-        return f"seen {len(history)} messages"
-
+def test_roles_registry_handles_registration_and_builtin_roles() -> None:
     roles = Roles()
-    roles.register(Role("quant", "Performs analysis", strategy))
-    role = roles.get("quant")
-    response = role.respond([])
-    assert response == "seen 0 messages"
+    builtin_names = {role.name for role in roles.builtin}
+    assert {"analyst", "research", "risk"} <= builtin_names
 
+    def reviewer(history: Sequence[Message]) -> str:
+        return f"reviewed-{len(history)}"
 
-def test_update_metadata() -> None:
-    def risk_strategy(history: Sequence[Message]) -> str:
-        return "ok"
+    review_role = Role(
+        name="review",
+        description="Evaluates proposed trades",
+        strategy=reviewer,
+        metadata={"team": "ops"},
+    )
+    roles.register(review_role)
 
-    roles = Roles()
-    roles.register(Role("risk", "Risk reviewer", risk_strategy))
-    roles.update_metadata("risk", {"level": "low"})
-    updated = roles.get("risk")
-    assert updated.metadata["level"] == "low"
+    retrieved = roles.get("review")
+    assert retrieved.respond(()) == "reviewed-0"
+
+    roles.update_metadata("review", {"priority": "high"})
+    updated = roles.get("review")
+    assert updated.metadata["team"] == "ops"
+    assert updated.metadata["priority"] == "high"
+
+    def unstable(history: Sequence[Message]) -> str:
+        raise RuntimeError("boom")
+
+    fallback = Role(
+        name="fallback",
+        description="Uses fallback when strategy errors",
+        strategy=unstable,
+        fallback_response="fallback-response",
+    )
+    roles.register(fallback)
+    assert roles.get("fallback").respond(()) == "fallback-response"
+
+    roles.unregister("fallback")
+    with pytest.raises(KeyError):
+        roles.get("fallback")
+
+    roles.clear()
+    assert {role.name for role in roles.list()} == {role.name for role in roles.builtin}
