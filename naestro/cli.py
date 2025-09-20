@@ -4,13 +4,7 @@ from typing import Sequence, cast
 from naestro.agents import DebateOrchestrator, DebateSettings, Message, Role, Roles
 from naestro.core.tracing import Tracer
 from naestro.governance import Decision, Governor, Policy, PolicyInput
-from packs.trading import (
-    DebateGate,
-    ExecutionAgent,
-    RiskAgent,
-    SignalAgent,
-    TradingPipeline,
-)
+from packs.trading import DebateGate, PipelineResult, trading_demo
 
 
 def build_roles() -> Roles:
@@ -48,6 +42,11 @@ def build_governor() -> Governor:
     return governor
 
 
+def build_debate_gate(roles: Roles) -> DebateGate:
+    orchestrator = DebateOrchestrator(roles)
+    return DebateGate(orchestrator, ["analyst", "risk"])
+
+
 def list_roles(roles: Roles) -> None:
     print("Registered roles:")
     for role in roles.list():
@@ -68,25 +67,40 @@ def run_debate(roles: Roles, prompt: str, rounds: int) -> None:
     print("Trace stored in", tracer.run_path)
 
 
-def run_pipeline(roles: Roles) -> None:
-    gate = DebateGate(DebateOrchestrator(roles), ["analyst", "risk"])
-    pipeline = TradingPipeline(
-        SignalAgent(window=2),
-        RiskAgent(max_exposure=1, min_confidence=0.15),
-        ExecutionAgent(),
-        debate_gate=gate,
-        governor=build_governor(),
-    )
-    prices = [100.0, 101.0, 102.0, 101.5, 103.0]
-    result = pipeline.run(prices)
+def describe_pipeline_result(result: PipelineResult) -> None:
     print("Pipeline trades:")
     for trade in result.trades:
         print(f"  idx={trade.index} price={trade.price:.2f} note={trade.note}")
+    if not result.trades:
+        print("  <none>")
+    print("Rejected trades:")
+    for trade in result.rejected_trades:
+        print(f"  idx={trade.index} price={trade.price:.2f} note={trade.note}")
+    if not result.rejected_trades:
+        print("  <none>")
     print("Governance:")
     for policy_result in result.governance_results:
         status = "PASS" if policy_result.passed else "FAIL"
         print(f"  {policy_result.name}: {status} - {policy_result.reason}")
+    if not result.governance_results:
+        print("  <no policies evaluated>")
+    print("Backtest metrics:")
+    for key, value in sorted(result.backtest.metrics.items()):
+        print(f"  {key}: {value:.4f}")
     print("Pipeline approved:", result.approved)
+
+
+def run_trading() -> None:
+    result = trading_demo()
+    describe_pipeline_result(result)
+
+
+def run_governed(roles: Roles) -> None:
+    result = trading_demo(
+        debate_gate=build_debate_gate(roles),
+        governor=build_governor(),
+    )
+    describe_pipeline_result(result)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -99,7 +113,11 @@ def build_parser() -> argparse.ArgumentParser:
     debate_parser.add_argument("--prompt", required=True)
     debate_parser.add_argument("--rounds", type=int, default=1)
 
-    subparsers.add_parser("run-pipeline", help="Execute the trading pipeline demo")
+    subparsers.add_parser("run-trading", help="Execute the base trading demo")
+    subparsers.add_parser(
+        "run-governed",
+        help="Execute the trading demo with debate gating and governance",
+    )
     return parser
 
 
@@ -111,8 +129,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         list_roles(roles)
     elif args.command == "run-debate":
         run_debate(roles, args.prompt, args.rounds)
-    elif args.command == "run-pipeline":
-        run_pipeline(roles)
+    elif args.command == "run-trading":
+        run_trading()
+    elif args.command == "run-governed":
+        run_governed(roles)
     return 0
 
 

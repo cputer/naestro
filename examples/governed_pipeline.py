@@ -1,3 +1,5 @@
+"""Execute the trading pipeline with both debate gating and governance."""
+
 import sys
 from pathlib import Path
 from typing import Sequence, cast
@@ -5,24 +7,18 @@ from typing import Sequence, cast
 if __package__ in {None, ""}:
     sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-from naestro.agents import DebateOrchestrator, Message, Role, Roles
-from naestro.governance import Decision, Governor, Policy, PolicyInput
+from naestro import Decision, DebateOrchestrator, Message, Policy, PolicyInput, Role, Roles
+from naestro import Governor
 
-from packs.trading import (
-    DebateGate,
-    ExecutionAgent,
-    RiskAgent,
-    SignalAgent,
-    TradingPipeline,
-)
+from packs.trading import DebateGate, ExecutionAgent, RiskAgent, SignalAgent, TradingPipeline
 
 
 def build_gate() -> DebateGate:
+    """Configure a deterministic gate with analyst and risk roles."""
+
     def analyst(history: Sequence[Message]) -> str:
         confidence = len(history) + 1
-        if confidence > 1:
-            return f"Approve with confidence {confidence}"
-        return "Approve trade"
+        return f"Approve with confidence {confidence}" if confidence > 1 else "Approve trade"
 
     def risk(history: Sequence[Message]) -> str:
         if any("drawdown" in message.content.lower() for message in history):
@@ -37,16 +33,15 @@ def build_gate() -> DebateGate:
 
 
 def build_governor() -> Governor:
+    """Create a governor enforcing drawdown and return policies."""
+
     governor = Governor()
 
     def max_drawdown(payload: PolicyInput) -> Decision:
         raw_drawdown = payload.metadata.get("max_drawdown", 0.0)
         drawdown = float(cast(float, raw_drawdown))
         passed = drawdown <= 2.5
-        if passed:
-            reason = "Within drawdown limit"
-        else:
-            reason = f"Drawdown {drawdown:.2f} exceeds limit"
+        reason = "Within drawdown limit" if passed else f"Drawdown {drawdown:.2f} exceeds limit"
         return Decision(name="max_drawdown", passed=passed, reason=reason)
 
     def min_return(payload: PolicyInput) -> Decision:
