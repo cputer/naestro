@@ -1,4 +1,6 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
 pyyaml==6.0.2
 requests==2.32.4
 scipy==1.16.1
 sympy==1.14.0
+torch==2.4.1+cpu
