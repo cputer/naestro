@@ -63,6 +63,8 @@ def write_trace(
     events = [event.to_dict() for event in build_trace(envelopes)]
     target.write_text(dumps(events, indent=2), encoding="utf-8")
     return target
+
+
 def start_trace(
     *, root: Path | str | None = None, run_name: str | None = None
 ) -> "Tracer":
