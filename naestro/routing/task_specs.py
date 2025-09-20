@@ -6,8 +6,8 @@ from typing import (
     Mapping,
     NotRequired,
     Sequence,
-    TypedDict,
 )
+from typing_extensions import TypedDict
 
 CapabilityList = Sequence[str] | set[str] | frozenset[str]
 
