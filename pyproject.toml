@@ -50,6 +50,7 @@ ignore = ["B905"]
 from-first = true
 force-sort-within-sections = true
 order-by-type = false
+known-first-party = ["naestro", "packs", "examples", "tests"]
 
 [tool.mypy]
 python_version = "3.12"
