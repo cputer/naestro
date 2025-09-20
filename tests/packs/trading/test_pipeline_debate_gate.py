@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Sequence
 
 from naestro.agents import DebateOrchestrator, Message, Role, Roles
-from packs.trading.pipeline import DebateGate
+from packs.trading.pipelines import DebateGate
 
 
 def test_debate_gate_approves_trade() -> None:

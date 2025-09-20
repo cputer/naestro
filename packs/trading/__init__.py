@@ -1,17 +1,20 @@
-"""Trading pack built on the Naestro runtime."""
+"""Trading pack primitives aligned with the TradingAgents prompt."""
 
 from __future__ import annotations
 
-from .agents import ExecutionAgent, RiskAgent, SignalAgent
+from .agents import ExecutionAgent, RiskAgent, SignalAgent, TradeDecision
 from .backtest import BacktestResult, run_backtest
-from .pipeline import DebateGate, TradingPipeline
+from .pipelines import DebateGate, PipelineResult, TradingPipeline, trading_demo
 
 __all__ = [
     "BacktestResult",
     "DebateGate",
     "ExecutionAgent",
+    "PipelineResult",
     "RiskAgent",
     "SignalAgent",
+    "TradeDecision",
     "TradingPipeline",
     "run_backtest",
+    "trading_demo",
 ]
