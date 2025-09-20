@@ -48,6 +48,7 @@ ignore = ["B905"]
 
 [tool.ruff.lint.isort]
 from-first = true
+force-sort-within-sections = true
 
 [tool.mypy]
 python_version = "3.12"
