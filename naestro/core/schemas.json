@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://naestro.ai/schemas/core/bus.json",
+  "title": "Naestro core message bus schemas",
+  "description": "Event payload schemas enforced by the deterministic message bus.",
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "description": "Arbitrary metadata attached to messages.",
+      "additionalProperties": {}
+    },
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "content", "timestamp", "metadata"],
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "metadata": {
+          "$ref": "#/$defs/metadata"
+        }
+      }
+    }
+  },
+  "events": {
+    "debate.started": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["participants", "prompt"],
+      "properties": {
+        "participants": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "prompt": {
+          "type": "string"
+        }
+      }
+    },
+    "debate.prompt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["message"],
+      "properties": {
+        "message": {
+          "$ref": "#/$defs/message"
+        }
+      }
+    },
+    "debate.turn": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["message", "round"],
+      "properties": {
+        "message": {
+          "$ref": "#/$defs/message"
+        },
+        "round": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "debate.finished": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary", "turns"],
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "turns": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}
