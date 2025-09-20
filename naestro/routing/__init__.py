@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from .model_registry import DEFAULT_WEIGHTS, ModelInfo, ModelRegistry, REGISTRY
+from .model_registry import DEFAULT_WEIGHTS, REGISTRY, ModelInfo, ModelRegistry
 from .router import ModelRouter, RoutePolicy
 from .task_specs import BaseTaskSpec, ChatTaskSpec, TaskSpec, ToolTaskSpec
 
