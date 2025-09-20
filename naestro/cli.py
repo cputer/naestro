@@ -3,7 +3,7 @@ from typing import Sequence, cast
 
 from naestro.agents import DebateOrchestrator, DebateSettings, Message, Role, Roles
 from naestro.core.tracing import Tracer
-from naestro.governance import Decision, Governor, Policy, PolicyResult
+from naestro.governance import Decision, Governor, Policy, PolicyInput
 from packs.trading import (
     DebateGate,
     ExecutionAgent,
@@ -30,17 +30,18 @@ def build_roles() -> Roles:
 def build_governor() -> Governor:
     governor = Governor()
 
-    def guard_drawdown(decision: Decision) -> PolicyResult:
-        raw_drawdown = decision.metadata.get("max_drawdown", 0.0)
+    def guard_drawdown(payload: PolicyInput) -> Decision:
+        raw_drawdown = payload.metadata.get("max_drawdown", 0.0)
         drawdown = float(cast(float, raw_drawdown))
         passed = drawdown <= 3.0
         reason = "Drawdown ok" if passed else f"Drawdown {drawdown:.2f} too high"
-        return PolicyResult(name="drawdown", passed=passed, reason=reason)
+        return Decision(name="drawdown", passed=passed, reason=reason)
 
-    def guard_return(decision: Decision) -> PolicyResult:
-        passed = decision.score >= 0.2
+    def guard_return(payload: PolicyInput) -> Decision:
+        score = payload.score or 0.0
+        passed = score >= 0.2
         reason = "Return adequate" if passed else "Return too low"
-        return PolicyResult(name="return", passed=passed, reason=reason)
+        return Decision(name="return", passed=passed, reason=reason)
 
     governor.register(Policy("drawdown", "Protect against drawdown", guard_drawdown))
     governor.register(Policy("return", "Minimum return threshold", guard_return))

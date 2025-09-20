@@ -6,8 +6,7 @@ from dataclasses import dataclass, field
 from typing import List, Sequence
 
 from naestro.agents import DebateOrchestrator, DebateSettings
-from naestro.governance.governor import Decision, Governor
-from naestro.governance.policies import PolicyResult
+from naestro.governance import Decision, Governor, PolicyInput
 
 from .agents import ExecutionAgent, PriceSeries, RiskAgent, SignalAgent, TradeDecision
 from .backtest import BacktestResult, run_backtest
@@ -50,7 +49,7 @@ class PipelineResult:
     rejected_trades: List[TradeDecision]
     backtest: BacktestResult
     approved: bool
-    governance_results: List[PolicyResult] = field(default_factory=list)
+    governance_results: List[Decision] = field(default_factory=list)
 
 
 class TradingPipeline:
@@ -81,15 +80,15 @@ class TradingPipeline:
             else:
                 rejected_trades.append(trade)
         backtest = run_backtest(prices, approved_trades)
-        governance_results: List[PolicyResult] = []
+        governance_results: List[Decision] = []
         approved = True
         if self._governor is not None:
-            decision = Decision(
+            policy_input = PolicyInput(
                 subject="trading-pipeline",
                 score=backtest.metrics.get("cumulative_return", 0.0),
                 metadata={"max_drawdown": backtest.metrics.get("max_drawdown", 0.0)},
             )
-            approved, governance_results = self._governor.enforce(decision)
+            approved, governance_results = self._governor.enforce(policy_input)
         return PipelineResult(
             trades=approved_trades,
             rejected_trades=rejected_trades,

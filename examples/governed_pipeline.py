@@ -6,7 +6,7 @@ if __package__ in {None, ""}:
     sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from naestro.agents import DebateOrchestrator, Message, Role, Roles
-from naestro.governance import Decision, Governor, Policy, PolicyResult
+from naestro.governance import Decision, Governor, Policy, PolicyInput
 
 from packs.trading import (
     DebateGate,
@@ -39,20 +39,21 @@ def build_gate() -> DebateGate:
 def build_governor() -> Governor:
     governor = Governor()
 
-    def max_drawdown(decision: Decision) -> PolicyResult:
-        raw_drawdown = decision.metadata.get("max_drawdown", 0.0)
+    def max_drawdown(payload: PolicyInput) -> Decision:
+        raw_drawdown = payload.metadata.get("max_drawdown", 0.0)
         drawdown = float(cast(float, raw_drawdown))
         passed = drawdown <= 2.5
         if passed:
             reason = "Within drawdown limit"
         else:
             reason = f"Drawdown {drawdown:.2f} exceeds limit"
-        return PolicyResult(name="max_drawdown", passed=passed, reason=reason)
+        return Decision(name="max_drawdown", passed=passed, reason=reason)
 
-    def min_return(decision: Decision) -> PolicyResult:
-        passed = decision.score >= 0.5
+    def min_return(payload: PolicyInput) -> Decision:
+        score = payload.score or 0.0
+        passed = score >= 0.5
         reason = "Return target met" if passed else "Return target missed"
-        return PolicyResult(name="min_return", passed=passed, reason=reason)
+        return Decision(name="min_return", passed=passed, reason=reason)
 
     governor.register(Policy("max_drawdown", "Limit drawdowns", max_drawdown))
     governor.register(Policy("min_return", "Ensure positive returns", min_return))
