@@ -1,9 +1,11 @@
 """Run the TradingAgents demo pipeline with bundled sample data."""
 from __future__ import annotations
 
-import csv
+# isort: off
 from importlib import resources
 from typing import Sequence
+import csv
+# isort: on
 
 from naestro.agents import DebateOrchestrator, Message, Role, Roles
 from packs.trading import DebateGate, trading_demo
