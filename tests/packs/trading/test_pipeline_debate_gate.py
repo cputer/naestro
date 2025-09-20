@@ -1,8 +1,21 @@
 from __future__ import annotations
 
+import sys
+from pathlib import Path
 from typing import Sequence
 
-from naestro.agents import DebateOrchestrator, Message, Role, Roles
+if __package__ in {None, ""}:
+    sys.path.append(str(Path(__file__).resolve().parents[3]))
+
+import pytest
+
+pytest.importorskip("jsonschema")
+
+from naestro.agents.debate import DebateOrchestrator
+from naestro.agents.roles import Role, Roles
+from naestro.agents.schemas import Message
+from naestro.core.bus import MessageBus
+from packs.trading.agents import TradeDecision
 from packs.trading.pipelines import DebateGate
 
 
@@ -18,19 +31,37 @@ def test_debate_gate_approves_trade() -> None:
     roles.register(Role("risk", "Risk", risk))
     gate = DebateGate(DebateOrchestrator(roles), ["analyst", "risk"])
 
-    class Trade:
-        price = 100.0
-        note = "enter"
-
-    assert gate.approve(Trade()) is True
+    trade = TradeDecision(index=0, position=1, price=100.0, note="enter")
+    assert gate.approve(trade) is True
 
 
-def test_debate_gate_handles_empty_participants() -> None:
+def test_debate_gate_rejects_when_final_message_is_negative() -> None:
+    def analyst(history: Sequence[Message]) -> str:
+        return "reject"
+
+    def risk(history: Sequence[Message]) -> str:
+        return "reject"
+
     roles = Roles()
-    gate = DebateGate(DebateOrchestrator(roles), [])
+    roles.register(Role("analyst", "Analyst", analyst))
+    roles.register(Role("risk", "Risk", risk))
+    gate = DebateGate(DebateOrchestrator(roles), ["analyst", "risk"])
 
-    class Trade:
-        price = 100.0
-        note = "enter"
+    trade = TradeDecision(index=0, position=1, price=150.0, note="enter")
+    assert gate.approve(trade) is False
 
-    assert gate.approve(Trade()) is True
+
+def test_debate_gate_formats_prompt_using_trade_details() -> None:
+    bus = MessageBus()
+    prompts: list[str] = []
+    bus.subscribe("debate.started", lambda payload: prompts.append(payload["prompt"]))
+
+    roles = Roles()
+    orchestrator = DebateOrchestrator(roles, bus=bus)
+    gate = DebateGate(orchestrator, [])
+
+    trade = TradeDecision(index=0, position=1, price=123.456, note="scout")
+    assert gate.approve(trade) is True
+    assert prompts
+    assert "123.46" in prompts[0]
+    assert "scout" in prompts[0]

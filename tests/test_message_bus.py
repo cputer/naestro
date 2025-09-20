@@ -13,6 +13,7 @@ if str(PROJECT_ROOT) not in sys.path:  # pragma: no cover - defensive path setup
 
 jsonschema = pytest.importorskip("jsonschema")
 
+from naestro.agents.schemas import new_message
 from naestro.core.bus import (
     LoggingMiddleware,
     MessageBus,
@@ -22,7 +23,7 @@ from naestro.core.summary import summarize
 from naestro.core.trace import build_trace, write_trace
 
 
-def test_message_bus_middleware_sequence() -> None:
+def test_message_bus_middleware_records_envelopes() -> None:
     bus = MessageBus()
     trace: list[str] = []
 
@@ -32,9 +33,9 @@ def test_message_bus_middleware_sequence() -> None:
         forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
     ) -> tuple[str, dict[str, object]]:
         trace.append(f"mw1:{event}")
-        result = forward(event, payload)
-        trace.append(f"mw1:post:{event}")
-        return result
+        forwarded = forward(event, payload)
+        trace.append(f"mw1:post:{forwarded[0]}")
+        return forwarded
 
     def middleware_two(
         event: str,
@@ -45,32 +46,30 @@ def test_message_bus_middleware_sequence() -> None:
         return forward(event, payload)
 
     def handler(payload: Mapping[str, object]) -> None:
-        trace.append(f"handler:{payload.get('value')}")
+        trace.append(f"handler:{payload['message']['role']}")
 
     bus.use(middleware_one)
     bus.use(middleware_two)
-    bus.register_schema(
-        "test",
-        {
-            "type": "object",
-            "properties": {"value": {"type": "integer"}},
-            "required": ["value"],
-            "additionalProperties": False,
-        },
+    bus.subscribe("debate.turn", handler)
+
+    message = new_message("analyst", "ready", metadata={"round": 0, "order": 0})
+    envelope = bus.publish(
+        "debate.turn",
+        {"message": message.to_dict(), "round": 0},
     )
-    bus.subscribe("test", handler)
-    envelope = bus.publish("test", {"value": 3})
 
     assert trace == [
-        "mw1:test",
-        "mw2:test",
-        "handler:3",
-        "mw1:post:test",
+        "mw1:debate.turn",
+        "mw2:debate.turn",
+        "handler:analyst",
+        "mw1:post:debate.turn",
     ]
     assert envelope is not None
-    assert envelope.event == "test"
-    assert dict(envelope.payload) == {"value": 3}
-    assert bus.envelopes[-1] == envelope
+    assert envelope.sequence == 1
+    assert envelope.event == "debate.turn"
+    assert envelope.timestamp.isoformat() == "2024-01-01T00:00:00.001000+00:00"
+    assert envelope.payload["message"]["metadata"]["round"] == 0
+    assert "debate.turn" in bus.known_events
 
 
 def test_logging_middleware_records_payloads() -> None:
@@ -90,15 +89,8 @@ def test_redaction_middleware_masks_payload_and_records() -> None:
     bus = MessageBus()
     bus.use(RedactionMiddleware({"debate.prompt": ["message.metadata.secret"]}))
 
-    payload = {
-        "message": {
-            "role": "system",
-            "content": "hello",
-            "timestamp": "2024-01-01T00:00:00+00:00",
-            "metadata": {"secret": "token"},
-        }
-    }
-    envelope = bus.publish("debate.prompt", payload)
+    message = new_message("system", "hello", metadata={"secret": "token"})
+    envelope = bus.publish("debate.prompt", {"message": message.to_dict()})
     assert envelope is not None
     redacted_message = envelope.payload["message"]
     assert isinstance(redacted_message, Mapping)
