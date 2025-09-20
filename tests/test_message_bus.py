@@ -81,6 +81,48 @@ def test_message_bus_middleware_records_envelopes() -> None:
     assert "debate.turn" in bus.known_events
 
 
+def test_middleware_forwarding_halt_propagates() -> None:
+    bus = MessageBus()
+    handled: list[Mapping[str, object]] = []
+    calls: list[str] = []
+
+    def outer_middleware(
+        event: str,
+        payload: dict[str, object],
+        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+    ) -> tuple[str, dict[str, object]]:
+        calls.append("outer:before")
+        result = forward(event, payload)
+        calls.append("outer:after")
+        return result
+
+    def halting_middleware(
+        event: str,
+        payload: dict[str, object],
+        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+    ) -> None:
+        calls.append("inner:halt")
+        return None
+
+    def handler(payload: Mapping[str, object]) -> None:
+        handled.append(payload)
+
+    bus.use(outer_middleware)
+    bus.use(halting_middleware)
+    bus.subscribe("debate.turn", handler)
+
+    message = new_message("analyst", "ready", metadata={"round": 0, "order": 0})
+    envelope = bus.publish(
+        "debate.turn",
+        {"message": message.to_dict(), "round": 0},
+    )
+
+    assert envelope is None
+    assert calls == ["outer:before", "inner:halt", "outer:after"]
+    assert handled == []
+    assert bus.envelopes == ()
+
+
 def test_logging_middleware_records_payloads() -> None:
     bus = MessageBus()
     seen: dict[str, Mapping[str, object]] = {}
