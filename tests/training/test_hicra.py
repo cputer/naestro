@@ -93,3 +93,74 @@ def test_hicra_metrics_not_emitted_when_disabled() -> None:
     assert hicra_planner_reward_ratio.get("overall") == 0.0
     assert hicra_depth.get("overall") == 0.0
     assert hicra_success.get() == 0
+
+
+def test_hicra_config_from_dict_defaults() -> None:
+    config = HICRAConfig.from_dict()
+
+    assert config == HICRAConfig()
+
+
+def test_hicra_normalize_scalar_returns_zeros() -> None:
+    assigner = HICRACreditAssigner(HICRAConfig(normalize=True))
+    rewards = torch.tensor(5.0)
+    mask = torch.tensor(1.0)
+
+    normalized = assigner._normalize(rewards, mask)
+
+    assert torch.equal(normalized, torch.zeros_like(rewards))
+
+
+def test_hicra_ensure_tensor_from_iterable() -> None:
+    tensor = HICRACreditAssigner._ensure_tensor([1, 2, 3])
+
+    assert isinstance(tensor, torch.Tensor)
+    assert tensor.dtype.is_floating_point
+
+
+def test_hicra_build_mask_converts_inputs() -> None:
+    assigner = HICRACreditAssigner()
+    rewards = torch.zeros(3)
+
+    mask = assigner._build_mask([1, 0, 1], rewards)
+
+    assert mask.dtype == torch.bool
+    assert torch.equal(mask, torch.tensor([True, False, True]))
+
+
+def test_hicra_build_mask_shape_mismatch() -> None:
+    assigner = HICRACreditAssigner()
+
+    with pytest.raises(ValueError):
+        assigner._build_mask(torch.tensor([True, False]), torch.zeros((2, 2)))
+
+
+def test_hicra_emit_metrics_scalar_is_noop() -> None:
+    assigner = HICRACreditAssigner()
+
+    hicra_planner_reward_ratio.reset()
+    hicra_depth.reset()
+    hicra_success.reset()
+
+    # Should not raise or record metrics when provided a scalar reward tensor.
+    assigner._emit_metrics(torch.tensor(0.0), torch.tensor(1.0, dtype=torch.bool))
+
+    assert hicra_success.get() == 0
+
+
+def test_build_hicra_from_dict_accepts_none() -> None:
+    assigner = build_hicra_from_dict(None)
+
+    assert isinstance(assigner, HICRACreditAssigner)
+
+
+def test_build_hicra_from_dict_validates_types() -> None:
+    with pytest.raises(TypeError):
+        build_hicra_from_dict(42)
+
+    with pytest.raises(TypeError):
+        build_hicra_from_dict({"hicra": []})
+
+    assigner = build_hicra_from_dict({"hicra": None})
+
+    assert isinstance(assigner, HICRACreditAssigner)

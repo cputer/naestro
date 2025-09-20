@@ -32,11 +32,11 @@ requests==2.32.4
     # via -r requirements.txt
 scipy==1.16.1
     # via -r requirements.txt
-sympy==1.14.0
+sympy==1.13.1
     # via
     #   -r requirements.txt
     #   torch
-torch==2.4.1+cpu
+torch==2.5.1+cpu
     # via -r requirements.txt
 typing-extensions==4.15.0
     # via torch
