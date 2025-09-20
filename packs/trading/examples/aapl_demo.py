@@ -4,8 +4,9 @@ from __future__ import annotations
 # isort: off
 from importlib import resources
 from typing import Sequence
-import csv
 # isort: on
+
+import csv
 
 from naestro.agents import DebateOrchestrator, Message, Role, Roles
 from packs.trading import DebateGate, trading_demo
