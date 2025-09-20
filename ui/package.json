@@ -47,5 +47,6 @@
     "react-dom": "^19.1.1",
     "recharts": "^3.2.0",
     "socket.io-client": "^4.7.5"
-  }
+  },
+  "packageManager": "pnpm@10.5.2+sha1.ca68c0441df195b7e2992f1d1cb12fb731f82d78"
 }
