@@ -39,17 +39,22 @@ def test_message_bus_middleware_records_envelopes() -> None:
     def middleware_one(
         event: str,
         payload: dict[str, object],
-        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+        forward: Callable[
+            [str, dict[str, object]], tuple[str, dict[str, object]] | None
+        ],
     ) -> tuple[str, dict[str, object]]:
         trace.append(f"mw1:{event}")
         forwarded = forward(event, payload)
+        assert forwarded is not None
         trace.append(f"mw1:post:{forwarded[0]}")
         return forwarded
 
     def middleware_two(
         event: str,
         payload: dict[str, object],
-        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+        forward: Callable[
+            [str, dict[str, object]], tuple[str, dict[str, object]] | None
+        ],
     ) -> tuple[str, dict[str, object]]:
         trace.append(f"mw2:{event}")
         return forward(event, payload)
@@ -89,17 +94,22 @@ def test_middleware_forwarding_halt_propagates() -> None:
     def outer_middleware(
         event: str,
         payload: dict[str, object],
-        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
-    ) -> tuple[str, dict[str, object]]:
+        forward: Callable[
+            [str, dict[str, object]], tuple[str, dict[str, object]] | None
+        ],
+    ) -> tuple[str, dict[str, object]] | None:
         calls.append("outer:before")
         result = forward(event, payload)
+        assert result is None
         calls.append("outer:after")
         return result
 
     def halting_middleware(
         event: str,
         payload: dict[str, object],
-        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+        forward: Callable[
+            [str, dict[str, object]], tuple[str, dict[str, object]] | None
+        ],
     ) -> None:
         calls.append("inner:halt")
         return None
@@ -130,9 +140,13 @@ def test_forwarding_middleware_copy_propagates_halt() -> None:
     def outer_middleware(
         event: str,
         payload: dict[str, object],
-        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
-    ) -> tuple[str, dict[str, object]]:
+        forward: Callable[
+            [str, dict[str, object]], tuple[str, dict[str, object]] | None
+        ],
+    ) -> tuple[str, dict[str, object]] | None:
         forwarded = forward(event, payload)
+        if forwarded is None:
+            return None
         # Returning a copied tuple simulates middleware that proxies the result
         # but does not preserve object identity.
         return tuple(forwarded)
@@ -140,7 +154,9 @@ def test_forwarding_middleware_copy_propagates_halt() -> None:
     def halting_middleware(
         event: str,
         payload: dict[str, object],
-        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+        forward: Callable[
+            [str, dict[str, object]], tuple[str, dict[str, object]] | None
+        ],
     ) -> None:
         return None
 
@@ -189,12 +205,15 @@ def test_middleware_fallback_after_halt_is_ignored() -> None:
     def outer_middleware(
         event: str,
         payload: dict[str, object],
-        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
-    ) -> tuple[str, dict[str, object]]:
+        forward: Callable[
+            [str, dict[str, object]], tuple[str, dict[str, object]] | None
+        ],
+    ) -> tuple[str, dict[str, object]] | None:
         nonlocal inner_halted
         inner_halted = False
         result = forward(event, payload)
-        if inner_halted:
+        halted = inner_halted or result is None
+        if halted:
             fallback_payload = {
                 "original_event": event,
                 "handled_by": "fallback",
@@ -205,7 +224,9 @@ def test_middleware_fallback_after_halt_is_ignored() -> None:
     def halting_middleware(
         event: str,
         payload: dict[str, object],
-        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+        forward: Callable[
+            [str, dict[str, object]], tuple[str, dict[str, object]] | None
+        ],
     ) -> None:
         nonlocal inner_halted
         inner_halted = True
@@ -232,9 +253,12 @@ def test_middleware_preserves_downstream_tuple_when_envelope_exists() -> None:
     def outer(
         event: str,
         payload: dict[str, object],
-        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+        forward: Callable[
+            [str, dict[str, object]], tuple[str, dict[str, object]] | None
+        ],
     ) -> tuple[str, dict[str, object]]:
         forwarded = forward(event, payload)
+        assert forwarded is not None
         observed.append(forwarded)
         assert forwarded[0] == "debate.turn"
         assert forwarded[1]["message"]["content"] == "ready"
@@ -243,16 +267,21 @@ def test_middleware_preserves_downstream_tuple_when_envelope_exists() -> None:
     def overriding(
         event: str,
         payload: dict[str, object],
-        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+        forward: Callable[
+            [str, dict[str, object]], tuple[str, dict[str, object]] | None
+        ],
     ) -> tuple[str, dict[str, object]]:
         downstream = forward(event, payload)
+        assert downstream is not None
         assert downstream[0] == "debate.turn"
         return "debate.override", {"note": "ignored"}
 
     def inner(
         event: str,
         payload: dict[str, object],
-        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+        forward: Callable[
+            [str, dict[str, object]], tuple[str, dict[str, object]] | None
+        ],
     ) -> tuple[str, dict[str, object]]:
         return forward(event, payload)
 
