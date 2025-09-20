@@ -12,12 +12,12 @@ from naestro import cli
 
 
 def main() -> None:
-    print("== List roles ==")
-    cli.main(["list-roles"])
-    print("\n== Run debate ==")
+    print("== Run debate demo ==")
     cli.main(["run-debate", "--prompt", "Is the setup favorable?", "--rounds", "2"])
-    print("\n== Run pipeline ==")
-    cli.main(["run-pipeline"])
+    print("\n== Run trading demo ==")
+    cli.main(["run-trading"])
+    print("\n== Run governed trading demo ==")
+    cli.main(["run-governed"])
 
 
 if __name__ == "__main__":

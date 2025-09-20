@@ -1,4 +1,4 @@
-"""Showcase the routing registry selecting an appropriate model."""
+"""Showcase selecting an appropriate model using the router APIs."""
 
 from __future__ import annotations
 
@@ -8,10 +8,12 @@ from pathlib import Path
 if __package__ in {None, ""}:
     sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-from naestro.routing import BaseTaskSpec, ModelInfo, ModelRouter
+from naestro import BaseTaskSpec, ModelInfo, ModelRouter
 
 
 def build_router() -> ModelRouter:
+    """Seed the router with a few sample models."""
+
     models = [
         ModelInfo(
             name="foundational-small",
