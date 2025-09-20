@@ -19,7 +19,6 @@ from naestro import (
     Role,
     Roles,
 )
-
 from packs.trading import (
     DebateGate,
     ExecutionAgent,
