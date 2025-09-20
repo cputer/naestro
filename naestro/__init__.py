@@ -32,8 +32,16 @@ from .governance import (
     SafetyPolicy,
     apply_patches,
 )
-from .routing.registry import ModelProfile, ModelRegistry
-from .routing.router import Router, RoutingRequest
+from .routing import (
+    BaseTaskSpec,
+    ChatTaskSpec,
+    ModelInfo,
+    ModelRegistry,
+    ModelRouter,
+    REGISTRY,
+    TaskSpec,
+    ToolTaskSpec,
+)
 
 __all__ = [
     "BudgetPolicy",
@@ -47,8 +55,11 @@ __all__ = [
     "LoggingMiddleware",
     "Message",
     "MessageBus",
-    "ModelProfile",
+    "BaseTaskSpec",
+    "ChatTaskSpec",
+    "ModelInfo",
     "ModelRegistry",
+    "ModelRouter",
     "Policy",
     "PolicyChecker",
     "PolicyInput",
@@ -58,8 +69,9 @@ __all__ = [
     "RiskPolicy",
     "Role",
     "Roles",
-    "Router",
-    "RoutingRequest",
+    "REGISTRY",
+    "TaskSpec",
+    "ToolTaskSpec",
     "SafetyPolicy",
     "Tracer",
     "apply_patches",
