@@ -94,4 +94,35 @@ def new_message(
     return Message(role=role, content=content, metadata=meta)
 
 
-__all__ = ["DebateTranscript", "Message", "new_message"]
+AgentMessage = Message
+"""Alias retained for compatibility with earlier agent APIs."""
+
+
+class Critique(BaseModel):
+    """Structured feedback emitted by reviewer or judge agents."""
+
+    message: AgentMessage
+    score: float | None = Field(default=None)
+    notes: str = Field(default="")
+    issues: tuple[str, ...] = Field(default_factory=tuple)
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+class Verdict(BaseModel):
+    """Outcome summarising the result of a critique or debate loop."""
+
+    approved: bool
+    rationale: str = Field(default="")
+    confidence: float | None = Field(default=None)
+    critiques: tuple[Critique, ...] = Field(default_factory=tuple)
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+__all__ = [
+    "AgentMessage",
+    "Critique",
+    "DebateTranscript",
+    "Message",
+    "Verdict",
+    "new_message",
+]

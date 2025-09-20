@@ -76,7 +76,9 @@ def _apply_redactions(
 
 
 def _freeze_payload(payload: Payload) -> Mapping[str, object]:
-    return MappingProxyType({str(key): _deep_copy(value) for key, value in payload.items()})
+    return MappingProxyType(
+        {str(key): _deep_copy(value) for key, value in payload.items()}
+    )
 
 
 _ENVELOPE_CONTEXT: ContextVar[dict[str, list[str]] | None] = ContextVar(
@@ -195,7 +197,9 @@ class MessageBus:
         self._middleware: list[Middleware] = []
         self._envelopes: list[Envelope] = []
         self._sequence = 0
-        self._base_timestamp = base_timestamp or datetime(2024, 1, 1, tzinfo=timezone.utc)
+        self._base_timestamp = base_timestamp or datetime(
+            2024, 1, 1, tzinfo=timezone.utc
+        )
 
     def subscribe(self, event: str, handler: Handler) -> None:
         self._handlers.setdefault(event, []).append(handler)
@@ -209,7 +213,9 @@ class MessageBus:
     def register_schema(self, event: str, schema: Mapping[str, Any]) -> None:
         self._catalog.register(event, schema)
 
-    def publish(self, event: str, payload: Mapping[str, object] | object) -> Envelope | None:
+    def publish(
+        self, event: str, payload: Mapping[str, object] | object
+    ) -> Envelope | None:
         normalized = _normalize_payload(payload)
         token = _ENVELOPE_CONTEXT.set({"redactions": []})
         redactions: tuple[str, ...] = ()
@@ -313,10 +319,30 @@ class RedactionMiddleware:
         return forward(event, sanitized)
 
 
+def logging_mw(
+    logger: Callable[[str, Mapping[str, object]], None]
+) -> LoggingMiddleware:
+    """Create a :class:`LoggingMiddleware` instance."""
+
+    return LoggingMiddleware(logger)
+
+
+def redaction_mw(
+    rules: Mapping[str, Sequence[str]] | Sequence[str],
+    *,
+    replacement: object = "***REDACTED***",
+) -> RedactionMiddleware:
+    """Create a :class:`RedactionMiddleware` with ``rules``."""
+
+    return RedactionMiddleware(rules, replacement=replacement)
+
+
 __all__ = [
     "Envelope",
     "LoggingMiddleware",
     "MessageBus",
     "Middleware",
+    "logging_mw",
     "RedactionMiddleware",
+    "redaction_mw",
 ]

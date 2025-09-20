@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Iterable, Mapping, Sequence, cast
 
-from .model_registry import DEFAULT_WEIGHTS, ModelInfo, ModelRegistry, REGISTRY
+from .model_registry import DEFAULT_WEIGHTS, REGISTRY, ModelInfo, ModelRegistry
 from .task_specs import BaseTaskSpec, ChatTaskSpec, TaskSpec, ToolTaskSpec
 
 TaskConfiguration = BaseTaskSpec | TaskSpec | ChatTaskSpec | ToolTaskSpec
@@ -56,7 +56,9 @@ class ModelRouter:
         ranked = self.rank_models(spec)
         if not ranked:
             task = _as_mapping(spec).get("task", "<unknown>")
-            raise ValueError(f"No model satisfies requested capabilities for task '{task}'")
+            raise ValueError(
+                f"No model satisfies requested capabilities for task '{task}'"
+            )
         return ranked[0]
 
     def rank_models(self, spec: TaskConfiguration) -> list[ModelInfo]:
@@ -123,4 +125,26 @@ class ModelRouter:
         raise TypeError("constraint values must be numeric if provided")
 
 
-__all__ = ["ModelRouter"]
+class RoutePolicy:
+    """Callable wrapper around :class:`ModelRouter` for policy-based routing."""
+
+    def __init__(
+        self,
+        registry: ModelRegistry | Iterable[ModelInfo] | None = None,
+        *,
+        default_weights: Mapping[str, float] | None = None,
+    ) -> None:
+        self.router = ModelRouter(registry, default_weights=default_weights)
+
+    def __call__(self, spec: TaskConfiguration) -> ModelInfo:
+        """Select the best model for ``spec``."""
+
+        return self.router.select_model(spec)
+
+    def rank(self, spec: TaskConfiguration) -> list[ModelInfo]:
+        """Return the ranked candidates for ``spec``."""
+
+        return self.router.rank_models(spec)
+
+
+__all__ = ["ModelRouter", "RoutePolicy"]
