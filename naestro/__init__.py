@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from .agents.debate import DebateConfig, DebateOrchestrator
+from .agents.roles import Role, Roles
 from .agents.schemas import AgentMessage, Critique, Verdict
 from .core.bus import MessageBus, logging_mw, redaction_mw
 from .core.trace import start_trace, write_debate_transcript, write_governor
@@ -19,6 +20,8 @@ from .routing.router import ModelRouter, RoutePolicy
 __all__ = (
     "DebateOrchestrator",
     "DebateConfig",
+    "Role",
+    "Roles",
     "AgentMessage",
     "Critique",
     "Verdict",
