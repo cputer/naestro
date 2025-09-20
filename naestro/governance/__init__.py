@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from .governor import Governor, apply_patches
+from .governor import apply_patches, Governor
 from .policies import (
     BudgetPolicy,
     LatencySLOPolicy,

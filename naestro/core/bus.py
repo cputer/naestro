@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-import json
 from contextvars import ContextVar
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from importlib import resources
+import json
 from types import MappingProxyType
 from typing import Any, Callable, Iterable, Mapping, MutableMapping, Protocol, Sequence
 

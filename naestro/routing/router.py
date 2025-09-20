@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Iterable, Mapping, Sequence, cast
+from typing import Any, cast, Iterable, Mapping, Sequence
 
-from .model_registry import DEFAULT_WEIGHTS, REGISTRY, ModelInfo, ModelRegistry
+from .model_registry import DEFAULT_WEIGHTS, ModelInfo, ModelRegistry, REGISTRY
 from .task_specs import BaseTaskSpec, ChatTaskSpec, TaskSpec, ToolTaskSpec
 
 TaskConfiguration = BaseTaskSpec | TaskSpec | ChatTaskSpec | ToolTaskSpec

@@ -6,7 +6,7 @@ from .bus import Envelope, LoggingMiddleware, MessageBus, RedactionMiddleware
 from .debate import DebateOrchestrator
 from .schemas import DebateTranscript, Message
 from .summary import BusSummary, summarize
-from .trace import TraceEvent, build_trace, write_trace
+from .trace import build_trace, TraceEvent, write_trace
 from .tracing import Tracer
 
 __all__ = [

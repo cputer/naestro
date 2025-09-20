@@ -1,8 +1,8 @@
 """Execute the trading pipeline with both debate gating and governance."""
 
-import sys
 from pathlib import Path
-from typing import Sequence, cast
+import sys
+from typing import cast, Sequence
 
 import yaml
 

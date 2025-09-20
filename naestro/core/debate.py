@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
-from typing import TYPE_CHECKING, Sequence
+from typing import Sequence, TYPE_CHECKING
 
 from naestro.core.bus import MessageBus
 from naestro.core.schemas import DebateTranscript, Message
