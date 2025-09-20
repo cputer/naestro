@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Dict, Iterable, Iterator, Mapping, Sequence
 
-
 DEFAULT_WEIGHTS: Mapping[str, float] = {
     "quality": 0.6,
     "latency": 0.2,
