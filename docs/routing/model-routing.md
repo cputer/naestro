@@ -4,11 +4,11 @@ The routing module keeps model metadata in a central registry and scores models
 against routing requests.
 
 ```python
-from naestro.routing import ModelProfile, ModelRegistry, Router, RoutingRequest
+from naestro.routing import BaseTaskSpec, ModelInfo, ModelRouter
 
-registry = ModelRegistry(
+router = ModelRouter(
     [
-        ModelProfile(
+        ModelInfo(
             name="small",
             provider="naestro",
             capabilities=frozenset({"chat", "analysis"}),
@@ -16,7 +16,7 @@ registry = ModelRegistry(
             latency=0.2,
             cost=0.1,
         ),
-        ModelProfile(
+        ModelInfo(
             name="coder",
             provider="partner",
             capabilities=frozenset({"code", "analysis"}),
@@ -27,12 +27,11 @@ registry = ModelRegistry(
     ]
 )
 
-router = Router(registry)
-request = RoutingRequest(
-    task="code-review",
-    required_capabilities=frozenset({"analysis", "code"}),
-    weights={"quality": 0.6, "latency": 0.2, "cost": 0.2},
-)
+request: BaseTaskSpec = {
+    "task": "code-review",
+    "required_capabilities": {"analysis", "code"},
+    "weights": {"quality": 0.6, "latency": 0.2, "cost": 0.2},
+}
 print(router.select_model(request).name)
 ```
 
