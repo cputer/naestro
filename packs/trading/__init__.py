@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from .agents import ExecutionAgent, RiskAgent, SignalAgent, TradeDecision
 from .backtest import BacktestResult, run_backtest
-from .pipelines import DebateGate, PipelineResult, TradingPipeline, trading_demo
+from .pipelines import DebateGate, PipelineResult, trading_demo, TradingPipeline
 
 __all__ = [
     "BacktestResult",

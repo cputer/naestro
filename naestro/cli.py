@@ -1,5 +1,5 @@
 import argparse
-from typing import Sequence, cast
+from typing import cast, Sequence
 
 from naestro.agents import DebateOrchestrator, DebateSettings, Message, Role, Roles
 from naestro.core.tracing import Tracer

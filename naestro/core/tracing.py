@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import dataclasses
-import json
 from datetime import datetime, timezone
+import json
 from pathlib import Path
 from types import TracebackType
-from typing import Any, Mapping, MutableSequence, cast
+from typing import Any, cast, Mapping, MutableSequence
 
 
 def _coerce(value: object) -> object:
