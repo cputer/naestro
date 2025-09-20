@@ -7,20 +7,29 @@ from typing import Callable, Mapping
 
 import pytest
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-if str(PROJECT_ROOT) not in sys.path:  # pragma: no cover - defensive path setup
-    sys.path.insert(0, str(PROJECT_ROOT))
+try:
+    from naestro.agents.schemas import new_message
+    from naestro.core.bus import (
+        LoggingMiddleware,
+        MessageBus,
+        RedactionMiddleware,
+    )
+    from naestro.core.summary import summarize
+    from naestro.core.trace import build_trace, write_trace
+except ModuleNotFoundError:  # pragma: no cover - defensive path setup
+    PROJECT_ROOT = Path(__file__).resolve().parents[1]
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+    from naestro.agents.schemas import new_message
+    from naestro.core.bus import (
+        LoggingMiddleware,
+        MessageBus,
+        RedactionMiddleware,
+    )
+    from naestro.core.summary import summarize
+    from naestro.core.trace import build_trace, write_trace
 
 jsonschema = pytest.importorskip("jsonschema")
-
-from naestro.agents.schemas import new_message
-from naestro.core.bus import (
-    LoggingMiddleware,
-    MessageBus,
-    RedactionMiddleware,
-)
-from naestro.core.summary import summarize
-from naestro.core.trace import build_trace, write_trace
 
 
 def test_message_bus_middleware_records_envelopes() -> None:
