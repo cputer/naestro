@@ -4,6 +4,8 @@ import sys
 from pathlib import Path
 from typing import Sequence, cast
 
+import yaml
+
 if __package__ in {None, ""}:
     sys.path.append(str(Path(__file__).resolve().parents[1]))
 
@@ -11,6 +13,23 @@ from naestro import Decision, DebateOrchestrator, Message, Policy, PolicyInput, 
 from naestro import Governor
 
 from packs.trading import DebateGate, ExecutionAgent, RiskAgent, SignalAgent, TradingPipeline
+
+
+CONFIG_ROOT = Path(__file__).resolve().parents[1] / "configs"
+TRADING_CONFIG = CONFIG_ROOT / "trading_demo.yaml"
+POLICY_CONFIG = CONFIG_ROOT / "policies_basic.yaml"
+
+
+def _load_trading_config() -> dict[str, object]:
+    return yaml.safe_load(TRADING_CONFIG.read_text()) or {}
+
+
+def _load_policy_thresholds() -> tuple[float, float]:
+    data = yaml.safe_load(POLICY_CONFIG.read_text()) or {}
+    policies = data.get("policies", {})
+    max_drawdown = float(policies.get("max_drawdown", 0.0))
+    min_return = float(policies.get("min_return", 0.0))
+    return max_drawdown, min_return
 
 
 def build_gate() -> DebateGate:
@@ -35,19 +54,28 @@ def build_gate() -> DebateGate:
 def build_governor() -> Governor:
     """Create a governor enforcing drawdown and return policies."""
 
+    max_drawdown_limit, min_return_threshold = _load_policy_thresholds()
     governor = Governor()
 
     def max_drawdown(payload: PolicyInput) -> Decision:
         raw_drawdown = payload.metadata.get("max_drawdown", 0.0)
         drawdown = float(cast(float, raw_drawdown))
-        passed = drawdown <= 2.5
-        reason = "Within drawdown limit" if passed else f"Drawdown {drawdown:.2f} exceeds limit"
+        passed = drawdown <= max_drawdown_limit
+        reason = (
+            "Within drawdown limit"
+            if passed
+            else f"Drawdown {drawdown:.2f} exceeds limit {max_drawdown_limit:.2f}"
+        )
         return Decision(name="max_drawdown", passed=passed, reason=reason)
 
     def min_return(payload: PolicyInput) -> Decision:
         score = payload.score or 0.0
-        passed = score >= 0.5
-        reason = "Return target met" if passed else "Return target missed"
+        passed = score >= min_return_threshold
+        reason = (
+            "Return target met"
+            if passed
+            else f"Return {score:.2f} below target {min_return_threshold:.2f}"
+        )
         return Decision(name="min_return", passed=passed, reason=reason)
 
     governor.register(Policy("max_drawdown", "Limit drawdowns", max_drawdown))
@@ -57,9 +85,13 @@ def build_governor() -> Governor:
 
 def main() -> None:
     prices = [100.0, 101.0, 102.5, 101.5, 103.0, 104.5]
+    trading_config = _load_trading_config()
+    window = int(trading_config.get("signal_window", 2))
+    max_exposure = int(trading_config.get("max_exposure", 1))
+    min_confidence = float(trading_config.get("min_confidence", 0.1))
     pipeline = TradingPipeline(
-        SignalAgent(window=2),
-        RiskAgent(max_exposure=1, min_confidence=0.1),
+        SignalAgent(window=window),
+        RiskAgent(max_exposure=max_exposure, min_confidence=min_confidence),
         ExecutionAgent(),
         debate_gate=build_gate(),
         governor=build_governor(),
