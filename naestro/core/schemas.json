@@ -86,6 +86,22 @@
           "minimum": 0
         }
       }
+    },
+    "governor.evaluated": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input", "results", "approved"],
+      "properties": {
+        "input": {
+          "type": "object"
+        },
+        "results": {
+          "type": "array"
+        },
+        "approved": {
+          "type": "boolean"
+        }
+      }
     }
   }
 }
