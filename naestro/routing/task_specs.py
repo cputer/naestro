@@ -7,6 +7,7 @@ from typing import (
     NotRequired,
     Sequence,
 )
+
 from typing_extensions import TypedDict
 
 CapabilityList = Sequence[str] | set[str] | frozenset[str]

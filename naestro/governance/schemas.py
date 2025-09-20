@@ -4,9 +4,12 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from typing import Any, Literal
-from typing_extensions import TypedDict
 
 from pydantic import BaseModel, ConfigDict, Field
+from typing_extensions import TypedDict as _TypedDict
+
+TypedDict = _TypedDict
+# TypedDict remains available from typing_extensions for Python 3.11 runtimes.
 
 
 class BudgetContext(BaseModel):
