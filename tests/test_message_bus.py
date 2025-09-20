@@ -123,6 +123,73 @@ def test_middleware_forwarding_halt_propagates() -> None:
     assert bus.envelopes == ()
 
 
+def test_middleware_fallback_after_halt_creates_envelope() -> None:
+    bus = MessageBus()
+    bus.register_schema(
+        "debate.fallback",
+        {
+            "type": "object",
+            "properties": {
+                "original_event": {"type": "string"},
+                "handled_by": {"type": "string"},
+            },
+            "required": ["original_event", "handled_by"],
+            "additionalProperties": True,
+        },
+    )
+
+    fallback_payloads: list[dict[str, object]] = []
+
+    def fallback_handler(payload: Mapping[str, object]) -> None:
+        fallback_payloads.append(dict(payload))
+
+    bus.subscribe("debate.fallback", fallback_handler)
+
+    inner_halted = False
+
+    def outer_middleware(
+        event: str,
+        payload: dict[str, object],
+        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+    ) -> tuple[str, dict[str, object]]:
+        nonlocal inner_halted
+        inner_halted = False
+        result = forward(event, payload)
+        if inner_halted:
+            fallback_payload = {
+                "original_event": event,
+                "handled_by": "fallback",
+            }
+            return "debate.fallback", fallback_payload
+        return result
+
+    def halting_middleware(
+        event: str,
+        payload: dict[str, object],
+        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+    ) -> None:
+        nonlocal inner_halted
+        inner_halted = True
+        return None
+
+    bus.use(outer_middleware)
+    bus.use(halting_middleware)
+
+    message = new_message("analyst", "ready", metadata={"round": 0, "order": 0})
+    envelope = bus.publish(
+        "debate.turn",
+        {"message": message.to_dict(), "round": 0},
+    )
+
+    assert envelope is not None
+    assert envelope.event == "debate.fallback"
+    assert envelope.payload["handled_by"] == "fallback"
+    assert fallback_payloads == [
+        {"original_event": "debate.turn", "handled_by": "fallback"}
+    ]
+    assert [record.event for record in bus.envelopes] == ["debate.fallback"]
+
+
 def test_logging_middleware_records_payloads() -> None:
     bus = MessageBus()
     seen: dict[str, Mapping[str, object]] = {}
