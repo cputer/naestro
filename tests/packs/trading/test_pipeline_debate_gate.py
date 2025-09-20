@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-import sys  # isort: split
-
 from pathlib import Path
+import sys
 from typing import Sequence
 
 import pytest
@@ -17,7 +16,6 @@ from naestro.agents.debate import DebateOrchestrator
 from naestro.agents.roles import Role, Roles
 from naestro.agents.schemas import Message
 from naestro.core.bus import MessageBus
-
 from packs.trading.agents import TradeDecision
 from packs.trading.pipelines import DebateGate
 
