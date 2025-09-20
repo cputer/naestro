@@ -22,3 +22,4 @@ ui/ui/
 .coverage
 coverage.xml
 htmlcov/
+.naestro_runs/
