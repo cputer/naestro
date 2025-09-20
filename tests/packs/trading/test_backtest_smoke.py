@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from pathlib import Path
-import sys
+from sys import path as sys_path
 
 import pytest
 
 if __package__ in {None, ""}:
-    sys.path.append(str(Path(__file__).resolve().parents[3]))
+    sys_path.append(str(Path(__file__).resolve().parents[3]))
 
 from packs.trading import run_backtest
 from packs.trading.agents import TradeDecision

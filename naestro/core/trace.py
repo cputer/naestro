@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-import json
+from json import dumps, loads
 from pathlib import Path
 from typing import Iterable, Mapping, Sequence, TYPE_CHECKING
 
@@ -41,7 +41,7 @@ class TraceEvent:
             "sequence": self.sequence,
             "event": self.event,
             "timestamp": self.timestamp,
-            "payload": json.loads(json.dumps(self.payload, default=str)),
+            "payload": loads(dumps(self.payload, default=str)),
             "redactions": list(self.redactions),
         }
 
@@ -61,7 +61,7 @@ def write_trace(
     """Write envelopes to *target* as JSON trace data."""
 
     events = [event.to_dict() for event in build_trace(envelopes)]
-    target.write_text(json.dumps(events, indent=2), encoding="utf-8")
+    target.write_text(dumps(events, indent=2), encoding="utf-8")
     return target
 def start_trace(
     *, root: Path | str | None = None, run_name: str | None = None
@@ -78,7 +78,7 @@ def write_debate_transcript(transcript: "DebateTranscript", target: Path) -> Pat
 
     payload = transcript.to_dict()
     payload["summary"] = transcript.summary()
-    target.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    target.write_text(dumps(payload, indent=2), encoding="utf-8")
     return target
 
 
@@ -89,7 +89,7 @@ def write_governor(decisions: Sequence["Decision"], target: Path) -> Path:
         "approved": all(decision.passed for decision in decisions),
         "decisions": [decision.model_dump() for decision in decisions],
     }
-    target.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    target.write_text(dumps(payload, indent=2), encoding="utf-8")
     return target
 
 
