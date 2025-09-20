@@ -53,14 +53,38 @@ pre-commit run --all-files
 If nodeenv fails to fetch Node during setup, confirm you’re on Node 22 (`node -v`) and re-run with
 system Node enabled.
 
-## CI Profiles: Smoke vs Full Coverage
+## CI checks
 
-Run these commands locally to mirror the CI jobs:
+The CI workflow installs Naestro with the development extras and runs linting, type
+checking, tests, and a suite of smoke scripts. Reproduce the pipeline locally with:
 
-- **UI smoke**: `pnpm install --frozen-lockfile -C ui && pnpm run test:smoke -C ui`
-- **Python smoke**: `pytest -q -k "health or smoke"`
-- **UI full**: `pnpm install --frozen-lockfile -C ui && CI=true pnpm run test:ci -C ui`
-- **Python full**:
-  `pytest -m "not slow" --maxfail=1 -q --durations=10 --cov=src --cov-report=xml --cov-fail-under=100`
+```bash
+python -m pip install --upgrade pip
+python -m pip install .[dev]
 
-Codecov uploads use flags `ui` and `python` with 100% targets.
+ruff check naestro packs examples \
+  tests/test_debate_basic.py tests/test_roles_registry.py \
+  tests/test_message_bus.py tests/test_governor.py \
+  tests/test_router_selection.py \
+  tests/packs/trading/test_backtest_smoke.py \
+  tests/packs/trading/test_pipeline_debate_gate.py \
+  tests/conftest.py tests/training/__init__.py
+
+black --check naestro packs examples \
+  tests/test_debate_basic.py tests/test_roles_registry.py \
+  tests/test_message_bus.py tests/test_governor.py \
+  tests/test_router_selection.py \
+  tests/packs/trading/test_backtest_smoke.py \
+  tests/packs/trading/test_pipeline_debate_gate.py \
+  tests/conftest.py tests/training/__init__.py
+
+mypy --strict naestro packs examples
+
+pytest
+
+python examples/debate_quickstart.py
+python examples/governed_pipeline.py
+python examples/routing_profiles.py
+python examples/cli.py
+python packs/trading/examples/aapl_demo.py
+```
