@@ -6,12 +6,13 @@ import sys
 import pytest
 
 try:
-    from packs.trading import run_backtest
-    from packs.trading.agents import TradeDecision
-except Exception:
+    import packs.trading  # noqa: F401
+except ModuleNotFoundError:
     sys.path.append(str(Path(__file__).resolve().parents[3]))
-    from packs.trading import run_backtest
-    from packs.trading.agents import TradeDecision
+    import packs.trading  # noqa: F401
+
+from packs.trading import run_backtest
+from packs.trading.agents import TradeDecision
 
 
 def test_backtest_runs_and_computes_metrics() -> None:
