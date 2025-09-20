@@ -28,12 +28,14 @@ class BusSummary:
         parts: list[str] = [f"total={self.total_events}"]
         if self.event_counts:
             event_parts = ", ".join(
-                f"{name}:{count}" for name, count in sorted(self.event_counts.items())
+                f"{name}:{count}"
+                for name, count in sorted(self.event_counts.items())
             )
             parts.append(f"events=({event_parts})")
         if self.redaction_counts:
             redaction_parts = ", ".join(
-                f"{path}:{count}" for path, count in sorted(self.redaction_counts.items())
+                f"{path}:{count}"
+                for path, count in sorted(self.redaction_counts.items())
             )
             parts.append(f"redactions=({redaction_parts})")
         return " | ".join(parts)

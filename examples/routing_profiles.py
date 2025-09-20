@@ -10,8 +10,11 @@ import yaml
 if __package__ in {None, ""}:
     sys.path.append(str(Path(__file__).resolve().parents[1]))
 
-from naestro import BaseTaskSpec, ModelInfo, ModelRouter
-
+from naestro import (
+    BaseTaskSpec,
+    ModelInfo,
+    ModelRouter,
+)
 
 CONFIG_PATH = Path(__file__).resolve().parents[1] / "configs" / "router_profiles.yaml"
 
