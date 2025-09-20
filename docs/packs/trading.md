@@ -34,6 +34,6 @@ print(result.trades)
 print(result.rejected_trades)
 ```
 
-The pipeline returns a :class:`~packs.trading.pipeline.PipelineResult` containing
+The pipeline returns a :class:`~packs.trading.pipelines.PipelineResult` containing
 approved trades, rejected trades and backtest metrics that can be fed into the
 :mod:`naestro.governance` layer.
