@@ -1,23 +1,30 @@
 from __future__ import annotations
 
 from pathlib import Path
-from sys import path as sys_path
+import sys
 from typing import Sequence
-
-if __package__ in {None, ""}:
-    sys_path.append(str(Path(__file__).resolve().parents[3]))
 
 import pytest
 
+try:
+    from naestro.agents.debate import DebateOrchestrator
+    from naestro.agents.roles import Role, Roles
+    from naestro.agents.schemas import Message
+    from naestro.core.bus import MessageBus
+
+    from packs.trading.agents import TradeDecision
+    from packs.trading.pipelines import DebateGate
+except Exception:
+    sys.path.append(str(Path(__file__).resolve().parents[3]))
+    from naestro.agents.debate import DebateOrchestrator
+    from naestro.agents.roles import Role, Roles
+    from naestro.agents.schemas import Message
+    from naestro.core.bus import MessageBus
+
+    from packs.trading.agents import TradeDecision
+    from packs.trading.pipelines import DebateGate
+
 pytest.importorskip("jsonschema")
-
-from naestro.agents.debate import DebateOrchestrator
-from naestro.agents.roles import Role, Roles
-from naestro.agents.schemas import Message
-from naestro.core.bus import MessageBus
-
-from packs.trading.agents import TradeDecision
-from packs.trading.pipelines import DebateGate
 
 
 def test_debate_gate_approves_trade() -> None:
