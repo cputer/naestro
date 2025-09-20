@@ -1,0 +1,5 @@
+{
+  "prompt": "Should the fund rebalance the tech sleeve today?",
+  "participants": ["analyst", "risk"],
+  "rounds": 2
+}

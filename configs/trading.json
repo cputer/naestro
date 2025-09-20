@@ -1,0 +1,9 @@
+{
+  "signal_window": 3,
+  "max_exposure": 1,
+  "min_confidence": 0.2,
+  "risk_policies": {
+    "max_drawdown": 2.0,
+    "min_return": 0.5
+  }
+}

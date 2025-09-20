@@ -1,7 +1,15 @@
-import sys
-from pathlib import Path
+from __future__ import annotations
 
-# Ensure project root is on sys.path for module resolution
-ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.append(str(ROOT))
+import importlib.util
+
+import pytest
+
+
+def pytest_collection_modifyitems(
+    config: pytest.Config, items: list[pytest.Item]
+) -> None:
+    if importlib.util.find_spec("torch") is None:
+        skip = pytest.mark.skip(reason="requires torch")
+        for item in items:
+            if "test_hicra" in item.nodeid:
+                item.add_marker(skip)
