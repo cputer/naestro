@@ -12,8 +12,11 @@ from typing import Any, Callable, Iterable, Mapping, MutableMapping, Protocol, S
 
 try:  # pragma: no cover - handled at runtime in MessageBus
     import jsonschema
-except ImportError:  # pragma: no cover - lazy error in _SchemaCatalog
-    jsonschema = None  # type: ignore[assignment]
+except Exception as exc:  # pragma: no cover - lazy error in _SchemaCatalog
+    raise RuntimeError(
+        "naestro.core.bus requires jsonschema>=4.22. "
+        "Install it with `pip install \"jsonschema>=4.22\"`."
+    ) from exc
 
 Payload = dict[str, object]
 
