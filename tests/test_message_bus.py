@@ -190,6 +190,53 @@ def test_middleware_fallback_after_halt_creates_envelope() -> None:
     assert [record.event for record in bus.envelopes] == ["debate.fallback"]
 
 
+def test_middleware_preserves_downstream_tuple_when_envelope_exists() -> None:
+    bus = MessageBus()
+    observed: list[tuple[str, dict[str, object]]] = []
+
+    def outer(
+        event: str,
+        payload: dict[str, object],
+        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+    ) -> tuple[str, dict[str, object]]:
+        forwarded = forward(event, payload)
+        observed.append(forwarded)
+        assert forwarded[0] == "debate.turn"
+        assert forwarded[1]["message"]["content"] == "ready"
+        return forwarded
+
+    def overriding(
+        event: str,
+        payload: dict[str, object],
+        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+    ) -> tuple[str, dict[str, object]]:
+        downstream = forward(event, payload)
+        assert downstream[0] == "debate.turn"
+        return "debate.override", {"note": "ignored"}
+
+    def inner(
+        event: str,
+        payload: dict[str, object],
+        forward: Callable[[str, dict[str, object]], tuple[str, dict[str, object]]],
+    ) -> tuple[str, dict[str, object]]:
+        return forward(event, payload)
+
+    bus.use(outer)
+    bus.use(overriding)
+    bus.use(inner)
+
+    message = new_message("analyst", "ready", metadata={"round": 0, "order": 0})
+    envelope = bus.publish(
+        "debate.turn",
+        {"message": message.to_dict(), "round": 0},
+    )
+
+    assert envelope is not None
+    assert envelope.event == "debate.turn"
+    assert observed and observed[0][0] == "debate.turn"
+    assert observed[0][1]["round"] == 0
+
+
 def test_logging_middleware_records_payloads() -> None:
     bus = MessageBus()
     seen: dict[str, Mapping[str, object]] = {}

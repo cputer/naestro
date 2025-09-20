@@ -15,7 +15,7 @@ try:  # pragma: no cover - handled at runtime in MessageBus
 except Exception as exc:  # pragma: no cover - lazy error in _SchemaCatalog
     raise RuntimeError(
         "naestro.core.bus requires jsonschema>=4.22. "
-        "Install it with `pip install \"jsonschema>=4.22\"`."
+        'Install it with `pip install "jsonschema>=4.22"`.'
     ) from exc
 
 Payload = dict[str, object]
@@ -175,8 +175,7 @@ Forward = Callable[[str, Payload], tuple[str, Payload]]
 class Middleware(Protocol):
     def __call__(
         self, event: str, payload: Payload, forward: Forward
-    ) -> tuple[str, Payload] | None:
-        ...
+    ) -> tuple[str, Payload] | None: ...
 
 
 Handler = Callable[[Mapping[str, object]], None]
@@ -220,9 +219,7 @@ class MessageBus:
         normalized = _normalize_payload(payload)
         token = _ENVELOPE_CONTEXT.set({"redactions": []})
         try:
-            final_event, final_payload, envelope = self._dispatch(
-                0, event, normalized
-            )
+            final_event, final_payload, envelope = self._dispatch(0, event, normalized)
             if envelope is None:
                 return None
             return envelope
@@ -265,7 +262,8 @@ class MessageBus:
         forward_result: tuple[str, Payload] | None = None
 
         def forward(next_event: str, next_payload: Payload) -> tuple[str, Payload]:
-            nonlocal downstream_envelope_produced, final_event, final_payload, envelope, forward_result
+            nonlocal downstream_envelope_produced, final_event, final_payload, envelope
+            nonlocal forward_result
             final_event, final_payload, envelope = self._dispatch(
                 index + 1, next_event, next_payload
             )
@@ -275,10 +273,12 @@ class MessageBus:
 
         result = self._middleware[index](event, payload, forward)
         if result is not None:
-            final_event, final_payload = result
             if envelope is None and not downstream_envelope_produced:
                 if forward_result is None or result is not forward_result:
+                    final_event, final_payload = result
                     envelope = self._deliver(final_event, final_payload)
+            elif forward_result is not None:
+                final_event, final_payload = forward_result
 
         return final_event, final_payload, envelope
 
@@ -334,7 +334,7 @@ class RedactionMiddleware:
 
 
 def logging_mw(
-    logger: Callable[[str, Mapping[str, object]], None]
+    logger: Callable[[str, Mapping[str, object]], None],
 ) -> LoggingMiddleware:
     """Create a :class:`LoggingMiddleware` instance."""
 
