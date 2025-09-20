@@ -46,6 +46,9 @@ target-version = "py312"
 select = ["E", "F", "B", "I"]
 ignore = ["B905"]
 
+[tool.ruff.lint.isort]
+from-first = true
+
 [tool.mypy]
 python_version = "3.12"
 strict = true
