@@ -5,9 +5,15 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Mapping, Sequence
+from typing import TYPE_CHECKING, Iterable, Mapping, Sequence
 
 from .bus import Envelope
+
+if TYPE_CHECKING:  # pragma: no cover - imported for type checking only
+    from naestro.agents.schemas import DebateTranscript
+    from naestro.governance.schemas import Decision
+
+    from .tracing import Tracer
 
 
 @dataclass(frozen=True, slots=True)
@@ -48,12 +54,50 @@ def build_trace(envelopes: Sequence[Envelope] | Iterable[Envelope]) -> list[Trac
     return [TraceEvent.from_envelope(envelope) for envelope in envelopes]
 
 
-def write_trace(envelopes: Sequence[Envelope] | Iterable[Envelope], target: Path) -> Path:
+def write_trace(
+    envelopes: Sequence[Envelope] | Iterable[Envelope],
+    target: Path,
+) -> Path:
     """Write envelopes to *target* as JSON trace data."""
 
     events = [event.to_dict() for event in build_trace(envelopes)]
     target.write_text(json.dumps(events, indent=2), encoding="utf-8")
     return target
+def start_trace(
+    *, root: Path | str | None = None, run_name: str | None = None
+) -> "Tracer":
+    """Create a :class:`~naestro.core.tracing.Tracer` for manual management."""
+
+    from .tracing import Tracer
+
+    return Tracer(root=root, run_name=run_name)
 
 
-__all__ = ["TraceEvent", "build_trace", "write_trace"]
+def write_debate_transcript(transcript: "DebateTranscript", target: Path) -> Path:
+    """Serialise a :class:`~naestro.agents.schemas.DebateTranscript` to JSON."""
+
+    payload = transcript.to_dict()
+    payload["summary"] = transcript.summary()
+    target.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    return target
+
+
+def write_governor(decisions: Sequence["Decision"], target: Path) -> Path:
+    """Write governor decisions to disk as JSON data."""
+
+    payload = {
+        "approved": all(decision.passed for decision in decisions),
+        "decisions": [decision.model_dump() for decision in decisions],
+    }
+    target.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    return target
+
+
+__all__ = [
+    "TraceEvent",
+    "build_trace",
+    "start_trace",
+    "write_debate_transcript",
+    "write_governor",
+    "write_trace",
+]
