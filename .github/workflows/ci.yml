@@ -16,7 +16,11 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
+          python-version: "3.12"
+      - name: Verify Python version
+        run: |
+          python --version
+          python -c "import sys; assert sys.version_info[:2] >= (3, 12)"
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
