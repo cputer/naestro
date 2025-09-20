@@ -29,9 +29,14 @@ class DebateGate:
             prompt,
             settings=DebateSettings(rounds=1),
         )
-        if not outcome.transcript.messages:
+        messages = outcome.transcript.messages
+        if not messages:
             return True
-        final_message = outcome.transcript.messages[-1].content.lower()
+        if len(messages) <= 1:
+            return True
+        if messages[-1].role == "system":
+            return True
+        final_message = messages[-1].content.lower()
         if "reject" in final_message:
             return False
         if "approve" in final_message or "proceed" in final_message:
